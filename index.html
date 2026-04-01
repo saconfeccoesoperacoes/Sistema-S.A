@@ -1,0 +1,5041 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<title>S.A Confecções | by WOLFFZ LABS</title>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="style.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --topbar:#05294b;
+  --topbar-2:#083863;
+  --bg:#f3f5f8;
+  --sidebar:#f7f8fb;
+  --card:#ffffff;
+  --card-soft:#fbfcfe;
+  --text:#14263d;
+  --muted:#6b778c;
+  --line:#dfe5ec;
+  --line-2:#edf1f5;
+  --primary:#1d4ed8;
+  --primary-soft:#e8f0ff;
+  --primary-border:#bfd3ff;
+  --danger:#dc2626;
+  --success:#16a34a;
+  --warning:#d97706;
+  --shadow:0 10px 28px rgba(15, 23, 42, .06);
+  --radius:14px;
+  --sidebar-w:230px;
+  --topbar-h:56px;
+}
+
+body.dark{
+  --topbar:#081a2b;
+  --topbar-2:#0d2337;
+  --bg:#0f1723;
+  --sidebar:#121c2b;
+  --card:#111b29;
+  --card-soft:#0f1825;
+  --text:#e9eef6;
+  --muted:#a9b4c5;
+  --line:#243244;
+  --line-2:#1b2838;
+  --primary:#3b82f6;
+  --primary-soft:#11284c;
+  --primary-border:#29508d;
+  --shadow:0 14px 34px rgba(0, 0, 0, .26);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+.hidden{display:none!important}
+.section-subtitle{margin:0 0 14px;color:var(--muted);line-height:1.6}
+
+#notificacao{
+  position:fixed;
+  top:74px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--success);
+  color:#fff;
+  padding:12px 18px;
+  border-radius:12px;
+  box-shadow:0 10px 24px rgba(0,0,0,.16);
+  font-weight:700;
+  z-index:10000;
+  opacity:0;
+  transition:opacity .3s ease, transform .3s ease;
+}
+#notificacao.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+#notificacao.error{background:var(--danger)}
+
+#loginTela{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(5,18,35,.38);
+  backdrop-filter:blur(4px);
+  z-index:9999;
+}
+#loginTela > div{
+  width:100%;
+  max-width:420px;
+  background:var(--card);
+  padding:26px;
+  border-radius:20px;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+#loginTela h2{
+  margin:0 0 18px;
+  font-size:22px;
+}
+
+.topbar{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:var(--topbar-h);
+  background:linear-gradient(90deg,var(--topbar),var(--topbar-2));
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:0 18px;
+  z-index:1200;
+  box-shadow:0 6px 16px rgba(0,0,0,.14);
+}
+.topbar-left,
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+  letter-spacing:.2px;
+}
+.brand-badge{
+  width:28px;
+  height:28px;
+  border-radius:10px;
+  background:#ffffff;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.16), inset 0 0 0 1px rgba(5,41,75,.08);
+  flex:0 0 34px;
+  padding:4px;
+}
+.brand-badge img{
+  width:18px;
+  height:18px;
+  object-fit:contain;
+  display:block;
+}
+.topbar-nav{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  margin-left:8px;
+}
+.topbar-link{
+  color:rgba(255,255,255,.86);
+  text-decoration:none;
+  font-size:14px;
+  padding:9px 12px;
+  border-radius:10px;
+  transition:.2s ease;
+}
+.topbar-link:hover,
+.topbar-link.active{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+}
+.topbar-chip{
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.14);
+  color:#fff;
+  border-radius:10px;
+  padding:8px 12px;
+  font-weight:600;
+  font-size:13px;
+}
+
+.sidebar{
+  position:fixed;
+  top:var(--topbar-h);
+  left:0;
+  width:var(--sidebar-w);
+  height:calc(100vh - var(--topbar-h));
+  padding:16px 14px 18px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  background:var(--sidebar);
+  color:var(--text);
+  border-right:1px solid var(--line);
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+}
+.sidebar h2{
+  margin:0;
+  font-size:15px;
+  line-height:1.45;
+}
+.sidebar-brand{
+  padding:10px 10px 16px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:12px;
+}
+.sidebar-title{
+  font-size:12px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin:16px 10px 8px;
+  font-weight:800;
+}
+.nav-btn,.theme-btn,.logout-mini{
+  width:100%;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  border:none;
+  border-radius:12px;
+  padding:10px 14px;
+  margin-bottom:0;
+  cursor:pointer;
+  color:var(--text);
+  background:transparent;
+  text-align:left;
+  font-weight:700;
+  white-space:nowrap;
+  transition:background .18s ease, transform .15s ease, box-shadow .18s ease;
+}
+.nav-btn:hover,.theme-btn:hover,.logout-mini:hover{
+  background:var(--card);
+  transform:translateY(-1px);
+}
+.nav-btn.active{
+  background:var(--primary-soft);
+  color:var(--primary);
+  box-shadow:inset 0 0 0 1px var(--primary-border);
+}
+.version{
+  margin:14px 10px 0;
+  font-size:12px;
+  line-height:1.6;
+  color:var(--muted);
+}
+
+.card-soft-block{
+  background:var(--card-soft);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px;
+}
+.sidebar-actions{
+  margin-top:auto;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:10px;
+  width:100%;
+  box-sizing:border-box;
+}
+.theme-btn{
+  width:100%;
+  min-width:0;
+  background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+.sidebar .logout-mini{
+  appearance:none;
+  -webkit-appearance:none;
+  width:100% !important;
+  min-width:0;
+  max-width:none;
+  display:block;
+  align-self:stretch;
+  padding:12px 14px;
+  margin:0;
+  border:none;
+  border-radius:12px;
+  background:#ef4444;
+  color:#fff;
+  box-shadow:none;
+  white-space:normal;
+  overflow:visible;
+  text-align:center;
+  line-height:1.2;
+  font-weight:800;
+}
+.sidebar .logout-mini:hover{
+  background:#dc2626;
+}
+
+body.dark .logout-mini{
+  background:#dc2626;
+  color:#fff;
+}
+
+.main{
+  margin-left:var(--sidebar-w);
+  margin-top:var(--topbar-h);
+  padding:18px 20px 28px;
+  min-height:100vh;
+}
+.page-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:16px;
+}
+.page-header-main h1{
+  margin:0;
+  font-size:28px;
+  line-height:1.1;
+  letter-spacing:-.02em;
+}
+.page-header-main p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:14px;
+}
+.page-header-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.soft-action{
+  border:1px solid var(--line);
+  background:var(--card);
+  color:var(--text);
+  border-radius:12px;
+  padding:10px 14px;
+  font-weight:700;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+}
+.card{
+  background:var(--card);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:var(--shadow);
+  border:1px solid var(--line);
+  margin-bottom:16px;
+  transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 16px 34px rgba(15,23,42,.08);
+}
+.card h2,.card h3{
+  margin:0 0 14px;
+  font-size:18px;
+}
+.stat{
+  margin-top:10px;
+  font-size:34px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:-.03em;
+}
+
+label{
+  display:block;
+  font-weight:700;
+  margin:10px 0 6px;
+  color:var(--text);
+  font-size:13px;
+}
+input,select,textarea{
+  width:100%;
+  min-height:42px;
+  padding:11px 12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:var(--card-soft);
+  color:var(--text);
+  outline:none;
+  transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(29,78,216,.10);
+  background:var(--card);
+}
+textarea{
+  min-height:96px;
+  resize:vertical;
+}
+
+button.primary,button.secondary,button.danger,button.print{
+  border:none;
+  border-radius:12px;
+  padding:11px 14px;
+  cursor:pointer;
+  font-weight:800;
+  margin:8px 8px 0 0;
+  transition:transform .15s ease, box-shadow .2s ease, opacity .2s ease;
+}
+button.primary:hover,button.secondary:hover,button.danger:hover,button.print:hover{
+  transform:translateY(-1px);
+}
+button.primary{
+  background:#1d4ed8;
+  color:#fff;
+  box-shadow:0 8px 18px rgba(29,78,216,.22);
+}
+button.secondary{
+  background:#eef2f7;
+  color:#243447;
+}
+body.dark button.secondary{
+  background:#1c2b3d;
+  color:#e5edf8;
+}
+button.danger{background:#dc2626;color:#fff}
+button.print{background:#0f766e;color:#fff}
+
+.table-wrap{
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--card);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:0;
+}
+th,td{
+  border-bottom:1px solid var(--line-2);
+  padding:10px 10px;
+  text-align:left;
+  font-size:13px;
+  vertical-align:top;
+}
+th{
+  background:#f8fafc;
+  color:#4b5563;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  position:sticky;
+  top:0;
+  z-index:1;
+}
+body.dark th{
+  background:#132032;
+  color:#b7c5d9;
+}
+tr:last-child td{border-bottom:none}
+
+.inline-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+
+.pill{
+  display:inline-block;
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.03em;
+}
+.pill-success{background:#dcfce7;color:#166534}
+.pill-warning{background:#fef3c7;color:#92400e}
+.pill-danger{background:#fee2e2;color:#991b1b}
+.pill-neutral{background:#e5e7eb;color:#374151}
+body.dark .pill-neutral{background:#334155;color:#f9fafb}
+
+#dashboardAlertas{margin-top:18px}
+.alerta-box{
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  padding:12px 14px;
+  border-radius:12px;
+  margin-top:10px;
+}
+.alerta-vazio{
+  background:#f8fafc;
+  border:1px dashed #cbd5e1;
+  color:#64748b;
+  padding:12px 14px;
+  border-radius:12px;
+  margin-top:10px;
+}
+body.dark .alerta-vazio{
+  background:#111827;
+  border-color:#374151;
+  color:#d1d5db;
+}
+body.dark .alerta-box{
+  background:#3f2a17;
+  border-color:#9a3412;
+  color:#fed7aa;
+}
+
+.estoque-topbar{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  margin:16px 0 10px;
+  flex-wrap:wrap;
+}
+#buscaEstoque{
+  width:100%;
+  max-width:360px;
+}
+#estoqueLista{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  margin-top:12px;
+}
+.estoque-card{
+  background:var(--card);
+  border-radius:16px;
+  padding:16px;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:all .25s ease;
+  position:relative;
+  overflow:hidden;
+}
+.estoque-card:hover{transform:translateY(-3px)}
+.estoque-card.open .estoque-detalhe{display:block}
+.estoque-card.open .estoque-toggle{transform:rotate(180deg)}
+.estoque-card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+.estoque-card h3{
+  margin:0;
+  font-size:18px;
+  line-height:1.3;
+  color:var(--text);
+}
+.estoque-toggle{
+  font-size:20px;
+  font-weight:700;
+  color:var(--muted);
+  transition:transform .25s ease;
+}
+.estoque-total{
+  margin-top:12px;
+  font-size:28px;
+  font-weight:800;
+  color:var(--text);
+}
+.estoque-total span{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  font-weight:600;
+  margin-top:2px;
+}
+.estoque-status{
+  display:inline-block;
+  margin-top:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+.status-bom{background:#dcfce7;color:#166534}
+.status-baixo{background:#fef3c7;color:#92400e}
+.status-critico{background:#fee2e2;color:#991b1b}
+.estoque-detalhe{
+  display:none;
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+.estoque-cor-bloco{
+  background:rgba(15,23,42,.02);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+  margin-bottom:10px;
+}
+.estoque-cor-titulo{
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:8px;
+  font-size:14px;
+}
+.estoque-tamanho-linha{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:14px;
+  padding:4px 0;
+  color:var(--text);
+}
+.estoque-vazio{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:8px;
+}
+.estoque-faixa{
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:5px;
+}
+.faixa-bom{background:#22c55e}
+.faixa-baixo{background:#f59e0b}
+.faixa-critico{background:#ef4444}
+.estoque-footer{
+  margin-top:22px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.summary-box{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;
+  margin-top:16px;
+}
+.summary-item{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  background:var(--card-soft);
+}
+.summary-item strong{
+  display:block;
+  margin-top:6px;
+  font-size:18px;
+}
+
+.expedicao-aviso-ok{
+  background:#dcfce7;
+  border:1px solid #86efac;
+  color:#166534;
+  padding:14px 16px;
+  border-radius:12px;
+  font-weight:700;
+}
+.expedicao-aviso-xpress{
+  background:#dbeafe;
+  border:1px solid #93c5fd;
+  color:#1d4ed8;
+  padding:14px 16px;
+  border-radius:12px;
+  font-weight:700;
+}
+.expedicao-aviso-mercado{
+  background:#fef3c7;
+  border:1px solid #fcd34d;
+  color:#92400e;
+  padding:14px 16px;
+  border-radius:12px;
+  font-weight:700;
+}
+.expedicao-aviso-direta{
+  background:#ede9fe;
+  border:1px solid #c4b5fd;
+  color:#6d28d9;
+  padding:14px 16px;
+  border-radius:12px;
+  font-weight:700;
+}
+.expedicao-aviso-erro{
+  background:#fee2e2;
+  border:1px solid #fca5a5;
+  color:#991b1b;
+  padding:14px 16px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+hr{
+  border:none;
+  border-top:1px solid var(--line);
+  margin:18px 0;
+}
+
+
+.expedicao-toolbar, .help-grid, .users-toolbar{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:14px;
+  margin-top:14px;
+}
+.field, .help-item{
+  background:var(--card-soft);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+}
+.field small{display:block;color:var(--muted);line-height:1.5;margin-top:8px}
+
+/* ajuste visual para códigos longos na expedição */
+#ultimoCodigoExpedicao,
+#ultimaLeituraExpedicao,
+#preferenciaShopee{
+  font-size:clamp(22px, 2.6vw, 36px);
+  line-height:1.05;
+  letter-spacing:-.02em;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+.expedicao-toolbar .field{
+  min-width:0;
+  overflow:hidden;
+}
+
+.expedicao-toolbar .field .stat{
+  max-width:100%;
+  white-space:normal;
+}
+.help-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+.help-item h3{margin:0 0 8px;font-size:16px}
+.help-item p{margin:0;color:var(--text);line-height:1.7}
+.notice-dev{
+  background:var(--primary-soft);
+  border:1px solid var(--primary-border);
+  color:var(--primary);
+  border-radius:14px;
+  padding:18px;
+  margin-bottom:16px;
+  font-weight:700;
+}
+.user-file-status{margin-top:10px;color:var(--muted);font-size:13px}
+.inline-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-mini{border:none;border-radius:10px;padding:8px 10px;font-weight:700;cursor:pointer}
+.btn-mini.delete{background:#fee2e2;color:#991b1b}
+.btn-mini.edit{background:#e8f0ff;color:#1d4ed8}
+
+
+.pedido-compra-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:8px;}
+.pedido-compra-box{background:var(--card-soft);border:1px solid var(--line);border-radius:14px;padding:14px;}
+.pedido-compra-box h4{margin:0 0 10px;font-size:15px;}
+.pedido-compra-box .inline-grid{grid-template-columns:repeat(2,minmax(110px,1fr));}
+.pedido-compra-table td strong{font-size:15px;}
+
+@media (max-width:980px){
+  .topbar{
+    height:auto;
+    min-height:var(--topbar-h);
+    padding:10px 14px;
+    flex-wrap:wrap;
+  }
+  .topbar-nav{
+    width:100%;
+    overflow:auto;
+    padding-bottom:4px;
+  }
+  .sidebar{
+    position:static;
+    width:100%;
+    height:auto;
+    margin-top:76px;
+    border-right:none;
+    border-bottom:1px solid var(--line);
+  }
+  .main{
+    margin-left:0;
+    margin-top:0;
+    padding:16px;
+  }
+}
+
+@media (max-width:720px){
+  .page-header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .grid{
+    grid-template-columns:1fr;
+  }
+  .inline-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+
+.prod-shell{display:flex;flex-direction:column;gap:16px;}
+.prod-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:2px;}
+.prod-tab-btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.18s ease;box-shadow:var(--shadow);}
+.prod-tab-btn:hover{transform:translateY(-1px);}
+.prod-tab-btn.active{background:var(--primary-soft);border-color:var(--primary-border);color:var(--primary);}
+.prod-panel{display:none;}
+.prod-panel.active{display:block;}
+.prod-note{color:var(--muted);margin:0 0 14px;line-height:1.6;}
+.prod-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+
+.config-shell{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:start;margin-top:10px;}
+.config-side{display:flex;flex-direction:column;gap:10px;}
+.config-tab-btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:12px 14px;text-align:left;font-weight:700;cursor:pointer;transition:.18s ease;}
+.config-tab-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow);}
+.config-tab-btn.active{background:var(--primary-soft);border-color:rgba(12,74,110,.22);color:var(--primary);}
+.config-panel{display:none;}
+.config-panel.active{display:block;}
+.config-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px;}
+.config-box{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--shadow);}
+.config-box h3,.config-box h4{margin:0 0 8px;}
+.config-box p,.config-box li,.config-box small{color:var(--muted);}
+.config-box ul{margin:10px 0 0 18px;padding:0;}
+.users-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.users-toolbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+.users-toolbar .field{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px;}
+.user-file-status{margin-top:8px;font-size:13px;color:var(--muted);}
+.master-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font-weight:700;font-size:12px;}
+.inline-actions.wrap{flex-wrap:wrap;}
+@media (max-width: 980px){.config-shell{grid-template-columns:1fr;}.config-side{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}}
+
+
+
+/* ===== REFORMA VISUAL V9 ===== */
+:root{
+  --topbar:#081225;
+  --topbar-2:#0f1c34;
+  --bg:#eef3f8;
+  --sidebar:#0d172a;
+  --card:#ffffff;
+  --card-soft:#f7f9fc;
+  --text:#0f172a;
+  --muted:#667085;
+  --line:#d7dfeb;
+  --line-2:#e8edf5;
+  --primary:#0f62fe;
+  --primary-soft:#eaf1ff;
+  --primary-border:#c9d8ff;
+  --danger:#dc2626;
+  --success:#16a34a;
+  --warning:#d97706;
+  --shadow:0 18px 44px rgba(15,23,42,.10);
+  --radius:18px;
+  --sidebar-w:260px;
+  --topbar-h:68px;
+}
+body.dark{
+  --topbar:#08111f;
+  --topbar-2:#0e1a2f;
+  --bg:#07111f;
+  --sidebar:#09111f;
+  --card:#0f1b2d;
+  --card-soft:#0c1626;
+  --text:#edf2fb;
+  --muted:#9fb0c7;
+  --line:#233248;
+  --line-2:#18253a;
+  --primary:#5b8cff;
+  --primary-soft:#10213e;
+  --primary-border:#274b86;
+  --shadow:0 20px 44px rgba(0,0,0,.35);
+}
+body{
+  background:
+    radial-gradient(circle at top right, rgba(15,98,254,.10), transparent 26%),
+    radial-gradient(circle at left top, rgba(16,185,129,.08), transparent 20%),
+    var(--bg);
+}
+.topbar{
+  height:var(--topbar-h);
+  padding:0 22px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  backdrop-filter:blur(14px);
+}
+.brand{gap:12px;font-size:15px;}
+.brand-badge{width:38px;height:38px;border-radius:12px;flex:0 0 38px;}
+.brand-badge img{width:22px;height:22px;}
+.topbar-link{font-weight:700;padding:10px 14px;border-radius:12px;}
+.topbar-chip{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:10px 14px;
+  min-height:40px;
+  display:flex;
+  align-items:center;
+}
+.sidebar{
+  background:linear-gradient(180deg, rgba(10,20,37,.98), rgba(11,19,34,.96));
+  color:#dce7f8;
+  border-right:1px solid rgba(255,255,255,.06);
+  padding:18px 16px 20px;
+}
+.sidebar-brand{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:16px 14px;
+  margin-bottom:16px;
+}
+.sidebar h2,.sidebar .version,.sidebar-title{color:#dce7f8;}
+.sidebar-title{opacity:.7;}
+.nav-btn,.theme-btn,.logout-mini{min-height:46px;border-radius:14px;font-weight:800;}
+.nav-btn,.theme-btn{color:#dce7f8;}
+.nav-btn:hover,.theme-btn:hover{background:rgba(255,255,255,.08);}
+.nav-btn.active{background:linear-gradient(135deg, rgba(15,98,254,.22), rgba(91,140,255,.10));color:#fff;box-shadow:inset 0 0 0 1px rgba(138,170,255,.24);}
+.theme-btn{background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);}
+.sidebar .logout-mini{background:linear-gradient(135deg,#ef4444,#dc2626);}
+.main{padding:22px 24px 36px;}
+.page-header{position:sticky;top:calc(var(--topbar-h) + 6px);z-index:10;background:rgba(238,243,248,.72);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.35);box-shadow:var(--shadow);border-radius:20px;padding:16px 18px;margin-bottom:18px;}
+body.dark .page-header{background:rgba(7,17,31,.72);border-color:rgba(255,255,255,.05);}
+.page-header-main h1{font-size:30px;}
+.page-header-main p{font-size:14px;max-width:720px;}
+.soft-action{border-radius:14px;padding:11px 15px;font-weight:800;box-shadow:0 8px 18px rgba(15,23,42,.06);}
+.card{border-radius:20px;padding:20px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.65);}
+body.dark .card{border-color:rgba(255,255,255,.04);}
+.card h2,.card h3{letter-spacing:-.02em;}
+.grid{gap:16px;}
+.metric-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin:18px 0;}
+.metric-card{position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(247,249,252,.98));border:1px solid rgba(15,98,254,.10);border-radius:20px;padding:18px;box-shadow:var(--shadow);}
+body.dark .metric-card{background:linear-gradient(180deg, rgba(15,27,45,.95), rgba(12,22,38,.98));border-color:rgba(91,140,255,.12);}
+.metric-card::after{content:'';position:absolute;inset:auto -24px -24px auto;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle, rgba(15,98,254,.14), transparent 70%);}
+.metric-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+.metric-value{font-size:34px;font-weight:900;line-height:1.05;letter-spacing:-.04em;margin-top:12px;}
+.metric-helper{margin-top:8px;font-size:13px;color:var(--muted);line-height:1.5;}
+.ops-hero{display:grid;grid-template-columns:1.5fr .9fr;gap:18px;margin-bottom:18px;}
+.hero-card{background:linear-gradient(135deg,#0d1f3a 0%, #0f2c54 55%, #15407b 100%);color:#fff;border-radius:24px;padding:26px;box-shadow:0 24px 48px rgba(15,23,42,.22);position:relative;overflow:hidden;}
+.hero-card::before{content:'';position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,.18), transparent 66%);}
+.hero-card h2{font-size:30px;margin:0 0 8px;max-width:540px;position:relative;z-index:1;}
+.hero-card p{margin:0;color:rgba(255,255,255,.82);line-height:1.7;max-width:650px;position:relative;z-index:1;}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;position:relative;z-index:1;}
+.hero-action{border:none;border-radius:14px;background:#fff;color:#0f2c54;padding:12px 16px;font-weight:800;cursor:pointer;}
+.hero-action.ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.14);}
+.hero-side{display:grid;gap:16px;}
+.quick-card{background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,250,252,.98));border-radius:22px;border:1px solid rgba(15,98,254,.12);box-shadow:var(--shadow);padding:20px;}
+body.dark .quick-card{background:linear-gradient(180deg, rgba(15,27,45,.95), rgba(12,22,38,.98));border-color:rgba(91,140,255,.10);}
+.quick-card h3{margin:0 0 10px;}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px;}
+.quick-link{border:none;border-radius:14px;padding:14px;text-align:left;background:var(--card-soft);color:var(--text);font-weight:800;cursor:pointer;box-shadow:inset 0 0 0 1px var(--line);}
+.quick-link span{display:block;font-weight:600;font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45;}
+.dashboard-split{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:start;}
+.list-card .card-soft-item{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;background:var(--card-soft);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:12px;}
+.card-soft-item strong{display:block;font-size:14px;}
+.card-soft-item small{display:block;color:var(--muted);line-height:1.6;margin-top:4px;}
+.section-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900;margin-bottom:8px;}
+.table-wrap{border-radius:16px;}
+th,td{padding:12px 12px;}
+input,select,textarea{border-radius:14px;min-height:46px;}
+button.primary,button.secondary,button.danger,button.print{border-radius:14px;padding:12px 16px;}
+.notice-dev,.alerta-box,.alerta-vazio,.expedicao-aviso-ok,.expedicao-aviso-xpress,.expedicao-aviso-mercado,.expedicao-aviso-direta,.expedicao-aviso-erro{border-radius:16px;}
+.empty-state{background:var(--card-soft);border:1px dashed var(--line);border-radius:16px;padding:16px;color:var(--muted);}
+#dashboardAlertas .alerta-box,#dashboardAlertas .alerta-vazio{margin-top:12px;}
+@media (max-width:1200px){.metric-grid{grid-template-columns:repeat(3,minmax(0,1fr));}.ops-hero,.dashboard-split{grid-template-columns:1fr;}}
+@media (max-width:980px){.page-header{top:10px;}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.topbar{padding:10px 14px;}}
+@media (max-width:640px){.metric-grid,.quick-grid{grid-template-columns:1fr;}.hero-card{padding:22px 18px;}.hero-card h2{font-size:26px;}.metric-value{font-size:28px;}.main{padding:14px 14px 28px;}}
+
+
+
+/* ===== MOBILE FIX BY GPT ===== */
+.mobile-menu-btn{
+  display:none;
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:12px;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  font-size:22px;
+  font-weight:900;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+.mobile-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(2,10,23,.46);
+  backdrop-filter:blur(3px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease;
+  z-index:1190;
+}
+body.sidebar-open .mobile-backdrop{
+  opacity:1;
+  pointer-events:auto;
+}
+.mobile-quick-nav{
+  display:none;
+}
+@media (max-width: 980px){
+  html,body{overflow-x:hidden;}
+  .mobile-menu-btn{display:inline-flex;}
+  .topbar{
+    position:sticky;
+    top:0;
+    min-height:68px;
+    padding:10px 12px;
+    align-items:center;
+    flex-wrap:nowrap;
+    gap:10px;
+  }
+  .topbar-left{min-width:0;flex:1;gap:10px;}
+  .topbar-right{display:none;}
+  .brand{min-width:0;}
+  .brand > div:last-child{min-width:0;}
+  .brand > div:last-child div:last-child{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:42vw;
+  }
+  .topbar-nav{
+    display:none;
+  }
+  .sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:min(86vw, 320px);
+    height:100dvh;
+    margin-top:0;
+    padding-top:88px;
+    transform:translateX(-102%);
+    transition:transform .28s ease;
+    z-index:1195;
+    border-right:1px solid rgba(255,255,255,.08);
+    border-bottom:none;
+    box-shadow:18px 0 48px rgba(0,0,0,.28);
+  }
+  body.sidebar-open .sidebar{transform:translateX(0);}
+  .main{
+    margin-left:0;
+    margin-top:0;
+    padding:14px 12px 92px;
+    width:100%;
+  }
+  .page-header{
+    position:static;
+    padding:14px;
+    border-radius:18px;
+  }
+  .page-header-main h1{font-size:24px;}
+  .page-header-actions,
+  .hero-actions,
+  .prod-actions,
+  .inline-actions{
+    display:grid;
+    grid-template-columns:1fr;
+    width:100%;
+  }
+  .soft-action,
+  .hero-action,
+  button.primary,
+  button.secondary,
+  button.danger,
+  button.print{
+    width:100%;
+    margin-right:0;
+  }
+  .ops-hero,
+  .dashboard-split,
+  .config-shell,
+  .users-toolbar,
+  .help-grid,
+  .expedicao-toolbar,
+  .pedido-compra-grid,
+  .summary-box,
+  .metric-grid,
+  .quick-grid,
+  .inline-grid{
+    grid-template-columns:1fr !important;
+  }
+  .card,
+  .quick-card,
+  .metric-card,
+  .hero-card,
+  .config-box,
+  .field,
+  .help-item,
+  .pedido-compra-box{
+    padding:16px;
+    border-radius:18px;
+  }
+  .card h2,.card h3,.quick-card h3,.hero-card h2{word-break:break-word;}
+  .table-wrap{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  table{
+    min-width:680px;
+  }
+  th,td{
+    font-size:12px;
+    padding:10px 8px;
+  }
+  input,select,textarea{
+    min-height:48px;
+    font-size:16px;
+  }
+  #loginTela{padding:14px;}
+  #loginTela > div{max-width:none;padding:22px 18px;}
+  #notificacao{
+    width:calc(100% - 24px);
+    top:78px;
+    left:12px;
+    transform:none;
+  }
+  #notificacao.show{transform:none;}
+  .estoque-topbar{align-items:stretch;}
+  #buscaEstoque{max-width:none;}
+  #estoqueLista{grid-template-columns:1fr;}
+  .estoque-card{padding:14px;}
+  .estoque-card-header{align-items:center;}
+  .estoque-total{font-size:24px;}
+  #ultimoCodigoExpedicao,
+  #ultimaLeituraExpedicao,
+  #preferenciaShopee,
+  .stat,
+  .metric-value{
+    font-size:clamp(22px, 6vw, 30px);
+  }
+  .mobile-quick-nav{
+    position:fixed;
+    left:10px;
+    right:10px;
+    bottom:10px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    padding:10px;
+    border-radius:18px;
+    background:rgba(8,18,37,.92);
+    backdrop-filter:blur(12px);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+    z-index:1180;
+  }
+  .mobile-quick-nav button{
+    border:none;
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    border-radius:12px;
+    padding:10px 6px;
+    font-size:11px;
+    font-weight:800;
+    line-height:1.2;
+    cursor:pointer;
+  }
+  .mobile-quick-nav button.active{
+    background:#0f62fe;
+  }
+}
+@media (max-width: 640px){
+  .brand > div:last-child div:first-child{font-size:14px;}
+  .brand > div:last-child div:last-child{font-size:11px;max-width:44vw;}
+  .page-header-main p,
+  .section-subtitle,
+  .prod-note,
+  .hero-card p,
+  .config-box p,
+  .help-item p,
+  .field small,
+  .metric-helper{font-size:13px;}
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+
+</head>
+<body>
+<div id="notificacao"></div>
+<div id="loginTela">
+<div>
+<div style="display:flex;justify-content:center;margin-bottom:14px;"><img alt="Logo S.A Confecções" src="Logo SA.png" style="width:64px;height:64px;object-fit:contain;background:#fff;border-radius:16px;padding:8px;box-shadow:0 8px 20px rgba(0,0,0,.08);"/></div>
+<h2>S.A Confecções | Login</h2>
+<input id="loginUsuario" placeholder="Usuário"/>
+<input id="loginSenha" placeholder="Senha" type="password"/>
+<button class="primary" onclick="login()">Entrar</button>
+</div>
+</div>
+<header class="topbar">
+<div class="topbar-left">
+<button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Abrir menu">☰</button>
+<div class="brand">
+<div class="brand-badge"><img alt="Logo S.A Confecções" src="Logo SA.png"/></div>
+<div>
+<div style="font-weight:900;line-height:1">S.A Confecções</div>
+<div style="font-size:12px;opacity:.72;font-weight:600">ERP operacional • vendas • estoque • expedição</div>
+</div>
+</div>
+<nav class="topbar-nav">
+<a class="topbar-link active" data-topnav="dashboard" href="javascript:void(0)" onclick="show('dashboard')">Painel</a>
+<a class="topbar-link" data-topnav="estoque" href="javascript:void(0)" onclick="show('estoque')">Estoque</a>
+<a class="topbar-link" data-topnav="pedidos" href="javascript:void(0)" onclick="abrirPedidosProtegido()">Pedidos</a>
+<a class="topbar-link" data-topnav="producao" href="javascript:void(0)" onclick="show('producao')">Produção</a>
+</nav>
+</div>
+<div class="topbar-right">
+<div class="topbar-chip" id="topbarUsuario" onclick="show('config')" style="cursor:pointer;">Rodolfo</div>
+<div class="topbar-chip" onclick="show('ajuda')" style="cursor:pointer;">Suporte</div>
+</div>
+</header>
+<div class="mobile-backdrop" id="mobileBackdrop"></div>
+<div class="sidebar" id="sidebar">
+<div class="sidebar-brand">
+<div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.7;font-weight:800;margin-bottom:8px">Central operacional</div>
+<h2 id="bemVindo" style="margin-bottom:8px">S.A Confecções | BEM-VINDO!</h2>
+<div style="font-size:13px;line-height:1.6;opacity:.78">Sistema reformulado para manter a rotina da empresa, com leitura rápida, mais organização visual e operação estável.</div>
+</div>
+<div class="sidebar-title">Operação</div>
+<button class="nav-btn" data-section="dashboard" onclick="show('dashboard')">Dashboard</button>
+<button class="nav-btn" data-section="pedidos" onclick="abrirPedidosProtegido()">Pedidos</button>
+<button class="nav-btn" data-section="estoque" onclick="show('estoque')">Estoque</button>
+<button class="nav-btn" data-section="expedicao" onclick="show('expedicao')">Expedição</button>
+<button class="nav-btn" data-section="packlist" onclick="show('packlist')">Packlist</button>
+<button class="nav-btn" data-section="pedidoCompra" onclick="show('pedidoCompra')">Pedido de Compra</button>
+<button class="nav-btn" data-section="producao" onclick="show('producao')">Produção</button>
+<div class="sidebar-title">Controle</div>
+<button class="nav-btn" data-section="auditoria" onclick="show('auditoria')">Auditoria</button>
+<button class="nav-btn" data-section="backup" onclick="show('backup')">Backup</button>
+<button class="nav-btn" data-section="config" onclick="show('config')">Configurações</button>
+<div class="version"><strong>S.A Confecções</strong><br/>Gestão inteligente para sua empresa<br/><span style="font-size:11px">v9.0 Professional</span></div>
+<div class="sidebar-actions">
+<button class="theme-btn" id="btnTema">Alternar tema</button>
+<button class="logout-mini" id="btnLogout">Sair do sistema</button>
+</div>
+</div>
+<div class="main">
+<div class="page-header">
+<div class="page-header-main">
+<h1 id="pageTitle">Dashboard</h1>
+<p id="pageSubtitle">Visual reformulado para a operação da S.A, mantendo os módulos, a lógica de uso e o fluxo real da empresa.</p>
+</div>
+<div class="page-header-actions">
+<button class="soft-action" onclick="abrirPedidosProtegido()" type="button">Abrir pedidos</button>
+<button class="soft-action" onclick="show('expedicao')" type="button">Ir para expedição</button>
+</div>
+</div>
+<!-- DASHBOARD -->
+<section id="dashboard">
+<div class="ops-hero">
+<div class="hero-card">
+<div class="section-kicker" style="color:rgba(255,255,255,.72)">Visão geral da operação</div>
+<h2>Controle profissional da rotina da S.A, sem perder o jeito que vocês já trabalham.</h2>
+<p>Este layout foi reestruturado para deixar o uso mais rápido no dia a dia: leitura melhor, blocos mais claros, ações mais visíveis e continuidade dos módulos que já fazem parte da operação da empresa.</p>
+<div class="hero-actions">
+<button class="hero-action" onclick="abrirPedidosProtegido()">Lançar pedido</button>
+<button class="hero-action ghost" onclick="show('packlist')">Abrir packlist</button>
+<button class="hero-action ghost" onclick="show('pedidoCompra')">Pedido de compra</button>
+</div>
+</div>
+<div class="hero-side">
+<div class="quick-card">
+<div class="section-kicker">Acessos rápidos</div>
+<h3>Atalhos da operação</h3>
+<div class="quick-grid">
+<button class="quick-link" onclick="show('estoque')">Estoque<span>Entradas, saídas e níveis por produto</span></button>
+<button class="quick-link" onclick="show('expedicao')">Expedição<span>Bipagem, contagem e organização da saída</span></button>
+<button class="quick-link" onclick="show('producao')">Produção<span>Risco, corte, costura e romaneios</span></button>
+<button class="quick-link" onclick="show('backup')">Backup<span>Exportar, importar e salvar dados</span></button>
+</div>
+</div>
+<div class="quick-card">
+<div class="section-kicker">Direcionamento</div>
+<h3>Como o painel foi pensado</h3>
+<div class="card-soft-item" style="margin-top:0">
+<div>
+<strong>Mais leitura no celular e no monitor</strong>
+<small>Os blocos agora têm respiro melhor, contraste mais profissional e navegação mais clara entre os módulos.</small>
+</div>
+</div>
+<div class="card-soft-item">
+<div>
+<strong>Fluxo preservado</strong>
+<small>Pedidos, estoque, packlist, produção, expedição, auditoria e backup continuam no sistema com a mesma lógica de uso.</small>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="metric-grid">
+<div class="metric-card"><div class="metric-label">Pedidos do dia</div><div class="metric-value" id="pedidosHoje">0</div><div class="metric-helper">Pedidos lançados na rotina atual.</div></div>
+<div class="metric-card"><div class="metric-label">Peças vendidas</div><div class="metric-value" id="pecasVendidas">0</div><div class="metric-helper">Volume total separado nas vendas registradas.</div></div>
+<div class="metric-card"><div class="metric-label">Peças em estoque</div><div class="metric-value" id="pecasEstoque">0</div><div class="metric-helper">Saldo geral disponível no estoque.</div></div>
+<div class="metric-card"><div class="metric-label">Mais vendido</div><div class="metric-value" id="maisVendidos">-</div><div class="metric-helper">Produto com maior saída no período atual.</div></div>
+<div class="metric-card"><div class="metric-label">Alertas de estoque</div><div class="metric-value" id="alertasEstoque">0</div><div class="metric-helper">Itens que pedem atenção imediata.</div></div>
+</div>
+<div class="dashboard-split">
+<div class="card list-card" id="dashboardAlertas">
+<div class="section-kicker">Monitoramento</div>
+<h3>Alertas de estoque</h3>
+<p class="section-subtitle">Veja aqui os itens com risco de ruptura para agir rápido antes de afetar venda, separação ou produção.</p>
+<div id="listaAlertasDashboard"></div>
+</div>
+<div class="card list-card">
+<div class="section-kicker">Boas práticas</div>
+<h3>Rotina recomendada</h3>
+<div class="card-soft-item">
+<div>
+<strong>1. Comece por pedidos e expedição</strong>
+<small>Garanta fluxo de saída, depois valide necessidade de compra e produção.</small>
+</div>
+</div>
+<div class="card-soft-item">
+<div>
+<strong>2. Use o packlist como conferência</strong>
+<small>Ele ajuda a reduzir erro operacional e padroniza a separação dos itens.</small>
+</div>
+</div>
+<div class="card-soft-item">
+<div>
+<strong>3. Feche o dia com backup</strong>
+<small>Exporte os dados e mantenha uma cópia segura da operação sempre atualizada.</small>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- PEDIDOS -->
+<section class="hidden" id="pedidos">
+<div class="notice-dev">Integração futura com UpSeller. Esta área está protegida por senha master e será usada para receber pedidos automaticamente em breve.</div>
+<div class="card">
+<h2>Novo Pedido</h2>
+<div class="inline-grid">
+<div>
+<label>Código</label>
+<input id="pedidoCodigo" placeholder="Ex: PED-001"/>
+</div>
+<div>
+<label>Cliente</label>
+<input id="pedidoCliente" placeholder="Nome do cliente"/>
+</div>
+<div>
+<label>Produto</label>
+<select id="pedidoProduto"></select>
+</div>
+<div>
+<label>Cor</label>
+<select id="pedidoCor"></select>
+</div>
+<div>
+<label>Tamanho</label>
+<select id="pedidoTamanho"></select>
+</div>
+<div>
+<label>Quantidade</label>
+<input id="pedidoQtd" min="1" type="number"/>
+</div>
+<div>
+<label>Status</label>
+<select id="pedidoStatus">
+<option value="PENDENTE">PENDENTE</option>
+<option value="SEPARANDO">SEPARANDO</option>
+<option value="CONCLUIDO">CONCLUIDO</option>
+<option value="CANCELADO">CANCELADO</option>
+</select>
+</div>
+<div>
+<label>Data</label>
+<input id="pedidoData" type="date"/>
+</div>
+</div>
+<label>Observações</label>
+<textarea id="pedidoObs" placeholder="Observações do pedido"></textarea>
+<button class="primary" onclick="criarPedido()">Salvar Pedido</button>
+</div>
+<div class="card">
+<div class="inline-grid">
+<div>
+<label>Buscar</label>
+<input id="filtroPedidoBusca" oninput="renderPedidosModulo()" placeholder="Código, cliente ou produto"/>
+</div>
+<div>
+<label>Status</label>
+<select id="filtroPedidoStatus" onchange="renderPedidosModulo()">
+<option value="">Todos</option>
+<option value="PENDENTE">PENDENTE</option>
+<option value="SEPARANDO">SEPARANDO</option>
+<option value="CONCLUIDO">CONCLUIDO</option>
+<option value="CANCELADO">CANCELADO</option>
+</select>
+</div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Cliente</th>
+<th>Produto</th>
+<th>Cor</th>
+<th>Tamanho</th>
+<th>Qtd</th>
+<th>Status</th>
+<th>Data</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody id="listaPedidosModulo"></tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- PACKLIST -->
+<section class="hidden" id="packlist">
+<div class="card">
+<h2>Criar Packlist</h2>
+<label>Produto</label><select id="produto"></select>
+<label>Cor</label><select id="cor"></select>
+<label>Tamanho</label><select id="tamanho"></select>
+<label>Quantidade</label><input id="quantidade" type="number"/>
+<button class="primary" onclick="addPedidoPacklist()">Adicionar ao Packlist</button>
+</div>
+<div class="card">
+<h3>Itens do Packlist</h3>
+<button class="print" onclick="imprimirPacklist()">🖨 Imprimir / Salvar / Excluir Packlist</button>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Produto</th>
+<th>Cor</th>
+<th>Tamanho</th>
+<th>Qtd</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody id="listaPacklist"></tbody>
+<tfoot id="totaisPacklist"></tfoot>
+</table>
+</div>
+<div id="packlistRodape" style="margin-top:20px;">
+        Data: <span id="dataPrint"></span><br/><br/>
+        Assinatura: ______________________________
+      </div>
+</div>
+</section>
+<!-- ESTOQUE -->
+<section class="hidden" id="estoque">
+<div class="card">
+<h2>Entrada / Saída de Produtos</h2>
+<label>Produto:</label><select id="produtoMov"></select>
+<label>Cor:</label><select id="corMov"></select>
+<label>Tamanho:</label><select id="tamMov"></select>
+<label>Quantidade:</label><input id="qtdMov" placeholder="Quantidade" type="number"/><br/><br/>
+<button class="primary" onclick="entrada()">Entrada no estoque</button>
+<button class="primary" onclick="saida()">Saída do estoque</button>
+<button class="primary" onclick="novoProduto()">➕ Novo Produto</button>
+<button class="secondary" onclick="novaCor()">🎨 Nova Cor</button>
+<button class="secondary" onclick="removerCor()">🧽 Remover Cor</button>
+<button class="danger" data-danger-scope="delete" onclick="retirarProduto()">🗑 Retirar Produto</button>
+</div>
+<div class="estoque-topbar">
+<input id="buscaEstoque" oninput="renderEstoque()" placeholder="🔎 Pesquisar produto no estoque..." type="text"/>
+</div>
+<div id="estoqueLista"></div>
+<div class="estoque-footer">
+<button class="danger" data-danger-scope="delete" onclick="zerarEstoque()">⚠ Zerar Estoque</button>
+</div>
+</section>
+<!-- PEDIDO DE COMPRA -->
+<section class="hidden" id="pedidoCompra">
+<div class="card">
+<h2>Pedido de Compra</h2>
+<p class="section-subtitle">Informe o que <strong>já tem em estoque</strong> e o que <strong>vai precisar</strong>. A lista e a planilha saem mostrando somente o que deve ser <strong>comprado</strong>, separado em <strong>M</strong> e <strong>GG</strong> para a mesma peça e cor.</p>
+<div class="inline-grid">
+<div>
+<label>Peça</label>
+<select id="compraProduto"></select>
+</div>
+<div>
+<label>Cor</label>
+<select id="compraCor"></select>
+</div>
+</div>
+<div class="pedido-compra-grid">
+<div class="pedido-compra-box">
+<h4>Tenho em estoque</h4>
+<div class="inline-grid">
+<div>
+<label>M</label>
+<input id="compraEstoqueM" min="0" type="number" value="0"/>
+</div>
+<div>
+<label>GG</label>
+<input id="compraEstoqueGG" min="0" type="number" value="0"/>
+</div>
+</div>
+</div>
+<div class="pedido-compra-box">
+<h4>Vou precisar</h4>
+<div class="inline-grid">
+<div>
+<label>M</label>
+<input id="compraM" min="0" type="number" value="0"/>
+</div>
+<div>
+<label>GG</label>
+<input id="compraGG" min="0" type="number" value="0"/>
+</div>
+</div>
+</div>
+</div>
+<label>Observação</label>
+<textarea id="compraObs" placeholder="Ex.: reposição urgente, pedido antecipado, fornecedor específico"></textarea>
+<div style="margin-top:8px;">
+<button class="primary" onclick="adicionarPedidoCompra()">Adicionar item</button>
+<button class="secondary" onclick="limparFormularioPedidoCompra()">Limpar</button>
+<button class="print" onclick="imprimirPedidoCompra()">🖨 Imprimir Pedido de Compra</button>
+<button class="print" onclick="exportarPedidoCompraExcel()">📊 Exportar Planilha</button>
+<button class="danger" data-danger-scope="delete" onclick="limparPedidoCompra()">🗑 Limpar Lista</button>
+</div>
+</div>
+<div class="grid">
+<div class="card"><h3>Itens na lista</h3><div class="stat" id="pedidoCompraItens">0</div></div>
+<div class="card"><h3>Total informado em estoque</h3><div class="stat" id="pedidoCompraTotalPecas">0</div></div>
+<div class="card">
+<h3>Total a comprar</h3>
+<div id="pedidoCompraTotalComprar" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;">
+  <div><div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px;">M</div><div class="stat" style="font-size:30px;" id="pedidoCompraTotalComprarM">0</div></div>
+  <div><div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px;">GG</div><div class="stat" style="font-size:30px;" id="pedidoCompraTotalComprarGG">0</div></div>
+  <div style="min-width:120px;"><div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px;">Total geral</div><div class="stat" style="font-size:30px;" id="pedidoCompraTotalComprarGeral">0</div></div>
+</div>
+</div>
+</div>
+<div class="card">
+<h3>Lista de compra</h3>
+<p class="section-subtitle">A tabela abaixo mostra só o que precisa ser comprado. O estoque continua registrado no sistema para conferência, mas não sai na planilha.</p>
+<div class="table-wrap">
+<table class="pedido-compra-table">
+<thead>
+<tr><th>#</th><th>Peça</th><th>Cor</th><th>M</th><th>GG</th><th>Total a comprar</th><th>Obs</th><th>Ação</th></tr>
+</thead>
+<tbody id="listaPedidoCompra"></tbody>
+<tfoot id="totaisPedidoCompra"></tfoot>
+</table>
+</div>
+</div>
+</section>
+<!-- PRODUÇÃO -->
+<section class="hidden" id="producao">
+<div class="prod-shell">
+<div class="prod-tabs">
+<button class="prod-tab-btn active" data-prod-tab="romaneios" onclick="showProdTab('romaneios')">Romaneios de Produção</button>
+<button class="prod-tab-btn" data-prod-tab="recebimento" onclick="showProdTab('recebimento')">Gerar Romaneio de Recebimento</button>
+</div>
+<div class="prod-panel active" id="prodTab-romaneios">
+<div class="card">
+<h2>Produção</h2>
+<div class="inline-grid">
+<div>
+<label>ID da Produção</label>
+<input id="prod_id" placeholder="Ex: PROD-001"/>
+</div>
+<div>
+<label>Data Início</label>
+<input id="prod_data_inicio" type="date"/>
+</div>
+<div>
+<label>Data Fim</label>
+<input id="prod_data_fim" type="date"/>
+</div>
+<div>
+<label>Modelo / Tecido</label>
+<input id="prod_modelo_tecido" placeholder="Ex: Babylook Viscolycra"/>
+</div>
+<div>
+<label>Local de Produção</label>
+<input id="prod_local_producao" placeholder="Ex: Oficina Central"/>
+</div>
+<div>
+<label>Responsável</label>
+<input id="prod_responsavel" placeholder="Nome do responsável"/>
+</div>
+</div>
+</div>
+<div class="card">
+<h3>Risco e Corte</h3>
+<div class="inline-grid">
+<div>
+<label>Local Corte</label>
+<input id="rc_local_corte" placeholder="Ex: Corte Interno"/>
+</div>
+<div>
+<label>Ampliação</label>
+<input id="rc_ampliacao_nome" placeholder="Nome da ampliação"/>
+</div>
+<div>
+<label>Risco</label>
+<input id="rc_risco_nome" placeholder="Nome do risco"/>
+</div>
+<div>
+<label>Valor Corte</label>
+<input id="rc_corte" placeholder="0,00" step="0.01" type="number"/>
+</div>
+<div>
+<label>Valor Risco</label>
+<input id="rc_risco_valor" placeholder="0,00" step="0.01" type="number"/>
+</div>
+<div>
+<label>Valor Ampliação</label>
+<input id="rc_ampliacao_valor" placeholder="0,00" step="0.01" type="number"/>
+</div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Cor</th>
+<th>P</th>
+<th>M</th>
+<th>G</th>
+<th>GG</th>
+<th>Outros</th>
+<th>Observação</th>
+<th>Subtotal</th>
+</tr>
+</thead>
+<tbody id="rc_tbody"></tbody>
+</table>
+</div>
+<div class="summary-box">
+<div class="summary-item">
+              Total Peças
+              <strong id="rc_total_pecas_text">0</strong>
+<input class="hidden" id="rc_total_pecas"/>
+</div>
+<div class="summary-item">
+              Valor Final
+              <strong id="rc_valor_final_text">R$ 0,00</strong>
+<input class="hidden" id="rc_valor_final"/>
+</div>
+<div class="summary-item">
+              Valor por Peça
+              <strong id="rc_valor_peca_text">R$ 0,00</strong>
+<input class="hidden" id="rc_valor_peca"/>
+</div>
+</div>
+</div>
+<div class="card">
+<h3>Romaneio Costura</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Cor</th>
+<th>P</th>
+<th>M</th>
+<th>G</th>
+<th>GG</th>
+<th>Outros</th>
+<th>Observação</th>
+<th>Qtd Total</th>
+</tr>
+</thead>
+<tbody id="pc_tbody"></tbody>
+</table>
+</div>
+<div class="inline-grid">
+<div>
+<label>Quantidade de Rolo</label>
+<input id="pc_qtd_rolo" step="0.01" type="number"/>
+</div>
+<div>
+<label>Transporte</label>
+<input id="pc_transporte" step="0.01" type="number"/>
+</div>
+<div>
+<label>Aviamento</label>
+<input id="pc_aviamento" step="0.01" type="number"/>
+</div>
+</div>
+<div class="summary-box">
+<div class="summary-item">
+              Total de Peças
+              <strong id="pc_total_pecas_text">0</strong>
+<input class="hidden" id="pc_total_pecas"/>
+</div>
+<div class="summary-item">
+              Valor do Tecido
+              <strong id="pc_valor_tecido_text">R$ 0,00</strong>
+<input class="hidden" id="pc_valor_tecido"/>
+</div>
+<div class="summary-item">
+              Valor Costura
+              <strong id="pc_valor_costura_text">R$ 0,00</strong>
+<input class="hidden" id="pc_valor_costura"/>
+</div>
+<div class="summary-item">
+              Corte / Ampliação / Risco
+              <strong id="pc_valor_risco_corte_text">R$ 0,00</strong>
+<input class="hidden" id="pc_valor_risco_corte"/>
+</div>
+<div class="summary-item">
+              Custo Total
+              <strong id="pc_custo_total_text">R$ 0,00</strong>
+<input class="hidden" id="pc_custo_total"/>
+</div>
+<div class="summary-item">
+              Custo Unitário por Peça
+              <strong id="pc_custo_unitario_text">R$ 0,00</strong>
+<input class="hidden" id="pc_custo_unitario"/>
+</div>
+</div>
+<div style="margin-top:18px;">
+<button class="primary" onclick="recalcularProducaoCompleta()">Recalcular</button>
+<button class="primary" onclick="salvarProducaoPlanilha()">Salvar Produção</button>
+<button class="secondary" onclick="limparFormularioProducao()">Limpar</button>
+<button class="print" onclick="exportarProducaoParaPlanilha()">Exportar Planilha Completa</button>
+</div>
+</div>
+<div class="card">
+<h3>Produções Salvas</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Data Início</th>
+<th>Data Fim</th>
+<th>Modelo/Tecido</th>
+<th>Total Peças</th>
+<th>Custo Total</th>
+<th>Custo Unitário</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody id="listaProducao"></tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="prod-panel" id="prodTab-recebimento">
+<div class="card">
+<h2>Gerar Romaneio de Recebimento</h2>
+<p class="prod-note">Esta subpágina gera a planilha de recebimento separada. Os romaneios de produção continuam juntos na planilha principal, e aqui você cria a folha de conferência de entrada para costura finalizada ou retorno da facção.</p>
+<div class="inline-grid">
+<div>
+<label>ID da Produção</label>
+<input id="rec_prod_id" placeholder="Preenchido automaticamente quando houver ID acima"/>
+</div>
+<div>
+<label>Responsável pelo Recebimento</label>
+<input id="rec_responsavel" placeholder="Nome do responsável pelo recebimento"/>
+</div>
+<div>
+<label>Data do Recebimento</label>
+<input id="rec_data" type="date"/>
+</div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Cor</th>
+<th>P</th>
+<th>M</th>
+<th>G</th>
+<th>GG</th>
+<th>Outros</th>
+<th>Defeito</th>
+</tr>
+</thead>
+<tbody id="rec_tbody"></tbody>
+</table>
+</div>
+<div class="prod-actions">
+<button class="primary" onclick="sincronizarRecebimentoDaCostura()">Puxar dados do Romaneio</button>
+<button class="print" onclick="exportarRomaneioRecebimento()">Exportar Romaneio de Recebimento</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- EXPEDIÇÃO -->
+<section class="hidden" id="expedicao">
+<div class="card">
+<h2>Expedição</h2>
+<p class="section-subtitle">Leitura pensada para scanner USB: Mercado Envios agora pode vir como sequência numérica de 11 dígitos. BR entra como Shopee e usa o destino BR ativo.</p>
+<label>Bipar código</label>
+<input id="codigoExpedicao" onkeydown="handleBipExpedicao(event)" placeholder="Bipe ou digite o código e pressione Enter"/>
+<div class="expedicao-toolbar">
+<div class="field">
+<label>Modo de identificação</label>
+<select id="modoExpedicao" onchange="atualizarModoExpedicao()">
+<option value="auto">Automático por prefixo</option>
+<option value="shopee_agencia">BR = Shopee Agência</option>
+<option value="shopee_direta">BR = Shopee Entrega Direta</option>
+<option value="mercado_envios">Forçar Mercado Envios</option>
+<option value="mercado_flex">Forçar Mercado Flex</option>
+</select>
+<small id="textoModoExpedicao">No automático: códigos numéricos com 11 dígitos vão para Mercado Envios. Códigos que começam com BR vão para Shopee no destino BR ativo.</small>
+</div>
+<div class="field">
+<label>Destino BR ativo</label>
+<div class="stat" id="preferenciaShopee">Shopee Agência</div>
+<small>Use esse destino quando os códigos BR mudarem de agência para coleta direta.</small>
+</div>
+<div class="field">
+<label>Último código</label>
+<div class="stat" id="ultimoCodigoExpedicao">--</div>
+</div>
+<div class="field">
+<label>Última leitura</label>
+<div class="stat" id="ultimaLeituraExpedicao">--</div>
+</div>
+</div>
+<div class="expedicao-toolbar" style="margin-top:12px;">
+<div class="field">
+<label>Regras rápidas</label>
+<small><strong>11 dígitos numéricos</strong> = Mercado Envios<br/><strong>BR</strong> = Shopee<br/><strong>Nº</strong> = Mercado Flex (aguardando código!)</small>
+</div>
+<div class="field">
+<label>Controle BR</label>
+<div class="inline-actions">
+<button class="secondary" onclick="setPreferenciaShopee('shopee_agencia')">Usar Shopee Agência</button>
+<button class="secondary" onclick="setPreferenciaShopee('shopee_direta')">Usar Entrega Direta</button>
+</div>
+<small>Troque aqui sem precisar mudar a lógica do sistema inteiro.</small>
+</div>
+</div>
+<div class="alerta-vazio" id="expedicaoAviso" style="margin-top:12px;">Aguardando leitura...</div>
+<div style="margin-top:16px;">
+<button class="primary" onclick="processarCodigoExpedicao()">Adicionar Código</button>
+<button class="secondary" onclick="focarCampoExpedicao()">Focar Scanner</button>
+<button class="print" onclick="imprimirExpedicao()">🖨 Imprimir Expedição</button>
+<button class="danger" data-danger-scope="delete" onclick="limparExpedicao()">🗑 Limpar Expedição</button>
+</div>
+</div>
+<div class="grid">
+<div class="card"><h3>Shopee Xpress (Agência)</h3><div class="stat" id="totalShopeeXpress">0</div></div>
+<div class="card"><h3>Shopee Entrega Direta</h3><div class="stat" id="totalShopeeDireta">0</div></div>
+<div class="card"><h3>Mercado Envios</h3><div class="stat" id="totalMercadoEnvios">0</div></div>
+<div class="card"><h3>Mercado Flex</h3><div class="stat" id="totalMercadoFlex">0</div></div>
+</div>
+<div class="card">
+<h3>Planilha de Expedição</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>#</th><th>Código</th><th>Prefixo</th><th>Tipo</th><th>Caixa / Modalidade</th><th>Data/Hora</th><th>Ação</th></tr>
+</thead>
+<tbody id="listaExpedicao"></tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="hidden" id="ajuda">
+<div class="help-card">
+<h2>Suporte Wolffz Labs</h2>
+<p>A <strong>Wolffz Labs</strong> desenvolve sistemas de gestão inteligentes para empresas que precisam de mais controle, organização e produtividade no dia a dia.</p>
+<div class="help-grid">
+<div class="help-item">
+<h3>Fale com a Wolffz Labs</h3>
+<p><strong>WhatsApp:</strong> 11 97742-2742 (Rodolfo)<br/>
+<strong>E-mail:</strong> mstherodolfoo@gmail.com<br/>
+<strong>Atendimento:</strong> Comercial e suporte do sistema</p>
+</div>
+<div class="help-item">
+<h3>Sobre a plataforma</h3>
+<p><strong>Marca:</strong> Wolffz Labs<br/>
+<strong>Slogan:</strong> Gestão inteligente para sua empresa<br/>
+<strong>Modelo:</strong> Sistema adaptável para diferentes segmentos</p>
+</div>
+<div class="help-item">
+<h3>Personalização</h3>
+<p>Este sistema pode ser configurado com identidade visual, permissões, módulos e fluxos específicos para cada cliente.</p>
+</div>
+<div class="help-item">
+<h3>Implantação</h3>
+<p>Versão local, remota ou em domínio próprio, conforme a estrutura da empresa contratante.</p>
+</div>
+<div class="help-item">
+<h3>Operação</h3>
+<p>Pedidos, estoque, produção, expedição, auditoria, usuários e relatórios podem ser ajustados conforme a rotina do negócio.</p>
+</div>
+<div class="help-item">
+<h3>Precisa deste sistema na sua empresa?</h3>
+<p>Ligue, mande um WhatsApp ou envie um e-mail. Aguardamos você para montar uma versão sob medida para a sua operação.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="hidden" id="config">
+<div class="card">
+<h2>Configurações do Sistema</h2>
+<p style="color:var(--muted);margin-top:6px">Organizei as configurações em subpáginas para ficar mais claro e seguro. As alterações de usuários ficam salvas no navegador e também podem ser sincronizadas no <strong>usuarios.json</strong>.</p>
+<div class="config-shell">
+<aside class="config-side">
+<button class="config-tab-btn active" data-config-tab="usuarios" onclick="showConfigTab('usuarios')">Usuários</button>
+<button class="config-tab-btn" data-config-tab="geral" onclick="showConfigTab('geral')">Geral</button>
+<button class="config-tab-btn" data-config-tab="expedicao" onclick="showConfigTab('expedicao')">Expedição</button>
+<button class="config-tab-btn" data-config-tab="integracoes" onclick="showConfigTab('integracoes')">Integrações</button>
+</aside>
+<div class="config-content">
+<div class="config-panel active" id="configTab-usuarios">
+<div class="users-head">
+<div>
+<h3 style="margin:0">Usuários do sistema</h3>
+<small>Somente o Rodolfo pode criar e remover usuários. O usuário master é protegido.</small>
+</div>
+<span class="master-badge">Usuário master: Rodolfo</span>
+</div>
+<div class="card-soft-block" id="masterUserPanel">
+<div class="users-toolbar">
+<div class="field">
+<label>Cadastro de usuário</label>
+<div class="inline-grid" style="margin-top:10px">
+<div>
+<label>Nome do usuário</label>
+<input id="novoUsuarioNome" placeholder="Ex.: Paula"/>
+</div>
+<div>
+<label>Senha</label>
+<input id="novoUsuarioSenha" placeholder="Digite a senha"/>
+</div>
+<div>
+<label>Perfil</label>
+<select id="novoUsuarioNivel">
+<option value="ADMIN">ADMIN</option>
+<option value="OPER">OPER</option>
+</select>
+</div>
+</div>
+<div class="inline-actions wrap" style="margin-top:10px">
+<button class="primary" data-master-only="true" onclick="adicionarUsuarioFormulario()">Salvar novo usuário</button>
+</div>
+</div>
+<div class="field">
+<label>Sincronização do arquivo</label>
+<div class="inline-actions wrap" style="margin-top:10px">
+<button class="secondary" data-master-only="true" onclick="conectarUsuariosJson()">Conectar usuarios.json</button>
+<button class="secondary" data-master-only="true" onclick="exportarUsuariosJson()">Exportar usuarios.json</button>
+</div>
+<div class="user-file-status" id="usuariosJsonStatus">usuarios.json não conectado. As alterações ficam salvas neste navegador e podem ser exportadas.</div>
+<small>Para gravar no arquivo físico de forma permanente, conecte o <strong>usuarios.json</strong> ou exporte o arquivo atualizado após as mudanças.</small>
+</div>
+</div>
+</div>
+<div class="empty-state hidden" id="masterUserPanelBlocked" style="margin-top:12px">
+<strong>Gerenciamento de usuários disponível apenas para Rodolfo.</strong>
+<div>Você pode visualizar a lista abaixo, mas só o usuário master pode criar ou remover contas.</div>
+</div>
+<div class="table-wrap" style="margin-top:14px">
+<table>
+<thead>
+<tr><th>Usuário</th><th>Perfil</th><th>Origem</th><th>Ações</th></tr>
+</thead>
+<tbody id="listaUsuarios"></tbody>
+</table>
+</div>
+</div>
+<div class="config-panel" id="configTab-geral">
+<div class="config-info-grid">
+<div class="config-box">
+<h3>Dados gerais</h3>
+<div class="inline-grid">
+<div>
+<label>Nome da Empresa</label>
+<input id="empresaNome" placeholder="Nome da empresa"/>
+</div>
+<div>
+<label>Limite de Estoque Baixo</label>
+<input id="limiteEstoqueBaixo" min="1" type="number"/>
+</div>
+</div>
+<div class="inline-actions" style="margin-top:10px">
+<button class="primary" onclick="salvarConfiguracoesGerais()">Salvar configuração</button>
+</div>
+</div>
+<div class="config-box">
+<h3>Segurança</h3>
+<ul>
+<li>A aba Pedidos continua protegida por senha master.</li>
+<li>O usuário Rodolfo não pode ser removido.</li>
+<li>Logs e ações críticas permanecem auditáveis no sistema.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="config-panel" id="configTab-expedicao">
+<div class="config-info-grid">
+<div class="config-box">
+<h3>Regras da expedição</h3>
+<ul>
+<li>Shopee Xpress → agência.</li>
+<li>Entrega Direta → fluxo configurável pela empresa.</li>
+<li>Mercado Envios → agência ou Correios.</li>
+<li>Mercado Flex → fluxo configurável pela empresa.</li>
+</ul>
+</div>
+<div class="config-box">
+<h3>Operação</h3>
+<p>O sistema foi mantido scanner-first, com foco no campo de bipagem e memória para códigos ambíguos.</p>
+</div>
+</div>
+</div>
+<div class="config-panel" id="configTab-integracoes">
+<div class="config-info-grid">
+<div class="config-box">
+<h3>Integrações futuras</h3>
+<p>Espaço reservado para integração com UpSeller, pedidos, sincronização remota e API futura.</p>
+</div>
+<div class="config-box">
+<h3>Persistência</h3>
+<p>No HTML local, o navegador salva os dados deste sistema. Para manter os usuários em arquivo físico, conecte ou exporte o <strong>usuarios.json</strong>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- AUDITORIA -->
+<section class="hidden" id="auditoria">
+<div class="card">
+<h2>Logs do Sistema</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Data / Hora</th><th>Usuário</th><th>Ação</th><th>Detalhes</th></tr>
+</thead>
+<tbody id="listaLogs"></tbody>
+</table>
+</div>
+<button class="danger" data-danger-scope="master" onclick="limparLogs()">🗑 Limpar Logs</button>
+</div>
+</section>
+<!-- BACKUP -->
+<section class="hidden" id="backup">
+<div class="card">
+<h2>Backup / Importação de Dados</h2>
+<button class="primary" onclick="exportarDados()">💾 Exportar Dados JSON</button>
+<input id="importFile" style="margin-top:10px;" type="file"/>
+<button class="primary" onclick="importarDados()">📂 Importar Dados JSON</button>
+<button class="primary" onclick="saveDados()">💾 Salvar Dados (Portátil)</button>
+<button class="primary" onclick="loadDados()">📂 Carregar Dados (Portátil)</button>
+</div>
+</section>
+</div>
+<div class="mobile-quick-nav" id="mobileQuickNav">
+<button type="button" data-mobile-section="dashboard" onclick="show('dashboard')">Painel</button>
+<button type="button" data-mobile-section="estoque" onclick="show('estoque')">Estoque</button>
+<button type="button" data-mobile-section="expedicao" onclick="show('expedicao')">Expedição</button>
+<button type="button" data-mobile-section="config" onclick="show('config')">Config</button>
+</div>
+<script>
+
+const __volatileStore = Object.create(null);
+const localStorage = {
+  getItem(key){ return Object.prototype.hasOwnProperty.call(__volatileStore, key) ? __volatileStore[key] : null; },
+  setItem(key, value){ __volatileStore[key] = String(value); },
+  removeItem(key){ delete __volatileStore[key]; },
+  clear(){ for(const k in __volatileStore) delete __volatileStore[k]; }
+};
+window.__saVolatileStore = __volatileStore;
+let dadosFileHandle = null;
+
+const defaults = {
+  empresaNome: "Nome da empresa",
+  limiteEstoqueBaixo: 3,
+  produtosPadrao: ["Calça Pantalona","Blusa Manga Curta Gola V","Blusa Manga Longa","Blusa Regata","Vestido","Macacão"],
+  cores: ["Preto","Branco","Verde","Vermelho","Pink"],
+  tamanhos: ["P","M","G","GG"],
+  usuarios: [
+    {usuario:"Rodolfo", senha:"SA12345", nivel:"MASTER", origem:"padrao"}
+  ]
+};
+
+let config = JSON.parse(localStorage.getItem("configERP")) || {
+  empresaNome: defaults.empresaNome,
+  limiteEstoqueBaixo: defaults.limiteEstoqueBaixo
+};
+
+function normalizarUsuario(user){
+  if(!user) return null;
+  return {
+    usuario: String(user.usuario || "").trim(),
+    senha: String(user.senha || "").trim(),
+    nivel: String(user.nivel || user.perfil || "OPER").toUpperCase(),
+    origem: user.origem || "custom"
+  };
+}
+
+function usuariosPadrao(){
+  return defaults.usuarios.map(normalizarUsuario);
+}
+
+function mergeUsuarios(listaSalva, listaPadrao){
+  const mapa = new Map();
+  (Array.isArray(listaSalva) ? listaSalva : []).map(normalizarUsuario).filter(Boolean).forEach(u=>{
+    mapa.set(u.usuario.toLowerCase(), u);
+  });
+  (Array.isArray(listaPadrao) ? listaPadrao : []).map(normalizarUsuario).filter(Boolean).forEach(u=>{
+    if(!mapa.has(u.usuario.toLowerCase())) mapa.set(u.usuario.toLowerCase(), u);
+  });
+  return Array.from(mapa.values());
+}
+
+function sincronizarUsuariosPadrao(){
+  usuarios = mergeUsuarios(usuarios, usuariosPadrao());
+  saveLocal();
+}
+
+const USERS_SCHEMA_VERSION = "v7_rodolfo_only";
+let usuarios = [];
+const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios") || "[]");
+const schemaSalvo = localStorage.getItem("usuariosSchemaVersion");
+if(schemaSalvo !== USERS_SCHEMA_VERSION){
+  usuarios = usuariosPadrao();
+  localStorage.setItem("usuariosSchemaVersion", USERS_SCHEMA_VERSION);
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+} else {
+  usuarios = mergeUsuarios(Array.isArray(usuariosSalvos) ? usuariosSalvos : [], usuariosPadrao());
+}
+let usuarioAtual = JSON.parse(localStorage.getItem("usuarioAtual")) || null;
+if(usuarioAtual){
+  const encontrado = usuarios.find(u => u.usuario.toLowerCase() === String(usuarioAtual.usuario || '').toLowerCase() && u.senha === usuarioAtual.senha);
+  if(!encontrado) usuarioAtual = null;
+}
+let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+let packlist = JSON.parse(localStorage.getItem("packlist")) || [];
+let estoque = JSON.parse(localStorage.getItem("estoque")) || {};
+let expedicao = JSON.parse(localStorage.getItem("expedicao")) || [];
+let modoExpedicao = localStorage.getItem("modoExpedicao") || "auto";
+let preferenciaShopee = localStorage.getItem("preferenciaShopee") || "shopee_agencia";
+let memoriaExpedicao = JSON.parse(localStorage.getItem("memoriaExpedicao") || "{}");
+let usuariosJsonConectado = false;
+let pedidoAccessGranted = false;
+let usuariosFileHandle = null;
+let produtos = JSON.parse(localStorage.getItem("produtos")) || defaults.produtosPadrao.slice();
+let cores = JSON.parse(localStorage.getItem("cores")) || defaults.cores.slice();
+let logs = JSON.parse(localStorage.getItem("logs")) || [];
+let producaoDetalhada = JSON.parse(localStorage.getItem("producaoDetalhada")) || [];
+let pedidosCompra = (JSON.parse(localStorage.getItem("pedidosCompra")) || []).map(normalizarPedidoCompraItem).filter(Boolean);
+
+sincronizarUsuariosPadrao();
+
+let tamanhos = defaults.tamanhos.slice();
+
+const PERMISSOES = {
+  MASTER: ["ALL"],
+  ADMIN: ["DELETE_GENERAL"],
+  OPER: []
+};
+
+function getPermissoesUsuario(user = usuarioAtual){
+  if(!user) return [];
+  return PERMISSOES[user.nivel] || [];
+}
+
+function isMaster(user = usuarioAtual){
+  return !!user && user.nivel === "MASTER";
+}
+
+function hasPermission(perm, user = usuarioAtual){
+  if(!user) return false;
+  const perms = getPermissoesUsuario(user);
+  return perms.includes("ALL") || perms.includes(perm);
+}
+
+// ==========================
+// UTIL
+// ==========================
+function key(p,c,t){ return `${p}|${c}|${t}`; }
+
+function numero(v){
+  const n = parseFloat(v);
+  return isNaN(n) ? 0 : n;
+}
+
+function money(v){
+  return Number(v || 0).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+}
+
+function saveLocal(){
+  localStorage.setItem("configERP", JSON.stringify(config));
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+  localStorage.setItem("usuarioAtual", JSON.stringify(usuarioAtual));
+  localStorage.setItem("pedidos", JSON.stringify(pedidos));
+  localStorage.setItem("packlist", JSON.stringify(packlist));
+  localStorage.setItem("estoque", JSON.stringify(estoque));
+  localStorage.setItem("produtos", JSON.stringify(produtos));
+  localStorage.setItem("cores", JSON.stringify(cores));
+  localStorage.setItem("logs", JSON.stringify(logs));
+  localStorage.setItem("producaoDetalhada", JSON.stringify(producaoDetalhada));
+  localStorage.setItem("pedidosCompra", JSON.stringify(pedidosCompra));
+}
+
+function notificar(msg, tipo="success", duracao=3000){
+  const n = document.getElementById("notificacao");
+  n.innerText = msg;
+  n.className = tipo === "error" ? "show error" : "show";
+  setTimeout(()=>{ n.className = ""; }, duracao);
+}
+
+function adicionarLog(acao, detalhes=""){
+  if(!usuarioAtual) return;
+  logs.unshift({
+    dataHora: new Date().toLocaleString("pt-BR"),
+    usuario: usuarioAtual.usuario,
+    acao,
+    detalhes
+  });
+  saveLocal();
+  renderLogs();
+}
+
+function preencherSelect(id, itens){
+  const select = document.getElementById(id);
+  if(!select) return;
+  select.innerHTML = "";
+  itens.forEach(item=>{
+    const o = document.createElement("option");
+    o.value = item;
+    o.textContent = item;
+    select.appendChild(o);
+  });
+}
+
+function atualizarBoasVindas(){
+  const el = document.getElementById("bemVindo");
+  const topbarUsuario = document.getElementById("topbarUsuario");
+  el.innerText = usuarioAtual
+    ? `${config.empresaNome} | BEM VINDO, ${usuarioAtual.usuario.toUpperCase()}!`
+    : `${config.empresaNome} | BEM VINDO!`;
+
+  if(topbarUsuario){
+    topbarUsuario.innerText = usuarioAtual ? usuarioAtual.usuario : "Rodolfo";
+  }
+}
+
+function getMasterPassword(){
+  const master = usuarios.find(u => u.usuario === "Rodolfo" && u.nivel === "MASTER") || usuarios.find(u => u.nivel === "MASTER");
+  return master ? master.senha : "";
+}
+
+function abrirPedidosProtegido(){
+  if(!usuarioAtual){
+    notificar("Faça login para acessar o sistema.", "error");
+    return;
+  }
+  if(isMaster() || pedidoAccessGranted){
+    pedidoAccessGranted = true;
+    show("pedidos");
+    return;
+  }
+  const senha = prompt("Área protegida. Digite a senha master para acessar Pedidos:");
+  if(senha && senha === getMasterPassword()){
+    pedidoAccessGranted = true;
+    adicionarLog("PEDIDOS_LIBERADOS", `Aba Pedidos liberada por ${usuarioAtual.usuario}`);
+    show("pedidos");
+  } else {
+    notificar("Senha master inválida.", "error");
+  }
+}
+
+function aplicarPermissoes(){
+  document.querySelectorAll(".danger").forEach(btn => {
+    const scope = btn.dataset.dangerScope || "delete";
+    const permitido = scope === "master" ? isMaster() : (isMaster() || hasPermission("DELETE_GENERAL"));
+    btn.style.display = permitido ? "inline-block" : "none";
+  });
+
+  document.querySelectorAll('[data-master-only="true"]').forEach(el => {
+    el.style.display = isMaster() ? "inline-flex" : "none";
+  });
+}
+
+
+// ==========================
+// USUÁRIOS JSON
+// ==========================
+async function carregarUsuariosJsonAuto(){
+  try {
+    if(location.protocol === "http:" || location.protocol === "https:"){
+      const resp = await fetch("usuarios.json?_=" + Date.now(), {cache:"no-store"});
+      if(resp.ok){
+        const data = await resp.json();
+        const lista = Array.isArray(data) ? data : data.usuarios;
+        if(Array.isArray(lista) && lista.length){
+          usuarios = lista.map(normalizarUsuario).filter(Boolean);
+          usuariosJsonConectado = true;
+          localStorage.setItem("usuarios", JSON.stringify(usuarios));
+          atualizarStatusUsuariosJson("usuarios.json carregado automaticamente.");
+        }
+      }
+    }
+  } catch(e){}
+}
+
+function atualizarStatusUsuariosJson(msg){
+  const el = document.getElementById("usuariosJsonStatus");
+  if(el) el.textContent = msg;
+}
+
+function conteudoUsuariosJson(){
+  return JSON.stringify({
+    updatedAt: new Date().toISOString(),
+    usuarios: usuarios.map(u => ({usuario:u.usuario, senha:u.senha, nivel:u.nivel, origem:u.origem || "custom"}))
+  }, null, 2);
+}
+
+async function conectarUsuariosJson(){
+  if(!isMaster()) return notificar("Apenas Rodolfo pode conectar o usuarios.json.", "error");
+  if(!window.showOpenFilePicker){
+    notificar("Seu navegador não suporta conexão direta com arquivo local. Use Exportar usuarios.json.", "error");
+    return;
+  }
+  try{
+    const [handle] = await window.showOpenFilePicker({multiple:false, types:[{description:"JSON", accept:{"application/json":[".json"]}}]});
+    const file = await handle.getFile();
+    const text = await file.text();
+    const data = JSON.parse(text || "{}");
+    const lista = Array.isArray(data) ? data : data.usuarios;
+    if(!Array.isArray(lista)) throw new Error("Estrutura inválida.");
+    usuarios = lista.map(normalizarUsuario).filter(Boolean);
+    usuariosFileHandle = handle;
+    usuariosJsonConectado = true;
+    saveLocal();
+    renderUsuarios();
+    atualizarStatusUsuariosJson(`Conectado: ${file.name}`);
+    notificar("usuarios.json conectado com sucesso!");
+  }catch(e){
+    notificar("Conexão com usuarios.json cancelada ou inválida.", "error");
+  }
+}
+
+async function persistirUsuariosJson(){
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+  if(usuariosFileHandle){
+    const writable = await usuariosFileHandle.createWritable();
+    await writable.write(conteudoUsuariosJson());
+    await writable.close();
+    usuariosJsonConectado = true;
+    atualizarStatusUsuariosJson("usuarios.json sincronizado com sucesso.");
+    return true;
+  }
+  atualizarStatusUsuariosJson(location.protocol.startsWith("http") ? "Use Exportar usuarios.json para atualizar o arquivo físico." : "HTML local: conecte o usuarios.json para sincronizar automaticamente.");
+  return false;
+}
+
+function exportarUsuariosJson(){
+  const blob = new Blob([conteudoUsuariosJson()], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "usuarios.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  notificar("usuarios.json exportado!");
+}
+
+// ==========================
+// LOGIN / TEMA
+// ==========================
+function login() {
+  const u = document.getElementById("loginUsuario").value.trim();
+  const s = document.getElementById("loginSenha").value.trim();
+  const user = usuarios.find(x => x.usuario.toLowerCase() === u.toLowerCase() && x.senha === s);
+
+  if(!user){
+    notificar("Usuário ou senha inválidos!", "error");
+    return;
+  }
+
+  usuarioAtual = user;
+  saveLocal();
+  document.getElementById("loginTela").style.display = "none";
+  atualizarBoasVindas();
+  setupMobileUI();
+  aplicarPermissoes();
+  init();
+  resetTimer();
+  adicionarLog("LOGIN", "Usuário logou no sistema");
+  notificar(`Bem-vindo, ${user.usuario}!`);
+}
+
+function logout(){
+  usuarioAtual = null;
+  pedidoAccessGranted = false;
+  saveLocal();
+  document.getElementById("loginTela").style.display = "flex";
+  atualizarBoasVindas();
+}
+
+document.getElementById("btnLogout").onclick = ()=>{
+  logout();
+  notificar("Sessão encerrada!", "error");
+};
+
+document.getElementById("btnTema").onclick = ()=>{
+  document.body.classList.toggle("dark");
+  localStorage.setItem("tema", document.body.classList.contains("dark") ? "dark" : "light");
+};
+
+
+function showConfigTab(tab){
+  document.querySelectorAll('.config-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.configTab === tab);
+  });
+  document.querySelectorAll('.config-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === `configTab-${tab}`);
+  });
+}
+
+
+function showProdTab(tab){
+  document.querySelectorAll('.prod-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.prodTab === tab);
+  });
+  document.querySelectorAll('.prod-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === `prodTab-${tab}`);
+  });
+}
+
+function renderRecebimentoRows(){
+  const tbody = document.getElementById('rec_tbody');
+  if(!tbody) return;
+  if(tbody.children.length) return;
+  const linhas = 7;
+  const htmlRows = [];
+  for(let i=0;i<linhas;i++){
+    htmlRows.push(`
+      <tr>
+        <td><input id="rec_cor_${i}" placeholder="Cor"></td>
+        <td><input id="rec_p_${i}" type="number" min="0" value="0"></td>
+        <td><input id="rec_m_${i}" type="number" min="0" value="0"></td>
+        <td><input id="rec_g_${i}" type="number" min="0" value="0"></td>
+        <td><input id="rec_gg_${i}" type="number" min="0" value="0"></td>
+        <td><input id="rec_outros_${i}" type="number" min="0" value="0"></td>
+        <td><input id="rec_defeito_${i}" placeholder="Apontar defeitos / observações"></td>
+      </tr>
+    `);
+  }
+  tbody.innerHTML = htmlRows.join('');
+}
+
+function sincronizarRecebimentoDaCostura(){
+  renderRecebimentoRows();
+  const recId = document.getElementById('rec_prod_id');
+  const prodId = document.getElementById('prod_id');
+  const recResp = document.getElementById('rec_responsavel');
+  const prodResp = document.getElementById('prod_responsavel');
+  const recData = document.getElementById('rec_data');
+  if(recId && prodId && !recId.value.trim()) recId.value = prodId.value.trim();
+  if(recResp && prodResp && !recResp.value.trim()) recResp.value = prodResp.value.trim();
+  if(recData && !recData.value) recData.value = new Date().toISOString().slice(0,10);
+  for(let i=0;i<7;i++){
+    const cor = document.getElementById(`pc_cor_${i}`)?.value || '';
+    const p = document.getElementById(`pc_p_${i}`)?.value || 0;
+    const m = document.getElementById(`pc_m_${i}`)?.value || 0;
+    const g = document.getElementById(`pc_g_${i}`)?.value || 0;
+    const gg = document.getElementById(`pc_gg_${i}`)?.value || 0;
+    const outros = document.getElementById(`pc_outros_${i}`)?.value || 0;
+    const targetCor = document.getElementById(`rec_cor_${i}`);
+    if(targetCor){
+      targetCor.value = cor;
+      document.getElementById(`rec_p_${i}`).value = p;
+      document.getElementById(`rec_m_${i}`).value = m;
+      document.getElementById(`rec_g_${i}`).value = g;
+      document.getElementById(`rec_gg_${i}`).value = gg;
+      document.getElementById(`rec_outros_${i}`).value = outros;
+    }
+  }
+  notificar('Dados do romaneio carregados no recebimento!');
+}
+
+function exportarRomaneioRecebimento(){
+  renderRecebimentoRows();
+  const wb = XLSX.utils.book_new();
+  const data = [];
+  const prodId = document.getElementById('rec_prod_id')?.value.trim() || document.getElementById('prod_id')?.value.trim() || '';
+  const responsavel = document.getElementById('rec_responsavel')?.value.trim() || document.getElementById('prod_responsavel')?.value.trim() || '';
+  const dataRec = document.getElementById('rec_data')?.value || '';
+  data.push([`ROMANEIO DE RECEBIMENTO - ID: ${prodId}`]);
+  data.push([`DATA: ${dataRec}`, '', '', '', '', '', `RESPONSÁVEL: ${responsavel}`]);
+  data.push([]);
+  data.push(['COR','P','M','G','GG','OUTROS','DEFEITO']);
+  for(let i=0;i<7;i++){
+    data.push([
+      document.getElementById(`rec_cor_${i}`)?.value || '',
+      Number(document.getElementById(`rec_p_${i}`)?.value || 0),
+      Number(document.getElementById(`rec_m_${i}`)?.value || 0),
+      Number(document.getElementById(`rec_g_${i}`)?.value || 0),
+      Number(document.getElementById(`rec_gg_${i}`)?.value || 0),
+      Number(document.getElementById(`rec_outros_${i}`)?.value || 0),
+      document.getElementById(`rec_defeito_${i}`)?.value || ''
+    ]);
+  }
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  XLSX.utils.book_append_sheet(wb, ws, 'Recebimento');
+  XLSX.writeFile(wb, `Recebimento_${prodId || Date.now()}.xlsx`);
+  notificar('Romaneio de recebimento exportado!');
+}
+
+// ==========================
+// TIMER
+// ==========================
+let timerInatividade;
+function resetTimer(){
+  clearTimeout(timerInatividade);
+  timerInatividade = setTimeout(()=>{
+    logout();
+    notificar("Sessão expirada por inatividade!", "error");
+  }, 30 * 60 * 1000);
+}
+["click","mousemove","keypress","scroll","touchstart"].forEach(evt=>{
+  document.addEventListener(evt, resetTimer);
+});
+
+// ==========================
+// NAVEGAÇÃO
+// ==========================
+function updateNavigationUI(id){
+  const titulos = {
+    dashboard: "Dashboard",
+    pedidos: "Pedidos",
+    estoque: "Estoque",
+    packlist: "Packlist",
+    pedidoCompra: "Pedido de Compra",
+    producao: "Produção",
+    expedicao: "Expedição",
+    config: "Configurações",
+    auditoria: "Auditoria",
+    backup: "Backup",
+    ajuda: "Ajuda"
+  };
+
+  const subtitulos = {
+    dashboard: "Visão geral da operação, indicadores e alertas do sistema.",
+    pedidos: "Cadastro, consulta e atualização dos pedidos em andamento.",
+    estoque: "Controle de entradas, saídas e níveis por produto.",
+    packlist: "Separação e impressão da lista de conferência dos itens.",
+    pedidoCompra: "Monte a lista de compra sem alterar o estoque.",
+    producao: "Acompanhamento de risco, corte, costura e custos de produção.",
+    expedicao: "Leitura de códigos e organização da planilha de expedição.",
+    config: "Ajustes gerais do sistema e gestão de usuários.",
+    auditoria: "Histórico de ações realizadas dentro do sistema.",
+    backup: "Exportação, importação e armazenamento portátil dos dados.",
+    ajuda: "Contato rápido, orientações de operação e suporte do sistema."
+  };
+
+  document.querySelectorAll('.nav-btn[data-section]').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.section === id);
+  });
+
+  const topMap = {
+    dashboard: 'dashboard',
+    estoque: 'estoque',
+    pedidos: 'pedidos',
+    producao: 'producao',
+    packlist: 'pedidos',
+    pedidoCompra: 'pedidos',
+    expedicao: 'pedidos',
+    config: 'dashboard',
+    auditoria: 'dashboard',
+    backup: 'dashboard',
+    ajuda: 'ajuda'
+  };
+  document.querySelectorAll('.topbar-link[data-topnav]').forEach(link=>{
+    link.classList.toggle('active', link.dataset.topnav === topMap[id]);
+  });
+
+  const pageTitle = document.getElementById('pageTitle');
+  const pageSubtitle = document.getElementById('pageSubtitle');
+  if(pageTitle) pageTitle.innerText = titulos[id] || 'Sistema';
+  if(pageSubtitle) pageSubtitle.innerText = subtitulos[id] || 'Painel do sistema.';
+}
+
+
+
+function syncMobileQuickNav(id){
+  document.querySelectorAll('[data-mobile-section]').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.mobileSection === id);
+  });
+}
+
+function closeMobileSidebar(){
+  document.body.classList.remove('sidebar-open');
+}
+
+function toggleMobileSidebar(){
+  if(window.innerWidth > 980) return;
+  document.body.classList.toggle('sidebar-open');
+}
+
+function setupMobileUI(){
+  const btn = document.getElementById('mobileMenuBtn');
+  const backdrop = document.getElementById('mobileBackdrop');
+  if(btn && !btn.dataset.bound){
+    btn.addEventListener('click', toggleMobileSidebar);
+    btn.dataset.bound = '1';
+  }
+  if(backdrop && !backdrop.dataset.bound){
+    backdrop.addEventListener('click', closeMobileSidebar);
+    backdrop.dataset.bound = '1';
+  }
+  document.querySelectorAll('.sidebar .nav-btn, .topbar-nav .topbar-link').forEach(el=>{
+    if(!el.dataset.mobileBound){
+      el.addEventListener('click', ()=>{ if(window.innerWidth <= 980) closeMobileSidebar(); });
+      el.dataset.mobileBound = '1';
+    }
+  });
+  window.addEventListener('resize', ()=>{
+    if(window.innerWidth > 980) closeMobileSidebar();
+  });
+}
+
+function show(id){ 
+  if(id === "expedicao") renderExpedicao();
+  ["dashboard","pedidos","estoque","packlist","pedidoCompra","producao","expedicao","config","auditoria","backup","ajuda"].forEach(t=>{
+    const el = document.getElementById(t);
+    if(el) el.classList.add("hidden");
+  });
+  const destino = document.getElementById(id);
+  if(destino) destino.classList.remove("hidden");
+  updateNavigationUI(id);
+  syncMobileQuickNav(id);
+  if(window.innerWidth <= 980) closeMobileSidebar();
+
+  if(id === "config") renderUsuarios();
+  if(id === "auditoria") renderLogs();
+  if(id === "estoque") renderEstoque();
+  if(id === "pedidos") renderPedidosModulo();
+  if(id === "pedidoCompra") renderPedidoCompra();
+  if(id === "producao") renderProducaoDetalhada();
+  if(id === "expedicao") setTimeout(focarCampoExpedicao, 80);
+}
+
+
+// ==========================
+// PEDIDO DE COMPRA
+// ==========================
+function normalizarPedidoCompraItem(item){
+  if(!item) return null;
+  return {
+    id: item.id || Date.now(),
+    produto: String(item.produto || '').trim(),
+    cor: String(item.cor || '').trim(),
+    estoqueM: Number(item.estoqueM ?? 0) || 0,
+    estoqueGG: Number(item.estoqueGG ?? 0) || 0,
+    precisoM: Number(item.precisoM ?? item.m ?? 0) || 0,
+    precisoGG: Number(item.precisoGG ?? item.gg ?? 0) || 0,
+    obs: String(item.obs || '').trim(),
+    criadoEm: item.criadoEm || new Date().toLocaleString('pt-BR')
+  };
+}
+
+function calcularComprarM(item){
+  return Math.max(0, Number(item?.precisoM || 0) - Number(item?.estoqueM || 0));
+}
+
+function calcularComprarGG(item){
+  return Math.max(0, Number(item?.precisoGG || 0) - Number(item?.estoqueGG || 0));
+}
+
+function calcularTotalPedidoCompraItem(item){
+  return calcularComprarM(item) + calcularComprarGG(item);
+}
+
+function limparFormularioPedidoCompra(){
+  ['compraEstoqueM','compraEstoqueGG','compraM','compraGG'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = 0;
+  });
+  const obs = document.getElementById('compraObs');
+  if(obs) obs.value = '';
+}
+
+function adicionarPedidoCompra(){
+  const produto = (document.getElementById('compraProduto')?.value || '').trim();
+  const cor = (document.getElementById('compraCor')?.value || '').trim();
+  const estoqueM = parseInt(document.getElementById('compraEstoqueM')?.value || 0, 10) || 0;
+  const estoqueGG = parseInt(document.getElementById('compraEstoqueGG')?.value || 0, 10) || 0;
+  const precisoM = parseInt(document.getElementById('compraM')?.value || 0, 10) || 0;
+  const precisoGG = parseInt(document.getElementById('compraGG')?.value || 0, 10) || 0;
+  const obs = (document.getElementById('compraObs')?.value || '').trim();
+
+  if(!produto || !cor){
+    notificar('Selecione a peça e a cor.', 'error');
+    return;
+  }
+  if((precisoM + precisoGG) <= 0){
+    notificar('Informe ao menos uma quantidade em "Vou precisar".', 'error');
+    return;
+  }
+
+  const chaveProduto = produto.toLowerCase();
+  const chaveCor = cor.toLowerCase();
+  const existente = pedidosCompra.find(item =>
+    String(item.produto).toLowerCase() === chaveProduto &&
+    String(item.cor).toLowerCase() === chaveCor
+  );
+
+  if(existente){
+    existente.estoqueM += estoqueM;
+    existente.estoqueGG += estoqueGG;
+    existente.precisoM = Number(existente.precisoM || 0) + precisoM;
+    existente.precisoGG = Number(existente.precisoGG || 0) + precisoGG;
+    existente.obs = [existente.obs, obs].filter(Boolean).join(' | ');
+  } else {
+    pedidosCompra.push(normalizarPedidoCompraItem({
+      id: Date.now(),
+      produto,
+      cor,
+      estoqueM,
+      estoqueGG,
+      precisoM,
+      precisoGG,
+      obs
+    }));
+  }
+
+  saveLocal();
+  renderPedidoCompra();
+  limparFormularioPedidoCompra();
+  adicionarLog('PEDIDO_COMPRA_ADICIONADO', `${produto} / ${cor} / estoque M:${estoqueM} GG:${estoqueGG} / preciso M:${precisoM} GG:${precisoGG}`);
+  notificar('Item adicionado ao pedido de compra!');
+}
+
+function removerPedidoCompra(id){
+  pedidosCompra = pedidosCompra.filter(item => item.id !== id);
+  saveLocal();
+  renderPedidoCompra();
+  adicionarLog('PEDIDO_COMPRA_REMOVIDO', `ID: ${id}`);
+  notificar('Item removido do pedido de compra!');
+}
+
+function limparPedidoCompra(){
+  if(!pedidosCompra.length){
+    notificar('A lista já está vazia.', 'error');
+    return;
+  }
+  if(!confirm('Confirma limpar toda a lista do pedido de compra?')) return;
+  pedidosCompra = [];
+  saveLocal();
+  renderPedidoCompra();
+  adicionarLog('PEDIDO_COMPRA_LIMPO', 'Lista de pedido de compra apagada');
+  notificar('Pedido de compra limpo!');
+}
+
+function renderPedidoCompra(){
+  const tbody = document.getElementById('listaPedidoCompra');
+  const tfoot = document.getElementById('totaisPedidoCompra');
+  const boxItens = document.getElementById('pedidoCompraItens');
+  const boxTotal = document.getElementById('pedidoCompraTotalPecas');
+  const boxComprarM = document.getElementById('pedidoCompraTotalComprarM');
+  const boxComprarGG = document.getElementById('pedidoCompraTotalComprarGG');
+  const boxComprarGeral = document.getElementById('pedidoCompraTotalComprarGeral');
+  if(!tbody || !tfoot) return;
+
+  tbody.innerHTML = '';
+  tfoot.innerHTML = '';
+
+  let totalEstoque = 0;
+  let totalComprarM = 0;
+  let totalComprarGG = 0;
+  let totalComprar = 0;
+
+  if(!pedidosCompra.length){
+    tbody.innerHTML = '<tr><td colspan="8"><div class="alerta-vazio" style="margin:0;">Nenhum item no pedido de compra.</div></td></tr>';
+  }
+
+  pedidosCompra.map(normalizarPedidoCompraItem).forEach((item, index) => {
+    const estoqueTotal = Number(item.estoqueM || 0) + Number(item.estoqueGG || 0);
+    const comprarM = calcularComprarM(item);
+    const comprarGG = calcularComprarGG(item);
+    const totalLinha = comprarM + comprarGG;
+
+    totalEstoque += estoqueTotal;
+    totalComprarM += comprarM;
+    totalComprarGG += comprarGG;
+    totalComprar += totalLinha;
+
+    const detalhe = `Tenho: M ${item.estoqueM || 0} | GG ${item.estoqueGG || 0} • Preciso: M ${item.precisoM || 0} | GG ${item.precisoGG || 0}`;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td><strong>${item.produto}</strong></td>
+      <td>${item.cor}<div style="font-size:11px;color:var(--muted);margin-top:4px;">${detalhe}</div></td>
+      <td><strong>${comprarM}</strong></td>
+      <td><strong>${comprarGG}</strong></td>
+      <td><strong>${totalLinha}</strong></td>
+      <td>${item.obs || '-'}</td>
+      <td><button class="btn-mini delete" onclick="removerPedidoCompra(${item.id})">Remover</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  if(pedidosCompra.length){
+    tfoot.innerHTML = `
+      <tr>
+        <td colspan="3"><strong>Totais</strong></td>
+        <td><strong>${totalComprarM}</strong></td>
+        <td><strong>${totalComprarGG}</strong></td>
+        <td><strong>${totalComprar}</strong></td>
+        <td colspan="2"></td>
+      </tr>
+    `;
+  }
+
+  if(boxItens) boxItens.innerText = String(pedidosCompra.length);
+  if(boxTotal) boxTotal.innerText = String(totalEstoque);
+  if(boxComprarM) boxComprarM.innerText = String(totalComprarM);
+  if(boxComprarGG) boxComprarGG.innerText = String(totalComprarGG);
+  if(boxComprarGeral) boxComprarGeral.innerText = String(totalComprar);
+}
+
+function imprimirPedidoCompra(){
+  if(!pedidosCompra.length){
+    notificar('Nenhum item para imprimir.', 'error');
+    return;
+  }
+
+  let linhas = '';
+  let totalComprarM = 0;
+  let totalComprarGG = 0;
+  let totalComprar = 0;
+
+  pedidosCompra.map(normalizarPedidoCompraItem).forEach((item, index) => {
+    const comprarM = calcularComprarM(item);
+    const comprarGG = calcularComprarGG(item);
+    const totalLinha = comprarM + comprarGG;
+    totalComprarM += comprarM;
+    totalComprarGG += comprarGG;
+    totalComprar += totalLinha;
+    linhas += `<tr><td>${index+1}</td><td>${item.produto}</td><td>${item.cor}</td><td>${comprarM}</td><td>${comprarGG}</td><td>${totalLinha}</td><td>${item.obs || '-'}</td></tr>`;
+  });
+
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Pedido de Compra</title><style>body{font-family:Arial;padding:20px}h1{margin:0 0 6px}p{margin:0 0 16px;color:#555}table{width:100%;border-collapse:collapse;margin-top:14px}th,td{border:1px solid #cfcfcf;padding:8px;text-align:left;font-size:13px}th{background:#f3f4f6}tfoot td{font-weight:700;background:#fafafa}</style></head><body><h1>Pedido de Compra</h1><p>Data: ${new Date().toLocaleString('pt-BR')}</p><table><thead><tr><th>#</th><th>Peça</th><th>Cor</th><th>M</th><th>GG</th><th>Total a comprar</th><th>Observação</th></tr></thead><tbody>${linhas}</tbody><tfoot><tr><td colspan="3">Totais</td><td>${totalComprarM}</td><td>${totalComprarGG}</td><td>${totalComprar}</td><td></td></tr></tfoot></table>
+<script>
+(function(){
+  const DEFAULT_CLOUD_CONFIG = {
+    SUPABASE_URL: '',
+    SUPABASE_ANON_KEY: '',
+    WORKSPACE_ID: 'sa-principal'
+  };
+
+    const CLOUD_STATE = {
+    client: null,
+    initialized: false,
+    syncTimer: null,
+    lastSyncAt: null,
+    syncing: false,
+    connected: false
+  };
+
+  let CLOUD_RUNTIME_CONFIG = (window.SA_CLOUD_CONFIG && typeof window.SA_CLOUD_CONFIG === 'object') ? { ...DEFAULT_CLOUD_CONFIG, ...window.SA_CLOUD_CONFIG } : { ...DEFAULT_CLOUD_CONFIG };
+
+  function mergeCloudConfig(){
+    return { ...DEFAULT_CLOUD_CONFIG, ...CLOUD_RUNTIME_CONFIG, ...(window.SA_CLOUD_CONFIG || {}) };
+  }
+
+  function saveCloudConfig(config){
+    CLOUD_RUNTIME_CONFIG = { ...DEFAULT_CLOUD_CONFIG, ...config };
+  }
+
+  function captureSystemSnapshot(){
+    return {
+      version: 'sa-cloud-v1',
+      savedAt: new Date().toISOString(),
+      config,
+      usuarios,
+      usuarioAtual,
+      pedidos,
+      packlist,
+      estoque,
+      expedicao,
+      modoExpedicao,
+      preferenciaShopee,
+      memoriaExpedicao,
+      produtos,
+      cores,
+      logs,
+      producaoDetalhada,
+      pedidosCompra
+    };
+  }
+
+  function applySystemSnapshot(payload){
+    if(!payload || typeof payload !== 'object') return;
+
+    config = payload.config || config;
+    usuarios = Array.isArray(payload.usuarios) ? payload.usuarios : usuarios;
+    usuarioAtual = payload.usuarioAtual || usuarioAtual;
+    pedidos = Array.isArray(payload.pedidos) ? payload.pedidos : pedidos;
+    packlist = Array.isArray(payload.packlist) ? payload.packlist : packlist;
+    estoque = payload.estoque && typeof payload.estoque === 'object' ? payload.estoque : estoque;
+    expedicao = Array.isArray(payload.expedicao) ? payload.expedicao : expedicao;
+    modoExpedicao = payload.modoExpedicao || modoExpedicao;
+    preferenciaShopee = payload.preferenciaShopee || preferenciaShopee;
+    memoriaExpedicao = payload.memoriaExpedicao && typeof payload.memoriaExpedicao === 'object' ? payload.memoriaExpedicao : memoriaExpedicao;
+    produtos = Array.isArray(payload.produtos) ? payload.produtos : produtos;
+    cores = Array.isArray(payload.cores) ? payload.cores : cores;
+    logs = Array.isArray(payload.logs) ? payload.logs : logs;
+    producaoDetalhada = Array.isArray(payload.producaoDetalhada) ? payload.producaoDetalhada : producaoDetalhada;
+    pedidosCompra = Array.isArray(payload.pedidosCompra)
+      ? payload.pedidosCompra.map(normalizarPedidoCompraItem).filter(Boolean)
+      : pedidosCompra;
+
+    if (typeof saveLocal === 'function') saveLocal();
+    try { if (typeof init === 'function') init(); } catch(e) {}
+    try { if (typeof renderUsuarios === 'function') renderUsuarios(); } catch(e) {}
+    try { if (typeof renderLogs === 'function') renderLogs(); } catch(e) {}
+    try { if (typeof atualizarBoasVindas === 'function') atualizarBoasVindas(); } catch(e) {}
+    try { if (typeof aplicarPermissoes === 'function') aplicarPermissoes(); } catch(e) {}
+    try {
+      const modo = document.getElementById('modoExpedicao');
+      if (modo) modo.value = modoExpedicao || 'auto';
+    } catch(e) {}
+  }
+
+  function cloudConfigReady(){
+    const cfg = mergeCloudConfig();
+    return Boolean(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && cfg.WORKSPACE_ID);
+  }
+
+  function getCloudStatusText(){
+    if (!cloudConfigReady()) return 'Configure URL, anon key e workspace para ativar a nuvem.';
+    if (!CLOUD_STATE.client) return 'Configuração salva. Faça login na nuvem para sincronizar.';
+    if (CLOUD_STATE.syncing) return 'Sincronizando com a nuvem...';
+    if (CLOUD_STATE.connected && CLOUD_STATE.lastSyncAt) return 'Nuvem conectada. Última sincronização: ' + CLOUD_STATE.lastSyncAt;
+    if (CLOUD_STATE.connected) return 'Nuvem conectada.';
+    return 'Cliente inicializado. Faça login na nuvem para sincronizar.';
+  }
+
+  function updateCloudStatus(extraMessage){
+    const statusEl = document.getElementById('cloudStatusText');
+    const badgeEl = document.getElementById('cloudStatusBadge');
+    const manualMessage = document.getElementById('cloudManualMessage');
+
+    if (statusEl) statusEl.textContent = extraMessage || getCloudStatusText();
+    if (manualMessage) manualMessage.textContent = extraMessage || '';
+
+    if (!badgeEl) return;
+    if (CLOUD_STATE.syncing) {
+      badgeEl.textContent = 'Sincronizando';
+      badgeEl.className = 'pill pill-warning';
+      return;
+    }
+    if (CLOUD_STATE.connected) {
+      badgeEl.textContent = 'Conectado';
+      badgeEl.className = 'pill pill-success';
+      return;
+    }
+    badgeEl.textContent = cloudConfigReady() ? 'Pronto para login' : 'Desconectado';
+    badgeEl.className = 'pill pill-neutral';
+  }
+
+  function ensureCloudCard(){
+    const host = document.getElementById('configTab-integracoes');
+    if (!host || document.getElementById('cloudSyncCard')) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'config-info-grid';
+    wrapper.innerHTML = `
+      <div class="config-box" id="cloudSyncCard">
+        <h3>GitHub Pages + Supabase</h3>
+        <p>Esta versão trabalha sem salvar dados do sistema no navegador. O sistema fica em memória temporária e a persistência oficial acontece somente na nuvem (Supabase).</p>
+        <div class="inline-grid">
+          <div>
+            <label>Supabase URL</label>
+            <input id="cloudSupabaseUrl" placeholder="https://SEU-PROJETO.supabase.co" />
+          </div>
+          <div>
+            <label>Supabase anon key</label>
+            <input id="cloudSupabaseAnonKey" placeholder="Cole aqui a anon key do projeto" />
+          </div>
+          <div>
+            <label>Workspace ID</label>
+            <input id="cloudWorkspaceId" placeholder="sa-principal" />
+          </div>
+        </div>
+        <div class="inline-grid" style="margin-top:10px">
+          <div>
+            <label>E-mail da nuvem</label>
+            <input id="cloudEmail" type="email" placeholder="Seu usuário do Supabase Auth" />
+          </div>
+          <div>
+            <label>Senha da nuvem</label>
+            <input id="cloudPassword" type="password" placeholder="Senha do Supabase Auth" />
+          </div>
+        </div>
+        <div class="inline-actions" style="margin-top:12px">
+          <button class="primary" type="button" id="btnSalvarCloudConfig">Aplicar configuração</button>
+          <button class="secondary" type="button" id="btnCloudLogin">Entrar na nuvem</button>
+          <button class="secondary" type="button" id="btnCloudPull">Baixar da nuvem</button>
+          <button class="secondary" type="button" id="btnCloudPush">Enviar para nuvem</button>
+          <button class="danger" type="button" id="btnCloudLogout">Sair da nuvem</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <span id="cloudStatusBadge" class="pill pill-neutral">Desconectado</span>
+          <small id="cloudStatusText" style="color:var(--muted)">Configure URL, anon key e workspace para ativar a nuvem.</small>
+        </div>
+        <small id="cloudManualMessage" style="display:block;color:var(--muted);margin-top:8px"></small>
+      </div>
+      <div class="config-box">
+        <h3>Como esta integração funciona</h3>
+        <ul>
+          <li>O sistema não grava os módulos no navegador do equipamento.</li>
+          <li>Os dados ficam em memória temporária até você entrar na nuvem.</li>
+          <li>Depois do login, você baixa o estado salvo e toda alteração é enviada para o Supabase.</li>
+          <li>A autenticação da nuvem é separada do login interno do sistema.</li>
+        </ul>
+      </div>
+    `;
+    host.appendChild(wrapper);
+
+    const cfg = mergeCloudConfig();
+    document.getElementById('cloudSupabaseUrl').value = cfg.SUPABASE_URL || '';
+    document.getElementById('cloudSupabaseAnonKey').value = cfg.SUPABASE_ANON_KEY || '';
+    document.getElementById('cloudWorkspaceId').value = cfg.WORKSPACE_ID || 'sa-principal';
+
+    document.getElementById('btnSalvarCloudConfig').addEventListener('click', async function(){
+      const newCfg = {
+        SUPABASE_URL: document.getElementById('cloudSupabaseUrl').value.trim(),
+        SUPABASE_ANON_KEY: document.getElementById('cloudSupabaseAnonKey').value.trim(),
+        WORKSPACE_ID: document.getElementById('cloudWorkspaceId').value.trim() || 'sa-principal'
+      };
+      saveCloudConfig(newCfg);
+      await initCloudClient();
+      updateCloudStatus('Configuração aplicada. Faça login na nuvem para carregar os dados oficiais.');
+      notificar('Configuração da nuvem aplicada!');
+    });
+
+    document.getElementById('btnCloudLogin').addEventListener('click', loginCloud);
+    document.getElementById('btnCloudPull').addEventListener('click', loadCloudSnapshot);
+    document.getElementById('btnCloudPush').addEventListener('click', saveCloudSnapshot);
+    document.getElementById('btnCloudLogout').addEventListener('click', logoutCloud);
+  }
+
+  async function initCloudClient(){
+    const cfg = mergeCloudConfig();
+    if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) {
+      CLOUD_STATE.client = null;
+      CLOUD_STATE.connected = false;
+      updateCloudStatus();
+      return null;
+    }
+
+    if (!window.supabase || !window.supabase.createClient) {
+      updateCloudStatus('Biblioteca do Supabase não carregou.');
+      return null;
+    }
+
+    CLOUD_STATE.client = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: false,
+        detectSessionInUrl: true
+      }
+    });
+
+    try {
+      const { data: { session } } = await CLOUD_STATE.client.auth.getSession();
+      CLOUD_STATE.connected = Boolean(session);
+    } catch (error) {
+      CLOUD_STATE.connected = false;
+    }
+
+    updateCloudStatus();
+    return CLOUD_STATE.client;
+  }
+
+  async function loginCloud(){
+    const client = await initCloudClient();
+    if (!client) {
+      notificar('Preencha a URL e a anon key do Supabase primeiro.', 'error');
+      return;
+    }
+
+    const email = (document.getElementById('cloudEmail')?.value || '').trim();
+    const password = (document.getElementById('cloudPassword')?.value || '').trim();
+
+    if (!email || !password) {
+      notificar('Informe o e-mail e a senha da nuvem.', 'error');
+      return;
+    }
+
+    try {
+      const { error } = await client.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      CLOUD_STATE.connected = true;
+      updateCloudStatus('Login na nuvem realizado com sucesso.');
+      notificar('Nuvem conectada com sucesso!');
+      await loadCloudSnapshot(true);
+    } catch (error) {
+      CLOUD_STATE.connected = false;
+      updateCloudStatus('Falha no login da nuvem.');
+      notificar('Erro ao entrar na nuvem: ' + error.message, 'error');
+    }
+  }
+
+  async function logoutCloud(){
+    if (!CLOUD_STATE.client) return;
+    try {
+      await CLOUD_STATE.client.auth.signOut();
+      CLOUD_STATE.connected = false;
+      updateCloudStatus('Sessão da nuvem encerrada.');
+      notificar('Sessão da nuvem encerrada.');
+    } catch (error) {
+      notificar('Erro ao sair da nuvem: ' + error.message, 'error');
+    }
+  }
+
+  async function loadCloudSnapshot(silent){
+    const client = await initCloudClient();
+    if (!client || !CLOUD_STATE.connected) {
+      if (!silent) notificar('Entre na nuvem antes de baixar os dados.', 'error');
+      return;
+    }
+
+    const cfg = mergeCloudConfig();
+    CLOUD_STATE.syncing = true;
+    updateCloudStatus();
+
+    try {
+      const { data, error } = await client
+        .from('app_state')
+        .select('workspace_id,payload,updated_at')
+        .eq('workspace_id', cfg.WORKSPACE_ID)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data && data.payload) {
+        applySystemSnapshot(data.payload);
+        CLOUD_STATE.lastSyncAt = new Date(data.updated_at).toLocaleString('pt-BR');
+        updateCloudStatus('Dados baixados da nuvem com sucesso.');
+        if (!silent) notificar('Dados baixados da nuvem!');
+      } else {
+        await saveCloudSnapshot(true);
+        if (!silent) notificar('Nenhum estado encontrado na nuvem. O estado local foi enviado.', 'error');
+      }
+    } catch (error) {
+      updateCloudStatus('Erro ao baixar da nuvem.');
+      if (!silent) notificar('Erro ao baixar da nuvem: ' + error.message, 'error');
+    } finally {
+      CLOUD_STATE.syncing = false;
+      updateCloudStatus();
+    }
+  }
+
+  async function saveCloudSnapshot(silent){
+    const client = await initCloudClient();
+    if (!client || !CLOUD_STATE.connected) {
+      if (!silent) notificar('Entre na nuvem antes de enviar os dados.', 'error');
+      return;
+    }
+
+    if (CLOUD_STATE.syncing) return;
+
+    const cfg = mergeCloudConfig();
+    CLOUD_STATE.syncing = true;
+    updateCloudStatus();
+
+    try {
+      const { data: userData } = await client.auth.getUser();
+      const payload = captureSystemSnapshot();
+      const { error } = await client
+        .from('app_state')
+        .upsert({
+          workspace_id: cfg.WORKSPACE_ID,
+          payload,
+          updated_by: userData?.user?.id || null
+        }, { onConflict: 'workspace_id' });
+
+      if (error) throw error;
+      CLOUD_STATE.lastSyncAt = new Date().toLocaleString('pt-BR');
+      updateCloudStatus('Dados enviados para a nuvem.');
+      if (!silent) notificar('Dados enviados para a nuvem!');
+    } catch (error) {
+      updateCloudStatus('Erro ao enviar para a nuvem.');
+      if (!silent) notificar('Erro ao enviar para a nuvem: ' + error.message, 'error');
+    } finally {
+      CLOUD_STATE.syncing = false;
+      updateCloudStatus();
+    }
+  }
+
+  function scheduleCloudSync(){
+    if (!CLOUD_STATE.connected) return;
+    clearTimeout(CLOUD_STATE.syncTimer);
+    CLOUD_STATE.syncTimer = setTimeout(function(){ saveCloudSnapshot(true); }, 900);
+  }
+
+  function patchSaveLocal(){
+    if (window.__saCloudSaveLocalPatched || typeof window.saveLocal !== 'function') return;
+    const originalSaveLocal = window.saveLocal;
+    window.saveLocal = function(){
+      const result = originalSaveLocal.apply(this, arguments);
+      scheduleCloudSync();
+      return result;
+    };
+    window.__saCloudSaveLocalPatched = true;
+  }
+
+  async function bootstrapCloud(){
+    ensureCloudCard();
+    patchSaveLocal();
+    await initCloudClient();
+    if (CLOUD_STATE.connected) {
+      await loadCloudSnapshot(true);
+    } else {
+      updateCloudStatus();
+    }
+  }
+
+  const previousOnload = window.onload;
+  window.onload = async function(){
+    if (typeof previousOnload === 'function') {
+      await previousOnload.apply(this, arguments);
+    }
+    if (!CLOUD_STATE.initialized) {
+      CLOUD_STATE.initialized = true;
+      await bootstrapCloud();
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(function(){
+      updateCloudStatus('Este modo não salva dados do sistema no navegador. Entre na nuvem e clique em 'Baixar da nuvem' para carregar o estado oficial.');
+    }, 300);
+  });
+
+})();
+</script>
+
+</body></html>`;
+
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  win.print();
+}
+
+function exportarPedidoCompraExcel(){
+  if(!pedidosCompra.length){
+    notificar('Nenhum item para exportar.', 'error');
+    return;
+  }
+
+  const agora = new Date();
+  const dataBr = agora.toLocaleDateString('pt-BR');
+  const horaBr = agora.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+
+  const linhas = pedidosCompra.map(normalizarPedidoCompraItem).map((item, index) => {
+    const comprarM = calcularComprarM(item);
+    const comprarGG = calcularComprarGG(item);
+    return [
+      index + 1,
+      item.produto || '',
+      item.cor || '',
+      comprarM,
+      comprarGG,
+      {f:`D${index+5}+E${index+5}`},
+      item.obs || ''
+    ];
+  });
+
+  const totalComprarM = pedidosCompra.reduce((a, item) => a + calcularComprarM(normalizarPedidoCompraItem(item)), 0);
+  const totalComprarGG = pedidosCompra.reduce((a, item) => a + calcularComprarGG(normalizarPedidoCompraItem(item)), 0);
+
+  const data = [
+    ['PEDIDO DE COMPRA'],
+    ['Data', dataBr, 'Hora', horaBr],
+    [],
+    ['#', 'Peça', 'Cor', 'M', 'GG', 'Total a comprar', 'Observações'],
+    ...linhas,
+    [],
+    ['TOTAIS', '', '', totalComprarM, totalComprarGG, {f:`D${linhas.length+7}+E${linhas.length+7}`}, '']
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [
+    {wch: 6},
+    {wch: 28},
+    {wch: 18},
+    {wch: 10},
+    {wch: 10},
+    {wch: 16},
+    {wch: 28}
+  ];
+  ws['!merges'] = [{s:{r:0,c:0}, e:{r:0,c:6}}];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'PedidoCompra');
+  XLSX.writeFile(wb, `pedido_compra_${new Date().toISOString().slice(0,10)}.xlsx`);
+  notificar('Planilha exportada com o pedido final de compra!');
+}
+
+// ==========================
+// INIT
+// ==========================
+async 
+function aplicarAprimoramentosVisuais(){
+  const btnTema = document.getElementById('btnTema');
+  if(btnTema && !btnTema.dataset.enhanced){
+    btnTema.dataset.enhanced = '1';
+    btnTema.innerText = document.body.classList.contains('dark') ? 'Tema claro' : 'Tema escuro';
+    btnTema.addEventListener('click', ()=>{
+      setTimeout(()=>{
+        btnTema.innerText = document.body.classList.contains('dark') ? 'Tema claro' : 'Tema escuro';
+      }, 50);
+    });
+  }
+}
+
+async function init(){
+  await carregarUsuariosJsonAuto();
+  atualizarStatusUsuariosJson(usuariosJsonConectado ? "usuarios.json carregado." : "usuarios.json não conectado.");
+  const modoSelect = document.getElementById("modoExpedicao");
+  if(modoSelect) modoSelect.value = modoExpedicao;
+  atualizarModoExpedicao();
+  renderRecebimentoRows();
+  preencherSelect("produto", produtos);
+  preencherSelect("cor", cores);
+  preencherSelect("tamanho", tamanhos);
+
+  preencherSelect("produtoMov", produtos);
+  preencherSelect("corMov", cores);
+  preencherSelect("tamMov", tamanhos);
+
+  preencherSelect("pedidoProduto", produtos);
+  preencherSelect("pedidoCor", cores);
+  preencherSelect("pedidoTamanho", tamanhos);
+
+  preencherSelect("compraProduto", produtos);
+  preencherSelect("compraCor", cores);
+
+  document.getElementById("empresaNome").value = config.empresaNome || defaults.empresaNome;
+  document.getElementById("limiteEstoqueBaixo").value = config.limiteEstoqueBaixo || 3;
+  document.getElementById("pedidoData").value = new Date().toISOString().slice(0,10);
+
+  resetDiario();
+  buildProducaoTables();
+  bindRecalculoProducao();
+  render();
+  aplicarAprimoramentosVisuais();
+  updateNavigationUI("dashboard");
+
+  document.getElementById("dataPrint").innerText = new Date().toLocaleDateString("pt-BR");
+}
+
+function render(){
+  renderDashboard();
+  renderPedidosModulo();
+  renderEstoque();
+  renderPacklist();
+  renderUsuarios();
+  showConfigTab("usuarios");
+  renderLogs();
+  renderProducaoDetalhada();
+  renderPedidoCompra();
+  renderExpedicao();
+}
+
+// ==========================
+// DASHBOARD
+// ==========================
+function renderDashboard(){
+  document.getElementById("pedidosHoje").innerText = pedidos.length;
+
+  let totalVendidas = 0;
+  let vendasPorProduto = {};
+  let alertas = 0;
+
+  pedidos.forEach(p=>{
+    if(p.status !== "CANCELADO"){
+      totalVendidas += Number(p.qtd || 0);
+      vendasPorProduto[p.produto] = (vendasPorProduto[p.produto] || 0) + Number(p.qtd || 0);
+    }
+  });
+
+  const totalEstoque = Object.values(estoque).reduce((a,b)=>a+b,0);
+
+  Object.keys(estoque).forEach(k=>{
+    const qtd = estoque[k] || 0;
+    if(qtd > 0 && qtd <= Number(config.limiteEstoqueBaixo || 3)) alertas++;
+  });
+
+  let maisVendido = "-";
+  let maior = 0;
+  Object.keys(vendasPorProduto).forEach(prod=>{
+    if(vendasPorProduto[prod] > maior){
+      maior = vendasPorProduto[prod];
+      maisVendido = prod;
+    }
+  });
+
+  document.getElementById("pecasVendidas").innerText = totalVendidas;
+  document.getElementById("pecasEstoque").innerText = totalEstoque;
+  document.getElementById("maisVendidos").innerText = maisVendido;
+  document.getElementById("alertasEstoque").innerText = alertas;
+
+  renderAlertasDashboard();
+}
+
+function renderAlertasDashboard(){
+  const lista = document.getElementById("listaAlertasDashboard");
+  lista.innerHTML = "";
+
+  const alertas = [];
+  produtos.forEach(prod=>{
+    cores.forEach(c=>{
+      tamanhos.forEach(t=>{
+        const qtd = estoque[key(prod,c,t)] || 0;
+        if(qtd > 0 && qtd <= Number(config.limiteEstoqueBaixo || 3)){
+          alertas.push(`${prod} — ${c} / ${t}: ${qtd} peça(s)`);
+        }
+      });
+    });
+  });
+
+  if(alertas.length === 0){
+    lista.innerHTML = `<div class="alerta-vazio">Nenhum alerta de estoque baixo no momento.</div>`;
+    return;
+  }
+
+  alertas.slice(0,10).forEach(item=>{
+    lista.innerHTML += `<div class="alerta-box">⚠ ${item}</div>`;
+  });
+}
+
+// ==========================
+// PEDIDOS
+// ==========================
+function criarPedido(){
+  const codigo = document.getElementById("pedidoCodigo").value.trim() || ("PED-" + Date.now());
+  const cliente = document.getElementById("pedidoCliente").value.trim();
+  const produto = document.getElementById("pedidoProduto").value;
+  const cor = document.getElementById("pedidoCor").value;
+  const tamanho = document.getElementById("pedidoTamanho").value;
+  const qtd = parseInt(document.getElementById("pedidoQtd").value);
+  const status = document.getElementById("pedidoStatus").value;
+  const data = document.getElementById("pedidoData").value || new Date().toISOString().slice(0,10);
+  const obs = document.getElementById("pedidoObs").value.trim();
+
+  if(!cliente || !produto || !cor || !tamanho || !qtd || qtd <= 0){
+    notificar("Preencha os dados do pedido corretamente.", "error");
+    return;
+  }
+
+  if(pedidos.some(p=>p.codigo === codigo)){
+    notificar("Já existe um pedido com esse código.", "error");
+    return;
+  }
+
+  const saldo = estoque[key(produto, cor, tamanho)] || 0;
+  if(status !== "CANCELADO" && qtd > saldo){
+    notificar("Estoque insuficiente para criar este pedido.", "error");
+    return;
+  }
+
+  if(status !== "CANCELADO"){
+    estoque[key(produto, cor, tamanho)] = saldo - qtd;
+  }
+
+  pedidos.unshift({codigo, cliente, produto, cor, tamanho, qtd, status, data, obs});
+  saveLocal();
+  render();
+  adicionarLog("PEDIDO_CRIADO", `Código: ${codigo}, Cliente: ${cliente}, Produto: ${produto}, Qtd: ${qtd}`);
+  notificar("Pedido salvo com sucesso!");
+
+  document.getElementById("pedidoCodigo").value = "";
+  document.getElementById("pedidoCliente").value = "";
+  document.getElementById("pedidoQtd").value = "";
+  document.getElementById("pedidoObs").value = "";
+  document.getElementById("pedidoStatus").value = "PENDENTE";
+  document.getElementById("pedidoData").value = new Date().toISOString().slice(0,10);
+}
+
+function statusPill(status){
+  const s = String(status || "").toUpperCase();
+  if(s === "CONCLUIDO") return `<span class="pill pill-success">${s}</span>`;
+  if(s === "CANCELADO") return `<span class="pill pill-danger">${s}</span>`;
+  if(s === "SEPARANDO") return `<span class="pill pill-warning">${s}</span>`;
+  return `<span class="pill pill-neutral">${s}</span>`;
+}
+
+function renderPedidosModulo(){
+  const lista = document.getElementById("listaPedidosModulo");
+  if(!lista) return;
+
+  const busca = (document.getElementById("filtroPedidoBusca").value || "").toLowerCase().trim();
+  const statusFiltro = document.getElementById("filtroPedidoStatus").value;
+
+  lista.innerHTML = "";
+
+  const filtrados = pedidos.filter(p=>{
+    const txt = `${p.codigo} ${p.cliente} ${p.produto}`.toLowerCase();
+    const okBusca = !busca || txt.includes(busca);
+    const okStatus = !statusFiltro || p.status === statusFiltro;
+    return okBusca && okStatus;
+  });
+
+  if(filtrados.length === 0){
+    lista.innerHTML = `<tr><td colspan="9">Nenhum pedido encontrado.</td></tr>`;
+    return;
+  }
+
+  filtrados.forEach(p=>{
+    const idx = pedidos.findIndex(x=>x.codigo === p.codigo);
+    lista.innerHTML += `
+      <tr>
+        <td>${p.codigo}</td>
+        <td>${p.cliente}</td>
+        <td>${p.produto}</td>
+        <td>${p.cor}</td>
+        <td>${p.tamanho}</td>
+        <td>${p.qtd}</td>
+        <td>${statusPill(p.status)}</td>
+        <td>${p.data}</td>
+        <td>
+          <button class="secondary" onclick="alterarStatusPedido(${idx}, 'CONCLUIDO')">Concluir</button>
+          <button class="danger" onclick="cancelarPedido(${idx})">Cancelar</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+function alterarStatusPedido(index, novoStatus){
+  const pedido = pedidos[index];
+  if(!pedido) return;
+  pedido.status = novoStatus;
+  saveLocal();
+  renderPedidosModulo();
+  adicionarLog("PEDIDO_STATUS", `Pedido ${pedido.codigo} alterado para ${novoStatus}`);
+  notificar("Status atualizado!");
+}
+
+function cancelarPedido(index){
+  if(!(isMaster() || hasPermission("DELETE_GENERAL"))) return notificar("Acesso negado!", "error");
+  const pedido = pedidos[index];
+  if(!pedido) return;
+
+  if(pedido.status !== "CANCELADO"){
+    estoque[key(pedido.produto, pedido.cor, pedido.tamanho)] =
+      (estoque[key(pedido.produto, pedido.cor, pedido.tamanho)] || 0) + Number(pedido.qtd || 0);
+  }
+
+  pedido.status = "CANCELADO";
+  saveLocal();
+  render();
+  adicionarLog("PEDIDO_CANCELADO", `Pedido ${pedido.codigo} cancelado`);
+  notificar("Pedido cancelado!");
+}
+
+// ==========================
+// PACKLIST
+// ==========================
+function addPedidoPacklist(){
+  const produto = document.getElementById("produto").value;
+  const cor = document.getElementById("cor").value;
+  const tamanho = document.getElementById("tamanho").value;
+  const qtd = parseInt(document.getElementById("quantidade").value);
+
+  if(!qtd || qtd <= 0){
+    notificar("Quantidade inválida!", "error");
+    return;
+  }
+
+  const saldo = estoque[key(produto, cor, tamanho)] || 0;
+  if(qtd > saldo){
+    notificar("Estoque insuficiente para este packlist!", "error");
+    return;
+  }
+
+  packlist.push({produto, cor, tamanho, qtd});
+  estoque[key(produto, cor, tamanho)] = saldo - qtd;
+
+  saveLocal();
+  render();
+  adicionarLog("PACKLIST_ADICIONADO", `Produto: ${produto}, Cor: ${cor}, Tam: ${tamanho}, Qtd: ${qtd}`);
+  notificar("Item adicionado ao packlist!");
+}
+
+function renderPacklist(){
+  const lista = document.getElementById("listaPacklist");
+  const totais = document.getElementById("totaisPacklist");
+
+  lista.innerHTML = "";
+  totais.innerHTML = "";
+
+  let totalGeral = 0;
+  const produtosTotais = {};
+
+  packlist.forEach((o, i)=>{
+    lista.innerHTML += `
+      <tr>
+        <td>${o.produto}</td>
+        <td>${o.cor}</td>
+        <td>${o.tamanho}</td>
+        <td>${o.qtd}</td>
+        <td><button class="danger" onclick="removerItemPacklist(${i})">Excluir</button></td>
+      </tr>
+    `;
+    totalGeral += o.qtd;
+    produtosTotais[o.produto] = (produtosTotais[o.produto] || 0) + o.qtd;
+  });
+
+  let footerHTML = `<tr><td colspan="3">Total Geral</td><td>${totalGeral}</td><td></td></tr>`;
+  Object.keys(produtosTotais).forEach(p=>{
+    footerHTML += `<tr><td colspan="3">${p}</td><td>${produtosTotais[p]}</td><td></td></tr>`;
+  });
+
+  totais.innerHTML = footerHTML;
+  aplicarPermissoes();
+}
+
+function removerItemPacklist(index){
+  if(!(isMaster() || hasPermission("DELETE_GENERAL"))) return notificar("Acesso negado!", "error");
+  const item = packlist[index];
+  if(!item) return;
+
+  estoque[key(item.produto, item.cor, item.tamanho)] =
+    (estoque[key(item.produto, item.cor, item.tamanho)] || 0) + Number(item.qtd || 0);
+
+  packlist.splice(index, 1);
+  saveLocal();
+  render();
+  adicionarLog("PACKLIST_REMOVIDO", `Produto: ${item.produto}, Qtd: ${item.qtd}`);
+  notificar("Item removido do packlist!");
+}
+
+function imprimirPacklist(){
+  if(packlist.length === 0){
+    notificar("Não há itens no packlist!", "error");
+    return;
+  }
+
+  const acao = prompt("Escolha:\n1 - Imprimir / Salvar PDF\n2 - Excluir packlist");
+
+  if(acao === "1"){
+    let tabela = `<table>
+      <thead>
+        <tr><th>Produto</th><th>Cor</th><th>Tamanho</th><th>Qtd</th></tr>
+      </thead><tbody>`;
+
+    packlist.forEach(p=>{
+      tabela += `<tr><td>${p.produto}</td><td>${p.cor}</td><td>${p.tamanho}</td><td>${p.qtd}</td></tr>`;
+    });
+
+    tabela += `</tbody><tfoot>${document.getElementById("totaisPacklist").innerHTML}</tfoot></table>`;
+    const rodape = document.getElementById("packlistRodape").outerHTML;
+
+    const printWindow = window.open("", "", "width=800,height=600");
+    printWindow.document.write(`
+      <html>
+      <head>
+        <title>Packlist</title>
+        <style>
+          body{font-family:sans-serif;padding:20px;}
+          table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+          th,td{border:1px solid #000;padding:8px;text-align:left;}
+          tfoot td{font-weight:bold;}
+        
+
+.prod-shell{display:flex;flex-direction:column;gap:16px;}
+.prod-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:2px;}
+.prod-tab-btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.18s ease;box-shadow:var(--shadow);}
+.prod-tab-btn:hover{transform:translateY(-1px);}
+.prod-tab-btn.active{background:var(--primary-soft);border-color:var(--primary-border);color:var(--primary);}
+.prod-panel{display:none;}
+.prod-panel.active{display:block;}
+.prod-note{color:var(--muted);margin:0 0 14px;line-height:1.6;}
+.prod-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+
+.config-shell{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:start;margin-top:10px;}
+.config-side{display:flex;flex-direction:column;gap:10px;}
+.config-tab-btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:12px 14px;text-align:left;font-weight:700;cursor:pointer;transition:.18s ease;}
+.config-tab-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow);}
+.config-tab-btn.active{background:var(--primary-soft);border-color:rgba(12,74,110,.22);color:var(--primary);}
+.config-panel{display:none;}
+.config-panel.active{display:block;}
+.config-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px;}
+.config-box{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:16px;box-shadow:var(--shadow);}
+.config-box h3,.config-box h4{margin:0 0 8px;}
+.config-box p,.config-box li,.config-box small{color:var(--muted);}
+.config-box ul{margin:10px 0 0 18px;padding:0;}
+.users-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.users-toolbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+.users-toolbar .field{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:14px;}
+.user-file-status{margin-top:8px;font-size:13px;color:var(--muted);}
+.master-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font-weight:700;font-size:12px;}
+.inline-actions.wrap{flex-wrap:wrap;}
+@media (max-width: 980px){.config-shell{grid-template-columns:1fr;}.config-side{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}}
+
+</style>
+      </head>
+      <body>${tabela}${rodape}</body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+    notificar("Use 'Salvar como PDF' do navegador.");
+  } else if(acao === "2"){
+    if(confirm("Tem certeza? Excluirá o packlist do dia.")){
+      packlist.forEach(item=>{
+        estoque[key(item.produto, item.cor, item.tamanho)] =
+          (estoque[key(item.produto, item.cor, item.tamanho)] || 0) + Number(item.qtd || 0);
+      });
+      packlist = [];
+      saveLocal();
+      render();
+      adicionarLog("PACKLIST_EXCLUIDO", "Todos os itens do packlist foram excluídos");
+      notificar("Packlist excluído!");
+    }
+  } else {
+    notificar("Opção inválida!", "error");
+  }
+}
+
+// ==========================
+// ESTOQUE
+// ==========================
+function entrada(){
+  const p = document.getElementById("produtoMov").value;
+  const c = document.getElementById("corMov").value;
+  const t = document.getElementById("tamMov").value;
+  const q = parseInt(document.getElementById("qtdMov").value);
+
+  if(!q || q <= 0){
+    notificar("Quantidade inválida!", "error");
+    return;
+  }
+
+  estoque[key(p,c,t)] = (estoque[key(p,c,t)] || 0) + q;
+  saveLocal();
+  render();
+  adicionarLog("ENTRADA_ESTOQUE", `Produto: ${p}, Cor: ${c}, Tamanho: ${t}, Qtd: ${q}`);
+  notificar("Entrada no estoque registrada!");
+}
+
+function saida(){
+  const p = document.getElementById("produtoMov").value;
+  const c = document.getElementById("corMov").value;
+  const t = document.getElementById("tamMov").value;
+  const q = parseInt(document.getElementById("qtdMov").value);
+
+  if(!q || q <= 0){
+    notificar("Quantidade inválida!", "error");
+    return;
+  }
+
+  const k = key(p,c,t);
+  const atual = estoque[k] || 0;
+
+  if(q > atual){
+    notificar("Estoque insuficiente!", "error");
+    return;
+  }
+
+  estoque[k] = atual - q;
+  saveLocal();
+  render();
+  adicionarLog("SAIDA_ESTOQUE", `Produto: ${p}, Cor: ${c}, Tamanho: ${t}, Qtd: ${q}`);
+  notificar("Saída do estoque registrada!");
+}
+
+function novoProduto(){
+  const nome = prompt("Nome do novo produto:");
+  const nomeNormalizado = String(nome || "").trim();
+  if(!nomeNormalizado || produtos.some(p => p.toLowerCase() === nomeNormalizado.toLowerCase())){
+    notificar("Produto inválido ou já existente!", "error");
+    return;
+  }
+
+  produtos.push(nomeNormalizado);
+  saveLocal();
+  init();
+  adicionarLog("PRODUTO_ADICIONADO", `Produto: ${nomeNormalizado}`);
+  notificar(`Produto "${nomeNormalizado}" adicionado!`);
+}
+
+function novaCor(){
+  const nome = prompt("Nome da nova cor:");
+  const nomeNormalizado = String(nome || "").trim();
+  if(!nomeNormalizado){
+    notificar("Cor inválida!", "error");
+    return;
+  }
+  if(cores.some(c => c.toLowerCase() === nomeNormalizado.toLowerCase())){
+    notificar("Essa cor já existe no sistema!", "error");
+    return;
+  }
+
+  cores.push(nomeNormalizado);
+  saveLocal();
+  init();
+  adicionarLog("COR_ADICIONADA", `Cor: ${nomeNormalizado}`);
+  notificar(`Cor "${nomeNormalizado}" adicionada!`);
+}
+
+function removerCor(){
+  const corAtual = document.getElementById("corMov")?.value || "";
+  const nome = prompt("Digite o nome da cor que deseja remover:", corAtual);
+  const nomeNormalizado = String(nome || "").trim();
+  if(!nomeNormalizado){
+    notificar("Nenhuma cor informada.", "error");
+    return;
+  }
+  const corEncontrada = cores.find(c => c.toLowerCase() === nomeNormalizado.toLowerCase());
+  if(!corEncontrada){
+    notificar("Cor não encontrada no sistema!", "error");
+    return;
+  }
+  if(!confirm(`Confirma remover a cor "${corEncontrada}"?`)) return;
+
+  cores = cores.filter(c => c.toLowerCase() !== corEncontrada.toLowerCase());
+  Object.keys(estoque).forEach(k=>{
+    const partes = k.split("|");
+    if(partes[1] && partes[1].toLowerCase() === corEncontrada.toLowerCase()) delete estoque[k];
+  });
+  pedidos = pedidos.filter(p => String(p.cor || "").toLowerCase() !== corEncontrada.toLowerCase());
+  packlist = packlist.filter(p => String(p.cor || "").toLowerCase() !== corEncontrada.toLowerCase());
+  saveLocal();
+  init();
+  adicionarLog("COR_REMOVIDA", `Cor: ${corEncontrada}`);
+  notificar(`Cor "${corEncontrada}" removida!`);
+}
+
+function retirarProduto(){
+  if(!(isMaster() || hasPermission("DELETE_GENERAL"))) return notificar("Acesso negado!", "error");
+  const p = document.getElementById("produtoMov").value;
+  if(confirm(`Confirma remover "${p}" do catálogo?`)){
+    produtos = produtos.filter(x => x !== p);
+    Object.keys(estoque).forEach(k=>{
+      if(k.startsWith(p + "|")) delete estoque[k];
+    });
+    saveLocal();
+    init();
+    syncMobileQuickNav("dashboard");
+    adicionarLog("PRODUTO_REMOVIDO", `Produto: ${p}`);
+    notificar(`Produto "${p}" removido!`);
+  }
+}
+
+function calcularTotalProduto(produtoNome){
+  let total = 0;
+  cores.forEach(c=>{
+    tamanhos.forEach(t=>{
+      total += estoque[key(produtoNome, c, t)] || 0;
+    });
+  });
+  return total;
+}
+
+function classificarEstoque(total){
+  if(total <= 2) return {classe:"critico", texto:"Crítico"};
+  if(total <= Number(config.limiteEstoqueBaixo || 3) + 2) return {classe:"baixo", texto:"Baixo"};
+  return {classe:"bom", texto:"Bom"};
+}
+
+function montarDetalhesProduto(produtoNome){
+  let html = "";
+  let encontrou = false;
+
+  cores.forEach(corItem=>{
+    let linhas = "";
+    let totalCor = 0;
+
+    tamanhos.forEach(tamItem=>{
+      const qtd = estoque[key(produtoNome, corItem, tamItem)] || 0;
+      totalCor += qtd;
+
+      if(qtd > 0){
+        linhas += `
+          <div class="estoque-tamanho-linha">
+            <span>Tam. ${tamItem}</span>
+            <strong>${qtd}</strong>
+          </div>
+        `;
+      }
+    });
+
+    if(totalCor > 0){
+      encontrou = true;
+      html += `
+        <div class="estoque-cor-bloco">
+          <div class="estoque-cor-titulo">${corItem} — ${totalCor} peça(s)</div>
+          ${linhas}
+        </div>
+      `;
+    }
+  });
+
+  if(!encontrou){
+    html = `<div class="estoque-vazio">Sem estoque disponível para este produto.</div>`;
+  }
+
+  return html;
+}
+
+function toggleEstoqueCard(card){
+  card.classList.toggle("open");
+}
+
+function renderEstoque(){
+  const lista = document.getElementById("estoqueLista");
+  const busca = (document.getElementById("buscaEstoque")?.value || "").toLowerCase().trim();
+
+  lista.innerHTML = "";
+
+  let produtosFiltrados = produtos.filter(prod => prod.toLowerCase().includes(busca));
+
+  if(produtosFiltrados.length === 0){
+    lista.innerHTML = `<div class="alerta-vazio">Nenhum produto encontrado na busca.</div>`;
+    document.getElementById("pecasEstoque").innerText = Object.values(estoque).reduce((a,b)=>a+b,0);
+    return;
+  }
+
+  produtosFiltrados.forEach(prod=>{
+    const totalProduto = calcularTotalProduto(prod);
+    const detalheHtml = montarDetalhesProduto(prod);
+    const status = classificarEstoque(totalProduto);
+
+    const card = document.createElement("div");
+    card.className = "estoque-card";
+    card.onclick = function(){
+      toggleEstoqueCard(card);
+    };
+
+    card.innerHTML = `
+      <div class="estoque-faixa faixa-${status.classe}"></div>
+      <div class="estoque-card-header">
+        <h3>${prod}</h3>
+        <div class="estoque-toggle">⌄</div>
+      </div>
+
+      <div class="estoque-total">
+        ${totalProduto}
+        <span>${totalProduto === 1 ? "Peça" : "Peças"}</span>
+      </div>
+
+      <div class="estoque-status status-${status.classe}">
+        Estoque ${status.texto}
+      </div>
+
+      <div class="estoque-detalhe">
+        ${detalheHtml}
+      </div>
+    `;
+
+    lista.appendChild(card);
+  });
+
+  const totalEstoque = Object.values(estoque).reduce((a,b)=>a+b,0);
+  document.getElementById("pecasEstoque").innerText = totalEstoque;
+}
+
+function zerarEstoque(){
+  if(!(isMaster() || hasPermission("DELETE_GENERAL"))) return notificar("Acesso negado!", "error");
+  if(confirm("Deseja zerar todo estoque?")){
+    estoque = {};
+    saveLocal();
+    render();
+    adicionarLog("ESTOQUE_ZERADO", "Todo o estoque foi zerado");
+    notificar("Estoque zerado!");
+  }
+}
+
+// ==========================
+// PRODUÇÃO
+// ==========================
+function buildProducaoTables(){
+  const rcBody = document.getElementById("rc_tbody");
+  const pcBody = document.getElementById("pc_tbody");
+  if(!rcBody || !pcBody) return;
+
+  if(rcBody.innerHTML.trim() === ""){
+    for(let i=0;i<12;i++){
+      rcBody.innerHTML += `
+        <tr>
+          <td><input id="rc_cor_${i}"></td>
+          <td><input id="rc_p_${i}" type="number"></td>
+          <td><input id="rc_m_${i}" type="number"></td>
+          <td><input id="rc_g_${i}" type="number"></td>
+          <td><input id="rc_gg_${i}" type="number"></td>
+          <td><input id="rc_outros_${i}" type="number"></td>
+          <td><input id="rc_obs_${i}"></td>
+          <td><input id="rc_subtotal_${i}" readonly></td>
+        </tr>
+      `;
+    }
+  }
+
+  if(pcBody.innerHTML.trim() === ""){
+    for(let i=0;i<7;i++){
+      pcBody.innerHTML += `
+        <tr>
+          <td><input id="pc_cor_${i}"></td>
+          <td><input id="pc_p_${i}" type="number"></td>
+          <td><input id="pc_m_${i}" type="number"></td>
+          <td><input id="pc_g_${i}" type="number"></td>
+          <td><input id="pc_gg_${i}" type="number"></td>
+          <td><input id="pc_outros_${i}" type="number"></td>
+          <td><input id="pc_obs_${i}"></td>
+          <td><input id="pc_subtotal_${i}" readonly></td>
+        </tr>
+      `;
+    }
+  }
+}
+
+function getInputValue(id){
+  const el = document.getElementById(id);
+  return el ? el.value : "";
+}
+
+function setInputValue(id, value){
+  const el = document.getElementById(id);
+  if(el) el.value = value;
+}
+
+function setTextValue(id, value){
+  const el = document.getElementById(id);
+  if(el) el.innerText = value;
+}
+
+function calcularSubtotalLinha(prefixo, index){
+  const p = numero(getInputValue(`${prefixo}_p_${index}`));
+  const m = numero(getInputValue(`${prefixo}_m_${index}`));
+  const g = numero(getInputValue(`${prefixo}_g_${index}`));
+  const gg = numero(getInputValue(`${prefixo}_gg_${index}`));
+  const outros = numero(getInputValue(`${prefixo}_outros_${index}`));
+  return p + m + g + gg + outros;
+}
+
+function calcularTotaisRiscoCorte(){
+  let total = 0;
+
+  for(let i=0;i<12;i++){
+    const subtotal = calcularSubtotalLinha("rc", i);
+    total += subtotal;
+    setInputValue(`rc_subtotal_${i}`, subtotal);
+  }
+
+  const corte = numero(getInputValue("rc_corte"));
+  const risco = numero(getInputValue("rc_risco_valor"));
+  const ampliacao = numero(getInputValue("rc_ampliacao_valor"));
+  const valorFinal = corte + risco + ampliacao;
+  const valorPorPeca = total > 0 ? valorFinal / total : 0;
+
+  setInputValue("rc_total_pecas", total);
+  setInputValue("rc_valor_final", valorFinal.toFixed(2));
+  setInputValue("rc_valor_peca", valorPorPeca.toFixed(4));
+
+  setTextValue("rc_total_pecas_text", total);
+  setTextValue("rc_valor_final_text", money(valorFinal));
+  setTextValue("rc_valor_peca_text", money(valorPorPeca));
+
+  return { totalPecas: total, corte, risco, ampliacao, valorFinal, valorPorPeca };
+}
+
+function calcularTotaisCostura(){
+  let total = 0;
+
+  for(let i=0;i<7;i++){
+    const subtotal = calcularSubtotalLinha("pc", i);
+    total += subtotal;
+    setInputValue(`pc_subtotal_${i}`, subtotal);
+  }
+
+  const qtdRolo = numero(getInputValue("pc_qtd_rolo"));
+  const transporte = numero(getInputValue("pc_transporte"));
+  const aviamento = numero(getInputValue("pc_aviamento"));
+  const riscoCorte = calcularTotaisRiscoCorte().valorFinal;
+  const valorTecido = qtdRolo * 539.8;
+  const valorCostura = total * 3;
+  const custoTotal = valorTecido + valorCostura + riscoCorte + transporte + aviamento;
+  const custoUnitario = total > 0 ? custoTotal / total : 0;
+
+  setInputValue("pc_total_pecas", total);
+  setInputValue("pc_valor_tecido", valorTecido.toFixed(2));
+  setInputValue("pc_valor_costura", valorCostura.toFixed(2));
+  setInputValue("pc_valor_risco_corte", riscoCorte.toFixed(2));
+  setInputValue("pc_custo_total", custoTotal.toFixed(2));
+  setInputValue("pc_custo_unitario", custoUnitario.toFixed(4));
+
+  setTextValue("pc_total_pecas_text", total);
+  setTextValue("pc_valor_tecido_text", money(valorTecido));
+  setTextValue("pc_valor_costura_text", money(valorCostura));
+  setTextValue("pc_valor_risco_corte_text", money(riscoCorte));
+  setTextValue("pc_custo_total_text", money(custoTotal));
+  setTextValue("pc_custo_unitario_text", money(custoUnitario));
+
+  return {
+    totalPecas: total,
+    qtdRolo,
+    valorTecido,
+    valorCostura,
+    riscoCorte,
+    transporte,
+    aviamento,
+    custoTotal,
+    custoUnitario
+  };
+}
+
+function recalcularProducaoCompleta(){
+  calcularTotaisRiscoCorte();
+  calcularTotaisCostura();
+}
+
+function coletarLinhas(prefixo, qtdLinhas){
+  const linhas = [];
+  for(let i=0;i<qtdLinhas;i++){
+    const cor = getInputValue(`${prefixo}_cor_${i}`).trim();
+    const p = numero(getInputValue(`${prefixo}_p_${i}`));
+    const m = numero(getInputValue(`${prefixo}_m_${i}`));
+    const g = numero(getInputValue(`${prefixo}_g_${i}`));
+    const gg = numero(getInputValue(`${prefixo}_gg_${i}`));
+    const outros = numero(getInputValue(`${prefixo}_outros_${i}`));
+    const obs = getInputValue(`${prefixo}_obs_${i}`).trim();
+    const subtotal = p + m + g + gg + outros;
+
+    if(cor || subtotal > 0 || obs){
+      linhas.push({cor,p,m,g,gg,outros,obs,subtotal});
+    }
+  }
+  return linhas;
+}
+
+function salvarProducaoPlanilha(){
+  const resumoRisco = calcularTotaisRiscoCorte();
+  const resumoCostura = calcularTotaisCostura();
+
+  const registro = {
+    id: getInputValue("prod_id") || ("PROD-" + Date.now()),
+    dataInicio: getInputValue("prod_data_inicio"),
+    dataFim: getInputValue("prod_data_fim"),
+    modeloTecido: getInputValue("prod_modelo_tecido"),
+    localProducao: getInputValue("prod_local_producao"),
+    localCorte: getInputValue("rc_local_corte"),
+    ampliacaoNome: getInputValue("rc_ampliacao_nome"),
+    riscoNome: getInputValue("rc_risco_nome"),
+    responsavel: getInputValue("prod_responsavel"),
+    riscoCorte: {
+      linhas: coletarLinhas("rc", 12),
+      corte: resumoRisco.corte,
+      risco: resumoRisco.risco,
+      ampliacao: resumoRisco.ampliacao,
+      totalPecas: resumoRisco.totalPecas,
+      valorFinal: resumoRisco.valorFinal,
+      valorPorPeca: resumoRisco.valorPorPeca
+    },
+    costura: {
+      linhas: coletarLinhas("pc", 7),
+      qtdRolo: resumoCostura.qtdRolo,
+      valorTecido: resumoCostura.valorTecido,
+      valorCostura: resumoCostura.valorCostura,
+      riscoCorte: resumoCostura.riscoCorte,
+      transporte: resumoCostura.transporte,
+      aviamento: resumoCostura.aviamento,
+      totalPecas: resumoCostura.totalPecas,
+      custoTotal: resumoCostura.custoTotal,
+      custoUnitario: resumoCostura.custoUnitario
+    }
+  };
+
+  const indexExistente = producaoDetalhada.findIndex(x=>x.id === registro.id);
+  if(indexExistente >= 0) producaoDetalhada[indexExistente] = registro;
+  else producaoDetalhada.unshift(registro);
+
+  saveLocal();
+  renderProducaoDetalhada();
+  adicionarLog("PRODUCAO_SALVA", `ID: ${registro.id}, Modelo: ${registro.modeloTecido}, Total peças: ${registro.costura.totalPecas}`);
+  notificar("Produção salva com sucesso!");
+}
+
+function renderProducaoDetalhada(){
+  const lista = document.getElementById("listaProducao");
+  lista.innerHTML = "";
+
+  if(producaoDetalhada.length === 0){
+    lista.innerHTML = `<tr><td colspan="8">Nenhuma produção salva.</td></tr>`;
+    return;
+  }
+
+  producaoDetalhada.forEach((item, i)=>{
+    lista.innerHTML += `
+      <tr>
+        <td>${item.id || ""}</td>
+        <td>${item.dataInicio || ""}</td>
+        <td>${item.dataFim || ""}</td>
+        <td>${item.modeloTecido || ""}</td>
+        <td>${item.costura.totalPecas || 0}</td>
+        <td>${money(item.costura.custoTotal || 0)}</td>
+        <td>${money(item.costura.custoUnitario || 0)}</td>
+        <td>
+          <button class="primary" onclick="carregarProducaoDetalhada(${i})">Abrir</button>
+          <button class="danger" onclick="removerProducaoDetalhada(${i})">Excluir</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+function carregarProducaoDetalhada(index){
+  const item = producaoDetalhada[index];
+  if(!item) return;
+
+  setInputValue("prod_id", item.id || "");
+  setInputValue("prod_data_inicio", item.dataInicio || "");
+  setInputValue("prod_data_fim", item.dataFim || "");
+  setInputValue("prod_modelo_tecido", item.modeloTecido || "");
+  setInputValue("prod_local_producao", item.localProducao || "");
+  setInputValue("rc_local_corte", item.localCorte || "");
+  setInputValue("rc_ampliacao_nome", item.ampliacaoNome || "");
+  setInputValue("rc_risco_nome", item.riscoNome || "");
+  setInputValue("prod_responsavel", item.responsavel || "");
+
+  for(let i=0;i<12;i++){
+    const linha = item.riscoCorte.linhas[i] || {};
+    setInputValue(`rc_cor_${i}`, linha.cor || "");
+    setInputValue(`rc_p_${i}`, linha.p || "");
+    setInputValue(`rc_m_${i}`, linha.m || "");
+    setInputValue(`rc_g_${i}`, linha.g || "");
+    setInputValue(`rc_gg_${i}`, linha.gg || "");
+    setInputValue(`rc_outros_${i}`, linha.outros || "");
+    setInputValue(`rc_obs_${i}`, linha.obs || "");
+  }
+
+  for(let i=0;i<7;i++){
+    const linha = item.costura.linhas[i] || {};
+    setInputValue(`pc_cor_${i}`, linha.cor || "");
+    setInputValue(`pc_p_${i}`, linha.p || "");
+    setInputValue(`pc_m_${i}`, linha.m || "");
+    setInputValue(`pc_g_${i}`, linha.g || "");
+    setInputValue(`pc_gg_${i}`, linha.gg || "");
+    setInputValue(`pc_outros_${i}`, linha.outros || "");
+    setInputValue(`pc_obs_${i}`, linha.obs || "");
+  }
+
+  setInputValue("rc_corte", item.riscoCorte.corte || "");
+  setInputValue("rc_risco_valor", item.riscoCorte.risco || "");
+  setInputValue("rc_ampliacao_valor", item.riscoCorte.ampliacao || "");
+  setInputValue("pc_qtd_rolo", item.costura.qtdRolo || "");
+  setInputValue("pc_transporte", item.costura.transporte || "");
+  setInputValue("pc_aviamento", item.costura.aviamento || "");
+
+  recalcularProducaoCompleta();
+  notificar("Produção carregada!");
+}
+
+function removerProducaoDetalhada(index){
+  if(!(isMaster() || hasPermission("DELETE_GENERAL"))) return notificar("Acesso negado!", "error");
+  if(!confirm("Deseja excluir esta produção?")) return;
+  producaoDetalhada.splice(index, 1);
+  saveLocal();
+  renderProducaoDetalhada();
+  notificar("Produção removida!");
+}
+
+function limparFormularioProducao(){
+  const ids = [
+    "prod_id","prod_data_inicio","prod_data_fim","prod_modelo_tecido","prod_local_producao",
+    "rc_local_corte","rc_ampliacao_nome","rc_risco_nome","prod_responsavel",
+    "rc_corte","rc_risco_valor","rc_ampliacao_valor",
+    "pc_qtd_rolo","pc_transporte","pc_aviamento"
+  ];
+  ids.forEach(id=>setInputValue(id, ""));
+
+  for(let i=0;i<12;i++){
+    ["cor","p","m","g","gg","outros","obs","subtotal"].forEach(campo=> setInputValue(`rc_${campo}_${i}`, ""));
+  }
+  for(let i=0;i<7;i++){
+    ["cor","p","m","g","gg","outros","obs","subtotal"].forEach(campo=> setInputValue(`pc_${campo}_${i}`, ""));
+  }
+
+  recalcularProducaoCompleta();
+  notificar("Formulário limpo!");
+}
+
+function bindRecalculoProducao(){
+  const ids = [];
+  for(let i=0;i<12;i++) ids.push(`rc_p_${i}`, `rc_m_${i}`, `rc_g_${i}`, `rc_gg_${i}`, `rc_outros_${i}`);
+  for(let i=0;i<7;i++) ids.push(`pc_p_${i}`, `pc_m_${i}`, `pc_g_${i}`, `pc_gg_${i}`, `pc_outros_${i}`);
+  ids.push("rc_corte","rc_risco_valor","rc_ampliacao_valor","pc_qtd_rolo","pc_transporte","pc_aviamento");
+
+  ids.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){
+      el.removeEventListener("input", recalcularProducaoCompleta);
+      el.addEventListener("input", recalcularProducaoCompleta);
+    }
+  });
+}
+
+function exportarProducaoParaPlanilha(){
+  if(typeof XLSX === "undefined"){
+    notificar("Biblioteca XLSX não carregada no sistema.", "error");
+    return;
+  }
+
+  const resumoRisco = calcularTotaisRiscoCorte();
+  const resumoCostura = calcularTotaisCostura();
+
+  const wb = XLSX.utils.book_new();
+
+  const rcData = [];
+  rcData.push(["ROMANEIO DE RISCO E CORTE","","","","","","","DATA:"]);
+  rcData.push(["MODELO:", getInputValue("prod_modelo_tecido"), "", "", "", "", "", "ID: " + getInputValue("prod_id")]);
+  rcData.push(["AMPLIAÇÃO:", getInputValue("rc_ampliacao_nome")]);
+  rcData.push(["RISCO:", getInputValue("rc_risco_nome")]);
+  rcData.push(["LOCAL CORTE:", getInputValue("rc_local_corte")]);
+  rcData.push([]);
+  rcData.push(["COR","P","M","G","GG","OUTROS","OBSERVAÇÃO","SUBTOTAL"]);
+
+  for(let i=0;i<12;i++){
+    rcData.push([
+      getInputValue(`rc_cor_${i}`),
+      numero(getInputValue(`rc_p_${i}`)),
+      numero(getInputValue(`rc_m_${i}`)),
+      numero(getInputValue(`rc_g_${i}`)),
+      numero(getInputValue(`rc_gg_${i}`)),
+      numero(getInputValue(`rc_outros_${i}`)),
+      getInputValue(`rc_obs_${i}`),
+      calcularSubtotalLinha("rc", i)
+    ]);
+  }
+
+  rcData.push(["TOTAL","","","","","","",resumoRisco.totalPecas]);
+  rcData.push(["CORTE:",resumoRisco.corte]);
+  rcData.push(["RISCO:",resumoRisco.risco]);
+  rcData.push(["AMPLIAÇÃO:",resumoRisco.ampliacao]);
+  rcData.push([]);
+  rcData.push(["VALOR FINAL:",resumoRisco.valorFinal]);
+  rcData.push(["VALOR POR PEÇA:",resumoRisco.valorPorPeca]);
+  rcData.push([]);
+  rcData.push(["RESPONSAVEL:", getInputValue("prod_responsavel")]);
+
+  const wsRC = XLSX.utils.aoa_to_sheet(rcData);
+  XLSX.utils.book_append_sheet(wb, wsRC, "Risco e Corte");
+
+  const pcData = [];
+  pcData.push(["ROMANEIO DE PRODUÇÃO COSTURA           ID:", getInputValue("prod_id")]);
+  pcData.push([]);
+  pcData.push(["DATA INICIO:", getInputValue("prod_data_inicio"), "", "", "", "DATA FIM:", getInputValue("prod_data_fim")]);
+  pcData.push([]);
+  pcData.push(["MODELO/TECIDO:", getInputValue("prod_modelo_tecido")]);
+  pcData.push([]);
+  pcData.push(["LOCAL DE PRODUÇÃO:", getInputValue("prod_local_producao")]);
+  pcData.push([]);
+  pcData.push(["COR","P","M","G","GG","OUTROS","OBSERVAÇÃO","QTD TOTAL"]);
+
+  for(let i=0;i<7;i++){
+    pcData.push([
+      getInputValue(`pc_cor_${i}`),
+      numero(getInputValue(`pc_p_${i}`)),
+      numero(getInputValue(`pc_m_${i}`)),
+      numero(getInputValue(`pc_g_${i}`)),
+      numero(getInputValue(`pc_gg_${i}`)),
+      numero(getInputValue(`pc_outros_${i}`)),
+      getInputValue(`pc_obs_${i}`),
+      calcularSubtotalLinha("pc", i)
+    ]);
+  }
+
+  while(pcData.length < 24) pcData.push([]);
+  pcData.push(["","","","","","","",resumoCostura.totalPecas]);
+  pcData.push([]);
+  pcData.push(["CUSTO UNITARIO POR PEÇA E TOTAL"]);
+  pcData.push(["QUANTIDADE DE ROLO:","",resumoCostura.qtdRolo]);
+  pcData.push(["VALOR DO TECIDO:","",resumoCostura.valorTecido]);
+  pcData.push(["VALOR COSTURA UN:","",resumoCostura.valorCostura]);
+  pcData.push(["CORTE/ AMPLIA/ RISCO:","",resumoCostura.riscoCorte]);
+  pcData.push(["TRANSPORTE:","",resumoCostura.transporte]);
+  pcData.push(["AVIAMENTO:","",resumoCostura.aviamento]);
+  pcData.push(["CUSTO TOTAL:","",resumoCostura.custoTotal]);
+  pcData.push(["CUSTO UNITARIO PÇ:","",resumoCostura.custoUnitario]);
+  pcData.push([]);
+  pcData.push(["RESPONSAVEL:", getInputValue("prod_responsavel")]);
+
+  const wsPC = XLSX.utils.aoa_to_sheet(pcData);
+  XLSX.utils.book_append_sheet(wb, wsPC, "Romaneio Costura");
+
+  const recData = [];
+  recData.push(["RECEBIMENTO __/___/___ - RESPONSAVEL:"]);
+  recData.push(["COR","P","M","G","GG","OUTROS","DEFEITO"]);
+  recData.push([]);
+  recData.push([]);
+  recData.push([]);
+  recData.push([]);
+  recData.push([]);
+
+  const wsREC = XLSX.utils.aoa_to_sheet(recData);
+  XLSX.utils.book_append_sheet(wb, wsREC, "Recebimento");
+
+  XLSX.writeFile(wb, `Romaneio_${getInputValue("prod_id") || Date.now()}.xlsx`);
+  notificar("Planilha exportada com sucesso!");
+}
+
+// ==========================
+// CONFIG
+// ==========================
+function salvarConfiguracoesGerais(){
+  config.empresaNome = document.getElementById("empresaNome").value.trim() || defaults.empresaNome;
+  config.limiteEstoqueBaixo = Math.max(1, parseInt(document.getElementById("limiteEstoqueBaixo").value) || 3);
+  saveLocal();
+  atualizarBoasVindas();
+  renderDashboard();
+  adicionarLog("CONFIG_SALVA", "Configurações gerais atualizadas");
+  notificar("Configurações salvas!");
+}
+
+function atualizarPainelUsuarios(){
+  const liberado = isMaster();
+  const panel = document.getElementById("masterUserPanel");
+  const blocked = document.getElementById("masterUserPanelBlocked");
+  if(panel) panel.classList.toggle("hidden", !liberado);
+  if(blocked) blocked.classList.toggle("hidden", liberado);
+}
+
+function renderUsuarios(){
+  atualizarPainelUsuarios();
+  const lista = document.getElementById("listaUsuarios");
+  if(!lista) return;
+  lista.innerHTML = "";
+
+  const listaOrdenada = usuarios.slice().sort((a,b)=> a.usuario.localeCompare(b.usuario, 'pt-BR'));
+  if(listaOrdenada.length === 0){
+    lista.innerHTML = `<tr><td colspan="4">Nenhum usuário cadastrado.</td></tr>`;
+    return;
+  }
+
+  listaOrdenada.forEach(u=>{
+    const podeExcluir = isMaster() && u.usuario !== "Rodolfo";
+    const safeName = u.usuario.replace(/'/g, "\'");
+    lista.innerHTML += `<tr>
+      <td>${u.usuario}</td>
+      <td>${u.nivel}</td>
+      <td>${u.origem || "custom"}</td>
+      <td>${podeExcluir ? `<button class="btn-mini delete" onclick="removerUsuario('${safeName}')">Remover</button>` : `<span style="color:var(--muted)">${u.usuario === "Rodolfo" ? "Protegido" : "Sem permissão"}</span>`}</td>
+    </tr>`;
+  });
+}
+
+async function adicionarUsuario(){
+  show("config");
+  showConfigTab("usuarios");
+  document.getElementById("novoUsuarioNome")?.focus();
+}
+
+async function adicionarUsuarioFormulario(){
+  const nome = document.getElementById("novoUsuarioNome")?.value || "";
+  const senha = document.getElementById("novoUsuarioSenha")?.value || "";
+  const nivel = document.getElementById("novoUsuarioNivel")?.value || "OPER";
+  const ok = await criarUsuario(nome, senha, nivel);
+  if(ok){
+    document.getElementById("novoUsuarioNome").value = "";
+    document.getElementById("novoUsuarioSenha").value = "";
+    document.getElementById("novoUsuarioNivel").value = "OPER";
+  }
+}
+
+async function criarUsuario(nome, senha, nivel){
+  if(!isMaster()) return notificar("Apenas Rodolfo pode adicionar usuários.", "error");
+  nome = String(nome || "").trim();
+  senha = String(senha || "").trim();
+  nivel = String(nivel || "OPER").trim().toUpperCase();
+  if(!nome) return notificar("Informe o nome do usuário.", "error");
+  if(!senha) return notificar("Informe a senha do usuário.", "error");
+  if(usuarios.some(u => u.usuario.toLowerCase() === nome.toLowerCase())){
+    return notificar("Já existe um usuário com esse nome.", "error");
+  }
+  if(!["ADMIN","OPER"].includes(nivel)) nivel = "OPER";
+  usuarios.push(normalizarUsuario({usuario:nome, senha:senha, nivel:nivel, origem:"custom"}));
+  saveLocal();
+  await persistirUsuariosJson();
+  renderUsuarios();
+  adicionarLog("USUARIO_ADICIONADO", `Usuário: ${nome}, Nível: ${nivel}`);
+  notificar(`Usuário "${nome}" adicionado com sucesso!`);
+  return true;
+}
+
+async function removerUsuario(nome){
+  if(!isMaster()) return notificar("Apenas Rodolfo pode remover usuários.", "error");
+  if(!nome) return notificar("Usuário inválido.", "error");
+  if(nome === "Rodolfo") return notificar("O usuário master não pode ser removido.", "error");
+  const idx = usuarios.findIndex(u => u.usuario === nome);
+  if(idx === -1) return notificar("Usuário não encontrado.", "error");
+  if(!confirm(`Remover o usuário ${nome}?`)) return;
+  const removido = usuarios.splice(idx, 1)[0];
+  saveLocal();
+  await persistirUsuariosJson();
+  renderUsuarios();
+  adicionarLog("USUARIO_REMOVIDO", `Usuário: ${removido.usuario}`);
+  notificar(`Usuário "${removido.usuario}" removido!`);
+}
+
+async function resetUsuarios(){
+  if(!isMaster()) return notificar("Apenas Rodolfo pode resetar usuários padrão.", "error");
+  if(confirm("Deseja restaurar apenas o usuário master Rodolfo? Isso apagará os demais usuários.")){
+    usuarios = usuariosPadrao();
+    saveLocal();
+    await persistirUsuariosJson();
+    renderUsuarios();
+    adicionarLog("USUARIOS_RESETADOS", "Usuários restaurados para o padrão mínimo");
+    notificar("Usuários restaurados!");
+  }
+}
+
+// ==========================
+// LOGS
+// ==========================
+function renderLogs(){
+  const tbody = document.getElementById("listaLogs");
+  if(!tbody) return;
+  tbody.innerHTML = "";
+  if(logs.length === 0){
+    tbody.innerHTML = `<tr><td colspan="4">Nenhum log registrado.</td></tr>`;
+    return;
+  }
+  logs.forEach(l=>{
+    tbody.innerHTML += `
+      <tr>
+        <td>${l.dataHora}</td>
+        <td>${l.usuario}</td>
+        <td>${l.acao}</td>
+        <td>${l.detalhes}</td>
+      </tr>
+    `;
+  });
+}
+
+function limparLogs(){
+  if(!isMaster()) return notificar("Apenas Rodolfo pode limpar logs.", "error");
+  if(confirm("Tem certeza que deseja limpar todos os logs?")){
+    logs = [];
+    saveLocal();
+    renderLogs();
+    notificar("Logs limpos!");
+  }
+}
+
+// ==========================
+// BACKUP / IMPORTAÇÃO
+// ==========================
+function exportarDados(){
+  const data = {
+    config,
+    usuarios,
+    usuarioAtual,
+    pedidos,
+    packlist,
+    estoque,
+    produtos,
+    logs,
+    producaoDetalhada
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "backup_erp_sa_confeccoes_v5_1.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  notificar("Backup exportado!");
+}
+
+function importarDados(){
+  const fileInput = document.getElementById("importFile");
+  if(fileInput.files.length === 0){
+    notificar("Selecione um arquivo JSON!", "error");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+    try {
+      const data = JSON.parse(e.target.result);
+      config = data.config || config;
+      usuarios = data.usuarios || usuarios;
+      usuarioAtual = data.usuarioAtual || usuarioAtual;
+      pedidos = data.pedidos || [];
+      packlist = data.packlist || [];
+      estoque = data.estoque || {};
+      produtos = data.produtos || defaults.produtosPadrao.slice();
+      logs = data.logs || [];
+      producaoDetalhada = data.producaoDetalhada || [];
+      saveLocal();
+      init();
+      atualizarBoasVindas();
+
+      if(usuarioAtual){
+        document.getElementById("loginTela").style.display = "none";
+        aplicarPermissoes();
+      }
+
+      notificar("Dados importados com sucesso!");
+    } catch(err){
+      notificar("Erro ao importar JSON!", "error");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+async function saveDados() {
+  if(!window.showSaveFilePicker){
+    notificar("Seu navegador não suporta salvamento portátil.", "error");
+    return;
+  }
+
+  if(!dadosFileHandle){
+    try{
+      dadosFileHandle = await window.showSaveFilePicker({
+        suggestedName: "dados_sa_confeccoes_v5_1.json",
+        types: [{description: "JSON S.A Confecções", accept: {"application/json": [".json"]}}]
+      });
+    } catch(e){
+      return;
+    }
+  }
+
+  try {
+    const writable = await dadosFileHandle.createWritable();
+    await writable.write(JSON.stringify({
+      config, usuarios, usuarioAtual, pedidos, packlist, estoque, produtos, logs, producaoDetalhada
+    }, null, 2));
+    await writable.close();
+    notificar("Dados salvos em arquivo portátil!");
+  } catch(e){
+    notificar("Erro ao salvar dados: " + e.message, "error");
+  }
+}
+
+async function loadDados() {
+  if(!window.showOpenFilePicker){
+    notificar("Seu navegador não suporta carregamento portátil.", "error");
+    return;
+  }
+
+  try {
+    const [fileHandle] = await window.showOpenFilePicker({
+      multiple: false,
+      types: [{description: "JSON S.A Confecções", accept: {"application/json": [".json"]}}]
+    });
+
+    dadosFileHandle = fileHandle;
+    const file = await fileHandle.getFile();
+    const text = await file.text();
+    const data = JSON.parse(text);
+
+    config = data.config || config;
+    usuarios = data.usuarios || usuarios;
+    usuarioAtual = data.usuarioAtual || usuarioAtual;
+    pedidos = data.pedidos || [];
+    packlist = data.packlist || [];
+    estoque = data.estoque || {};
+    produtos = data.produtos || defaults.produtosPadrao.slice();
+    logs = data.logs || [];
+    producaoDetalhada = data.producaoDetalhada || [];
+
+    saveLocal();
+    init();
+    renderUsuarios();
+    renderLogs();
+
+    if(usuarioAtual){
+      document.getElementById("loginTela").style.display = "none";
+      atualizarBoasVindas();
+      aplicarPermissoes();
+    }
+
+    notificar("Dados carregados do arquivo portátil!");
+  } catch(e){
+    notificar("Erro ao carregar dados: " + e.message, "error");
+  }
+}
+
+// ==========================
+// RESET DIÁRIO
+// ==========================
+function resetDiario(){
+  const hoje = new Date().toLocaleDateString("pt-BR");
+  const ultimo = localStorage.getItem("ultimoDiaERP");
+
+  if(ultimo !== hoje){
+    packlist = [];
+    saveLocal();
+    localStorage.setItem("ultimoDiaERP", hoje);
+  }
+}
+
+// ==========================
+// ONLOAD
+// ==========================
+window.onload = ()=>{
+  if(localStorage.getItem("tema") === "dark"){
+    document.body.classList.add("dark");
+  }
+
+  atualizarBoasVindas();
+
+  document.getElementById("loginUsuario").addEventListener("keypress", function(e){
+    if(e.key === "Enter") login();
+  });
+  document.getElementById("loginSenha").addEventListener("keypress", function(e){
+    if(e.key === "Enter") login();
+  });
+
+  if(usuarioAtual){
+    document.getElementById("loginTela").style.display = "none";
+    init();
+    syncMobileQuickNav("dashboard");
+    aplicarPermissoes();
+    resetTimer();
+  } else {
+    document.getElementById("loginTela").style.display = "flex";
+    init();
+  }
+};
+function focarCampoExpedicao(){
+  const input = document.getElementById("codigoExpedicao");
+  if(input) input.focus();
+}
+
+function atualizarModoExpedicao(){
+  const select = document.getElementById("modoExpedicao");
+  const texto = document.getElementById("textoModoExpedicao");
+  if(select){
+    modoExpedicao = select.value || "auto";
+    localStorage.setItem("modoExpedicao", modoExpedicao);
+  }
+
+  const mensagens = {
+    auto: "No automático: códigos numéricos com 11 dígitos entram como Mercado Envios. BR entra como Shopee no destino BR ativo.",
+    shopee_agencia: "Os próximos códigos BR serão lançados como Shopee Agência até você trocar o modo.",
+    shopee_direta: "Os próximos códigos BR serão lançados como Shopee Entrega Direta até você trocar o modo.",
+    mercado_envios: "Todos os próximos códigos serão lançados como Mercado Envios até você trocar o modo.",
+    mercado_flex: "Todos os próximos códigos serão lançados como Mercado Flex até você trocar o modo."
+  };
+
+  if(texto) texto.innerText = mensagens[modoExpedicao] || mensagens.auto;
+  atualizarPainelExpedicao();
+}
+
+function setPreferenciaShopee(tipo){
+  if(!["shopee_agencia","shopee_direta"].includes(tipo)) return;
+  preferenciaShopee = tipo;
+  localStorage.setItem("preferenciaShopee", preferenciaShopee);
+  atualizarPainelExpedicao();
+  notificar(`Destino BR alterado para ${nomePreferenciaShopee()}.`);
+  focarCampoExpedicao();
+}
+
+function nomePreferenciaShopee(){
+  if(preferenciaShopee === "shopee_direta") return "Shopee Entrega Direta";
+  return "Shopee Agência";
+}
+
+function identificarTipoExpedicao(codigo){
+  const c = String(codigo || "").trim().toUpperCase();
+  if(!c) return null;
+
+  const manualMap = {
+    shopee_agencia: {tipo: "Shopee Xpress", caixa: "CAIXA SHOPEE XPRESS (AGÊNCIA)", classe: "expedicao-aviso-xpress"},
+    shopee_direta: {tipo: "Shopee Entrega Direta", caixa: "CAIXA SHOPEE ENTREGA DIRETA / TIGER FLEX", classe: "expedicao-aviso-direta"},
+    mercado_envios: {tipo: "Mercado Envios", caixa: "CAIXA MERCADO ENVIOS (AGÊNCIA / CORREIOS)", classe: "expedicao-aviso-mercado"},
+    mercado_flex: {tipo: "Mercado Flex", caixa: "CAIXA MERCADO FLEX / TIGER FLEX", classe: "expedicao-aviso-ok"}
+  };
+
+  const prefixo = c.slice(0,2);
+  const detalhes = {prefixo, tamanho: c.length};
+
+  if(modoExpedicao === "mercado_envios") return {...manualMap.mercado_envios, ...detalhes};
+  if(modoExpedicao === "mercado_flex") return {...manualMap.mercado_flex, ...detalhes};
+  if(modoExpedicao === "shopee_agencia" && prefixo === "BR") return {...manualMap.shopee_agencia, ...detalhes};
+  if(modoExpedicao === "shopee_direta" && prefixo === "BR") return {...manualMap.shopee_direta, ...detalhes};
+
+  if(/^\d{11}$/.test(c)){
+    return {...manualMap.mercado_envios, ...detalhes};
+  }
+
+  if(prefixo === "BR" && c.length >= 10){
+    return {...(preferenciaShopee === "shopee_direta" ? manualMap.shopee_direta : manualMap.shopee_agencia), ...detalhes};
+  }
+
+  if(prefixo === "46"){
+    return {...manualMap.mercado_flex, ...detalhes};
+  }
+
+  return {tipo: "Não reconhecido", caixa: "VERIFICAR MANUALMENTE", classe: "expedicao-aviso-erro", ...detalhes};
+}
+
+function handleBipExpedicao(event){
+  if(event.key === "Enter"){
+    event.preventDefault();
+    processarCodigoExpedicao();
+  }
+}
+
+function atualizarPainelExpedicao(ultimoItem = null){
+  const ultimoCodigo = document.getElementById("ultimoCodigoExpedicao");
+  const ultimaLeitura = document.getElementById("ultimaLeituraExpedicao");
+  const pref = document.getElementById("preferenciaShopee");
+
+  if(pref) pref.innerText = nomePreferenciaShopee();
+  if(ultimoCodigo) ultimoCodigo.innerText = ultimoItem ? ultimoItem.codigo : (expedicao[0]?.codigo || "--");
+  if(ultimaLeitura) ultimaLeitura.innerText = ultimoItem ? ultimoItem.dataHora : (expedicao[0]?.dataHora || "--");
+}
+
+function processarCodigoExpedicao(){
+  const input = document.getElementById("codigoExpedicao");
+  const aviso = document.getElementById("expedicaoAviso");
+  const codigo = input.value.trim().toUpperCase();
+
+  if(!codigo){
+    notificar("Digite ou bipa um código.", "error");
+    return;
+  }
+
+  const jaExiste = expedicao.some(item => item.codigo === codigo);
+  if(jaExiste){
+    aviso.className = "expedicao-aviso-erro";
+    aviso.innerHTML = `⚠ Código já bipado: <strong>${codigo}</strong>`;
+    input.value = "";
+    input.focus();
+    notificar("Esse código já foi lançado.", "error");
+    return;
+  }
+
+  const info = identificarTipoExpedicao(codigo);
+  const agora = new Date().toLocaleString("pt-BR");
+  const item = {
+    codigo,
+    prefixo: info.prefixo || codigo.slice(0,2),
+    tamanho: info.tamanho || codigo.length,
+    tipo: info.tipo,
+    caixa: info.caixa,
+    dataHora: agora
+  };
+
+  expedicao.unshift(item);
+
+  if(codigo.startsWith("BR")){
+    if(modoExpedicao === "shopee_agencia" || info.tipo === "Shopee Xpress"){
+      preferenciaShopee = "shopee_agencia";
+    } else if(modoExpedicao === "shopee_direta" || info.tipo === "Shopee Entrega Direta"){
+      preferenciaShopee = "shopee_direta";
+    }
+    localStorage.setItem("preferenciaShopee", preferenciaShopee);
+    localStorage.setItem("memoriaExpedicao", JSON.stringify(memoriaExpedicao));
+  }
+
+  saveLocal();
+  renderExpedicao();
+  atualizarPainelExpedicao(item);
+
+  if(info.tipo === "Não reconhecido"){
+    aviso.className = "expedicao-aviso-erro";
+    aviso.innerHTML = `⚠ <strong>${codigo}</strong><br>Tipo não reconhecido.<br><strong>VERIFICAR MANUALMENTE</strong>`;
+    notificar("Código não reconhecido.", "error");
+  } else {
+    aviso.className = info.classe;
+    aviso.innerHTML = `✅ <strong>${codigo}</strong><br>Tipo: <strong>${info.tipo}</strong><br>SEPARE EM: <strong>${info.caixa}</strong>`;
+    adicionarLog("EXPEDICAO_BIPADA", `Código: ${codigo} | Tipo: ${info.tipo}`);
+    notificar("Código lançado na expedição!");
+  }
+
+  input.value = "";
+  input.focus();
+}
+
+function renderExpedicao(){
+  const lista = document.getElementById("listaExpedicao");
+  if(!lista) return;
+
+  lista.innerHTML = "";
+
+  let totalXpress = 0;
+  let totalMercado = 0;
+  let totalDireta = 0;
+  let totalFlex = 0;
+
+  if(expedicao.length === 0){
+    lista.innerHTML = `<tr><td colspan="7">Nenhum código bipado ainda.</td></tr>`;
+  } else {
+    expedicao.forEach((item, i)=>{
+      if(item.tipo === "Shopee Xpress") totalXpress++;
+      if(item.tipo === "Mercado Envios") totalMercado++;
+      if(item.tipo === "Shopee Entrega Direta") totalDireta++;
+      if(item.tipo === "Mercado Flex") totalFlex++;
+
+      lista.innerHTML += `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${item.codigo}<br><small style="color:var(--muted)">${item.tamanho || item.codigo.length} caracteres</small></td>
+          <td>${item.prefixo || item.codigo.slice(0,2)}</td>
+          <td>${item.tipo}</td>
+          <td><strong>${item.caixa}</strong></td>
+          <td>${item.dataHora}</td>
+          <td><button class="danger" onclick="removerExpedicao(${i})">Excluir</button></td>
+        </tr>
+      `;
+    });
+  }
+
+  document.getElementById("totalShopeeXpress").innerText = totalXpress;
+  document.getElementById("totalMercadoEnvios").innerText = totalMercado;
+  document.getElementById("totalShopeeDireta").innerText = totalDireta;
+  document.getElementById("totalMercadoFlex").innerText = totalFlex;
+  atualizarPainelExpedicao();
+}
+
+
+function removerExpedicao(index){
+  if(!(isMaster() || hasPermission("DELETE_GENERAL"))) return notificar("Acesso negado!", "error");
+  const item = expedicao[index];
+  if(!item) return;
+
+  expedicao.splice(index, 1);
+  saveLocal();
+  renderExpedicao();
+  adicionarLog("EXPEDICAO_REMOVIDA", `Código removido: ${item.codigo}`);
+  notificar("Código removido da expedição.");
+}
+
+function limparExpedicao(){
+  if(!(isMaster() || hasPermission("DELETE_GENERAL"))) return notificar("Acesso negado!", "error");
+  if(!confirm("Deseja limpar toda a planilha de expedição?")) return;
+
+  expedicao = [];
+  saveLocal();
+  renderExpedicao();
+  atualizarPainelExpedicao();
+
+  const aviso = document.getElementById("expedicaoAviso");
+  if(aviso){
+    aviso.className = "alerta-vazio";
+    aviso.innerHTML = "Aguardando leitura...";
+  }
+
+  adicionarLog("EXPEDICAO_LIMPA", "Planilha de expedição zerada");
+  focarCampoExpedicao();
+  notificar("Expedição limpa!");
+}
+
+function imprimirExpedicao(){
+  if(expedicao.length === 0){
+    notificar("Não há itens na expedição para imprimir.", "error");
+    return;
+  }
+
+  const totalXpress = expedicao.filter(x=>x.tipo === "Shopee Xpress").length;
+  const totalMercado = expedicao.filter(x=>x.tipo === "Mercado Envios").length;
+  const totalDireta = expedicao.filter(x=>x.tipo === "Shopee Entrega Direta").length;
+  const totalFlex = expedicao.filter(x=>x.tipo === "Mercado Flex").length;
+
+  let linhas = "";
+  expedicao.forEach((item, i)=>{
+    linhas += `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${item.codigo}</td>
+        <td>${item.prefixo || item.codigo.slice(0,2)}</td>
+        <td>${item.tipo}</td>
+        <td>${item.caixa}</td>
+        <td>${item.dataHora}</td>
+      </tr>
+    `;
+  });
+
+  const janela = window.open("", "", "width=1000,height=700");
+  janela.document.write(`
+    <html>
+      <head>
+        <title>Expedição</title>
+        <style>
+          body{font-family:Arial,sans-serif;padding:20px;color:#111}
+          h1,h2{margin:0 0 12px}
+          .resumo{margin-bottom:20px}
+          .resumo div{margin-bottom:6px;font-weight:700}
+          table{width:100%;border-collapse:collapse}
+          th,td{border:1px solid #ccc;padding:8px;text-align:left;font-size:13px}
+          th{background:#f3f4f6}
+        </style>
+      </head>
+      <body>
+        <h1>Planilha de Expedição</h1>
+        <h2>S.A Confecções</h2>
+        <div class="resumo">
+          <div>Shopee Xpress: ${totalXpress}</div>
+          <div>Shopee Entrega Direta: ${totalDireta}</div>
+          <div>Mercado Envios: ${totalMercado}</div>
+          <div>Mercado Flex: ${totalFlex}</div>
+          <div>Data: ${new Date().toLocaleString("pt-BR")}</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Código</th>
+              <th>Prefixo</th>
+              <th>Tipo</th>
+              <th>Caixa</th>
+              <th>Data/Hora</th>
+            </tr>
+          </thead>
+          <tbody>${linhas}</tbody>
+        </table>
+      </body>
+    </html>
+  `);
+  janela.document.close();
+  janela.focus();
+  janela.print();
+}
+
+</script>
+</body>
+</html>
