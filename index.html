@@ -5,10 +5,9 @@
 <meta charset="utf-8"/>
 <title>S.A Confecções | by WOLFFZ LABS</title>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --topbar:#05294b;
@@ -970,220 +969,7 @@ button.primary,button.secondary,button.danger,button.print{border-radius:14px;pa
 @media (max-width:980px){.page-header{top:10px;}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.topbar{padding:10px 14px;}}
 @media (max-width:640px){.metric-grid,.quick-grid{grid-template-columns:1fr;}.hero-card{padding:22px 18px;}.hero-card h2{font-size:26px;}.metric-value{font-size:28px;}.main{padding:14px 14px 28px;}}
 
-
-
-/* ===== MOBILE FIX BY GPT ===== */
-.mobile-menu-btn{
-  display:none;
-  width:44px;
-  height:44px;
-  border:none;
-  border-radius:12px;
-  background:rgba(255,255,255,.12);
-  color:#fff;
-  font-size:22px;
-  font-weight:900;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-}
-.mobile-backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(2,10,23,.46);
-  backdrop-filter:blur(3px);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .25s ease;
-  z-index:1190;
-}
-body.sidebar-open .mobile-backdrop{
-  opacity:1;
-  pointer-events:auto;
-}
-.mobile-quick-nav{
-  display:none;
-}
-@media (max-width: 980px){
-  html,body{overflow-x:hidden;}
-  .mobile-menu-btn{display:inline-flex;}
-  .topbar{
-    position:sticky;
-    top:0;
-    min-height:68px;
-    padding:10px 12px;
-    align-items:center;
-    flex-wrap:nowrap;
-    gap:10px;
-  }
-  .topbar-left{min-width:0;flex:1;gap:10px;}
-  .topbar-right{display:none;}
-  .brand{min-width:0;}
-  .brand > div:last-child{min-width:0;}
-  .brand > div:last-child div:last-child{
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    max-width:42vw;
-  }
-  .topbar-nav{
-    display:none;
-  }
-  .sidebar{
-    position:fixed;
-    top:0;
-    left:0;
-    width:min(86vw, 320px);
-    height:100dvh;
-    margin-top:0;
-    padding-top:88px;
-    transform:translateX(-102%);
-    transition:transform .28s ease;
-    z-index:1195;
-    border-right:1px solid rgba(255,255,255,.08);
-    border-bottom:none;
-    box-shadow:18px 0 48px rgba(0,0,0,.28);
-  }
-  body.sidebar-open .sidebar{transform:translateX(0);}
-  .main{
-    margin-left:0;
-    margin-top:0;
-    padding:14px 12px 92px;
-    width:100%;
-  }
-  .page-header{
-    position:static;
-    padding:14px;
-    border-radius:18px;
-  }
-  .page-header-main h1{font-size:24px;}
-  .page-header-actions,
-  .hero-actions,
-  .prod-actions,
-  .inline-actions{
-    display:grid;
-    grid-template-columns:1fr;
-    width:100%;
-  }
-  .soft-action,
-  .hero-action,
-  button.primary,
-  button.secondary,
-  button.danger,
-  button.print{
-    width:100%;
-    margin-right:0;
-  }
-  .ops-hero,
-  .dashboard-split,
-  .config-shell,
-  .users-toolbar,
-  .help-grid,
-  .expedicao-toolbar,
-  .pedido-compra-grid,
-  .summary-box,
-  .metric-grid,
-  .quick-grid,
-  .inline-grid{
-    grid-template-columns:1fr !important;
-  }
-  .card,
-  .quick-card,
-  .metric-card,
-  .hero-card,
-  .config-box,
-  .field,
-  .help-item,
-  .pedido-compra-box{
-    padding:16px;
-    border-radius:18px;
-  }
-  .card h2,.card h3,.quick-card h3,.hero-card h2{word-break:break-word;}
-  .table-wrap{
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  table{
-    min-width:680px;
-  }
-  th,td{
-    font-size:12px;
-    padding:10px 8px;
-  }
-  input,select,textarea{
-    min-height:48px;
-    font-size:16px;
-  }
-  #loginTela{padding:14px;}
-  #loginTela > div{max-width:none;padding:22px 18px;}
-  #notificacao{
-    width:calc(100% - 24px);
-    top:78px;
-    left:12px;
-    transform:none;
-  }
-  #notificacao.show{transform:none;}
-  .estoque-topbar{align-items:stretch;}
-  #buscaEstoque{max-width:none;}
-  #estoqueLista{grid-template-columns:1fr;}
-  .estoque-card{padding:14px;}
-  .estoque-card-header{align-items:center;}
-  .estoque-total{font-size:24px;}
-  #ultimoCodigoExpedicao,
-  #ultimaLeituraExpedicao,
-  #preferenciaShopee,
-  .stat,
-  .metric-value{
-    font-size:clamp(22px, 6vw, 30px);
-  }
-  .mobile-quick-nav{
-    position:fixed;
-    left:10px;
-    right:10px;
-    bottom:10px;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    padding:10px;
-    border-radius:18px;
-    background:rgba(8,18,37,.92);
-    backdrop-filter:blur(12px);
-    box-shadow:0 18px 40px rgba(0,0,0,.22);
-    z-index:1180;
-  }
-  .mobile-quick-nav button{
-    border:none;
-    background:rgba(255,255,255,.08);
-    color:#fff;
-    border-radius:12px;
-    padding:10px 6px;
-    font-size:11px;
-    font-weight:800;
-    line-height:1.2;
-    cursor:pointer;
-  }
-  .mobile-quick-nav button.active{
-    background:#0f62fe;
-  }
-}
-@media (max-width: 640px){
-  .brand > div:last-child div:first-child{font-size:14px;}
-  .brand > div:last-child div:last-child{font-size:11px;max-width:44vw;}
-  .page-header-main p,
-  .section-subtitle,
-  .prod-note,
-  .hero-card p,
-  .config-box p,
-  .help-item p,
-  .field small,
-  .metric-helper{font-size:13px;}
-}
-
 </style>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./config.js"></script>
-
 </head>
 <body>
 <div id="notificacao"></div>
@@ -1198,7 +984,6 @@ body.sidebar-open .mobile-backdrop{
 </div>
 <header class="topbar">
 <div class="topbar-left">
-<button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Abrir menu">☰</button>
 <div class="brand">
 <div class="brand-badge"><img alt="Logo S.A Confecções" src="Logo SA.png"/></div>
 <div>
@@ -1218,8 +1003,7 @@ body.sidebar-open .mobile-backdrop{
 <div class="topbar-chip" onclick="show('ajuda')" style="cursor:pointer;">Suporte</div>
 </div>
 </header>
-<div class="mobile-backdrop" id="mobileBackdrop"></div>
-<div class="sidebar" id="sidebar">
+<div class="sidebar">
 <div class="sidebar-brand">
 <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.7;font-weight:800;margin-bottom:8px">Central operacional</div>
 <h2 id="bemVindo" style="margin-bottom:8px">S.A Confecções | BEM-VINDO!</h2>
@@ -1902,7 +1686,7 @@ body.sidebar-open .mobile-backdrop{
 <section class="hidden" id="config">
 <div class="card">
 <h2>Configurações do Sistema</h2>
-<p style="color:var(--muted);margin-top:6px">Organizei as configurações em subpáginas para ficar mais claro e seguro. As alterações ficam salvas automaticamente no sistema e podem ser exportadas em JSON quando necessário.</p>
+<p style="color:var(--muted);margin-top:6px">Organizei as configurações em subpáginas para ficar mais claro e seguro. As alterações de usuários ficam salvas no navegador e também podem ser sincronizadas no <strong>usuarios.json</strong>.</p>
 <div class="config-shell">
 <aside class="config-side">
 <button class="config-tab-btn active" data-config-tab="usuarios" onclick="showConfigTab('usuarios')">Usuários</button>
@@ -1950,7 +1734,7 @@ body.sidebar-open .mobile-backdrop{
 <button class="secondary" data-master-only="true" onclick="conectarUsuariosJson()">Conectar usuarios.json</button>
 <button class="secondary" data-master-only="true" onclick="exportarUsuariosJson()">Exportar usuarios.json</button>
 </div>
-<div class="user-file-status" id="usuariosJsonStatus">Usuários sincronizados pelo sistema. O usuarios.json é opcional somente para exportação manual.</div>
+<div class="user-file-status" id="usuariosJsonStatus">usuarios.json não conectado. As alterações ficam salvas neste navegador e podem ser exportadas.</div>
 <small>Para gravar no arquivo físico de forma permanente, conecte o <strong>usuarios.json</strong> ou exporte o arquivo atualizado após as mudanças.</small>
 </div>
 </div>
@@ -2017,11 +1801,11 @@ body.sidebar-open .mobile-backdrop{
 <div class="config-info-grid">
 <div class="config-box">
 <h3>Integrações futuras</h3>
-<p>Sincronização automática ativa com Supabase para manter dados iguais entre equipamentos.</p>
+<p>Espaço reservado para integração com UpSeller, pedidos, sincronização remota e API futura.</p>
 </div>
 <div class="config-box">
 <h3>Persistência</h3>
-<p>Este sistema salva automaticamente no Supabase. As exclusões e alterações também são sincronizadas.</p>
+<p>No HTML local, o navegador salva os dados deste sistema. Para manter os usuários em arquivo físico, conecte ou exporte o <strong>usuarios.json</strong>.</p>
 </div>
 </div>
 </div>
@@ -2056,14 +1840,7 @@ body.sidebar-open .mobile-backdrop{
 </div>
 </section>
 </div>
-<div class="mobile-quick-nav" id="mobileQuickNav">
-<button type="button" data-mobile-section="dashboard" onclick="show('dashboard')">Painel</button>
-<button type="button" data-mobile-section="estoque" onclick="show('estoque')">Estoque</button>
-<button type="button" data-mobile-section="expedicao" onclick="show('expedicao')">Expedição</button>
-<button type="button" data-mobile-section="config" onclick="show('config')">Config</button>
-</div>
 <script>
-
 let dadosFileHandle = null;
 
 const defaults = {
@@ -2123,7 +1900,7 @@ if(schemaSalvo !== USERS_SCHEMA_VERSION){
 } else {
   usuarios = mergeUsuarios(Array.isArray(usuariosSalvos) ? usuariosSalvos : [], usuariosPadrao());
 }
-let usuarioAtual = null;
+let usuarioAtual = JSON.parse(localStorage.getItem("usuarioAtual")) || null;
 if(usuarioAtual){
   const encontrado = usuarios.find(u => u.usuario.toLowerCase() === String(usuarioAtual.usuario || '').toLowerCase() && u.senha === usuarioAtual.senha);
   if(!encontrado) usuarioAtual = null;
@@ -2183,21 +1960,169 @@ function money(v){
   return Number(v || 0).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
 }
 
-function saveLocal(){
+
+const CLOUD_TABLE = (window.SA_CLOUD_CONFIG && window.SA_CLOUD_CONFIG.TABLE_NAME) || "app_state";
+let cloudClient = null;
+let cloudSaveTimer = null;
+let cloudIsHydrating = false;
+let cloudHydrated = false;
+
+function getCloudClient(){
+  try{
+    if(cloudClient) return cloudClient;
+    if(!window.SA_CLOUD_CONFIG) return null;
+    const url = window.SA_CLOUD_CONFIG.SUPABASE_URL;
+    const key = window.SA_CLOUD_CONFIG.SUPABASE_ANON_KEY;
+    if(!url || !key || !window.supabase || !window.supabase.createClient) return null;
+    cloudClient = window.supabase.createClient(url, key);
+    return cloudClient;
+  }catch(e){
+    console.error("Erro ao criar cliente Supabase:", e);
+    return null;
+  }
+}
+
+function getCloudWorkspaceId(){
+  return (window.SA_CLOUD_CONFIG && window.SA_CLOUD_CONFIG.WORKSPACE_ID) || "sa-principal";
+}
+
+function getCloudPayload(){
+  return {
+    config,
+    usuarios,
+    usuarioAtual,
+    pedidos,
+    packlist,
+    estoque,
+    expedicao,
+    modoExpedicao,
+    preferenciaShopee,
+    memoriaExpedicao,
+    produtos,
+    cores,
+    logs,
+    producaoDetalhada,
+    pedidosCompra,
+    tema: localStorage.getItem("tema") || "light",
+    usuariosSchemaVersion: localStorage.getItem("usuariosSchemaVersion") || USERS_SCHEMA_VERSION
+  };
+}
+
+function applyCloudPayload(payload){
+  if(!payload || typeof payload !== "object") return;
+
+  if(payload.config && typeof payload.config === "object") config = payload.config;
+  if(Array.isArray(payload.usuarios)) usuarios = mergeUsuarios(payload.usuarios, usuariosPadrao());
+  if(Object.prototype.hasOwnProperty.call(payload, "usuarioAtual")) usuarioAtual = payload.usuarioAtual || null;
+  if(Array.isArray(payload.pedidos)) pedidos = payload.pedidos;
+  if(Array.isArray(payload.packlist)) packlist = payload.packlist;
+  if(payload.estoque && typeof payload.estoque === "object") estoque = payload.estoque;
+  if(Array.isArray(payload.expedicao)) expedicao = payload.expedicao;
+  if(typeof payload.modoExpedicao === "string") modoExpedicao = payload.modoExpedicao;
+  if(typeof payload.preferenciaShopee === "string") preferenciaShopee = payload.preferenciaShopee;
+  if(payload.memoriaExpedicao && typeof payload.memoriaExpedicao === "object") memoriaExpedicao = payload.memoriaExpedicao;
+  if(Array.isArray(payload.produtos)) produtos = payload.produtos;
+  if(Array.isArray(payload.cores)) cores = payload.cores;
+  if(Array.isArray(payload.logs)) logs = payload.logs;
+  if(Array.isArray(payload.producaoDetalhada)) producaoDetalhada = payload.producaoDetalhada;
+  if(Array.isArray(payload.pedidosCompra)) pedidosCompra = payload.pedidosCompra;
+
   localStorage.setItem("configERP", JSON.stringify(config));
   localStorage.setItem("usuarios", JSON.stringify(usuarios));
+  localStorage.setItem("usuarioAtual", JSON.stringify(usuarioAtual));
   localStorage.setItem("pedidos", JSON.stringify(pedidos));
   localStorage.setItem("packlist", JSON.stringify(packlist));
   localStorage.setItem("estoque", JSON.stringify(estoque));
+  localStorage.setItem("expedicao", JSON.stringify(expedicao));
+  localStorage.setItem("modoExpedicao", modoExpedicao || "auto");
+  localStorage.setItem("preferenciaShopee", preferenciaShopee || "shopee_agencia");
+  localStorage.setItem("memoriaExpedicao", JSON.stringify(memoriaExpedicao || {}));
   localStorage.setItem("produtos", JSON.stringify(produtos));
   localStorage.setItem("cores", JSON.stringify(cores));
   localStorage.setItem("logs", JSON.stringify(logs));
   localStorage.setItem("producaoDetalhada", JSON.stringify(producaoDetalhada));
   localStorage.setItem("pedidosCompra", JSON.stringify(pedidosCompra));
+  localStorage.setItem("usuariosSchemaVersion", payload.usuariosSchemaVersion || USERS_SCHEMA_VERSION);
+
+  if(payload.tema === "dark"){
+    document.body.classList.add("dark");
+    localStorage.setItem("tema", "dark");
+  }else{
+    document.body.classList.remove("dark");
+    localStorage.setItem("tema", "light");
+  }
+}
+
+async function loadCloudState(){
+  const client = getCloudClient();
+  if(!client) return false;
+
+  cloudIsHydrating = true;
+  try{
+    const { data, error } = await client
+      .from(CLOUD_TABLE)
+      .select("payload")
+      .eq("workspace_id", getCloudWorkspaceId())
+      .maybeSingle();
+
+    if(error) throw error;
+    if(data && data.payload){
+      applyCloudPayload(data.payload);
+    }
+    cloudHydrated = true;
+    return true;
+  }catch(err){
+    console.error("Erro ao carregar da nuvem:", err);
+    notificar("Falha ao carregar da nuvem. Usando dados locais.", "error", 5000);
+    return false;
+  }finally{
+    cloudIsHydrating = false;
+  }
+}
+
+async function saveCloudState(){
+  if(cloudIsHydrating) return;
+  const client = getCloudClient();
+  if(!client) return;
+
+  try{
+    const payload = getCloudPayload();
+    const { error } = await client
+      .from(CLOUD_TABLE)
+      .upsert({
+        workspace_id: getCloudWorkspaceId(),
+        payload,
+        updated_at: new Date().toISOString()
+      });
+    if(error) throw error;
+  }catch(err){
+    console.error("Erro ao salvar na nuvem:", err);
+  }
+}
+
+function scheduleCloudSave(){
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = setTimeout(saveCloudState, 700);
+}
+
+function saveLocal(){
+  localStorage.setItem("configERP", JSON.stringify(config));
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+  localStorage.setItem("usuarioAtual", JSON.stringify(usuarioAtual));
+  localStorage.setItem("pedidos", JSON.stringify(pedidos));
+  localStorage.setItem("packlist", JSON.stringify(packlist));
+  localStorage.setItem("estoque", JSON.stringify(estoque));
   localStorage.setItem("expedicao", JSON.stringify(expedicao));
-  localStorage.setItem("modoExpedicao", modoExpedicao);
-  localStorage.setItem("preferenciaShopee", preferenciaShopee);
-  localStorage.setItem("memoriaExpedicao", JSON.stringify(memoriaExpedicao));
+  localStorage.setItem("modoExpedicao", modoExpedicao || "auto");
+  localStorage.setItem("preferenciaShopee", preferenciaShopee || "shopee_agencia");
+  localStorage.setItem("memoriaExpedicao", JSON.stringify(memoriaExpedicao || {}));
+  localStorage.setItem("produtos", JSON.stringify(produtos));
+  localStorage.setItem("cores", JSON.stringify(cores));
+  localStorage.setItem("logs", JSON.stringify(logs));
+  localStorage.setItem("producaoDetalhada", JSON.stringify(producaoDetalhada));
+  localStorage.setItem("pedidosCompra", JSON.stringify(pedidosCompra));
+  localStorage.setItem("usuariosSchemaVersion", USERS_SCHEMA_VERSION);
+  scheduleCloudSave();
 }
 
 function notificar(msg, tipo="success", duracao=3000){
@@ -2381,7 +2306,6 @@ function login() {
   saveLocal();
   document.getElementById("loginTela").style.display = "none";
   atualizarBoasVindas();
-  setupMobileUI();
   aplicarPermissoes();
   init();
   resetTimer();
@@ -2405,6 +2329,7 @@ document.getElementById("btnLogout").onclick = ()=>{
 document.getElementById("btnTema").onclick = ()=>{
   document.body.classList.toggle("dark");
   localStorage.setItem("tema", document.body.classList.contains("dark") ? "dark" : "light");
+  scheduleCloudSave();
 };
 
 
@@ -2581,45 +2506,6 @@ function updateNavigationUI(id){
   if(pageSubtitle) pageSubtitle.innerText = subtitulos[id] || 'Painel do sistema.';
 }
 
-
-
-function syncMobileQuickNav(id){
-  document.querySelectorAll('[data-mobile-section]').forEach(btn=>{
-    btn.classList.toggle('active', btn.dataset.mobileSection === id);
-  });
-}
-
-function closeMobileSidebar(){
-  document.body.classList.remove('sidebar-open');
-}
-
-function toggleMobileSidebar(){
-  if(window.innerWidth > 980) return;
-  document.body.classList.toggle('sidebar-open');
-}
-
-function setupMobileUI(){
-  const btn = document.getElementById('mobileMenuBtn');
-  const backdrop = document.getElementById('mobileBackdrop');
-  if(btn && !btn.dataset.bound){
-    btn.addEventListener('click', toggleMobileSidebar);
-    btn.dataset.bound = '1';
-  }
-  if(backdrop && !backdrop.dataset.bound){
-    backdrop.addEventListener('click', closeMobileSidebar);
-    backdrop.dataset.bound = '1';
-  }
-  document.querySelectorAll('.sidebar .nav-btn, .topbar-nav .topbar-link').forEach(el=>{
-    if(!el.dataset.mobileBound){
-      el.addEventListener('click', ()=>{ if(window.innerWidth <= 980) closeMobileSidebar(); });
-      el.dataset.mobileBound = '1';
-    }
-  });
-  window.addEventListener('resize', ()=>{
-    if(window.innerWidth > 980) closeMobileSidebar();
-  });
-}
-
 function show(id){ 
   if(id === "expedicao") renderExpedicao();
   ["dashboard","pedidos","estoque","packlist","pedidoCompra","producao","expedicao","config","auditoria","backup","ajuda"].forEach(t=>{
@@ -2629,8 +2515,6 @@ function show(id){
   const destino = document.getElementById(id);
   if(destino) destino.classList.remove("hidden");
   updateNavigationUI(id);
-  syncMobileQuickNav(id);
-  if(window.innerWidth <= 980) closeMobileSidebar();
 
   if(id === "config") renderUsuarios();
   if(id === "auditoria") renderLogs();
@@ -2842,576 +2726,7 @@ function imprimirPedidoCompra(){
     linhas += `<tr><td>${index+1}</td><td>${item.produto}</td><td>${item.cor}</td><td>${comprarM}</td><td>${comprarGG}</td><td>${totalLinha}</td><td>${item.obs || '-'}</td></tr>`;
   });
 
-  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Pedido de Compra</title><style>body{font-family:Arial;padding:20px}h1{margin:0 0 6px}p{margin:0 0 16px;color:#555}table{width:100%;border-collapse:collapse;margin-top:14px}th,td{border:1px solid #cfcfcf;padding:8px;text-align:left;font-size:13px}th{background:#f3f4f6}tfoot td{font-weight:700;background:#fafafa}</style></head><body><h1>Pedido de Compra</h1><p>Data: ${new Date().toLocaleString('pt-BR')}</p><table><thead><tr><th>#</th><th>Peça</th><th>Cor</th><th>M</th><th>GG</th><th>Total a comprar</th><th>Observação</th></tr></thead><tbody>${linhas}</tbody><tfoot><tr><td colspan="3">Totais</td><td>${totalComprarM}</td><td>${totalComprarGG}</td><td>${totalComprar}</td><td></td></tr></tfoot></table>
-<script>
-(function(){
-  const DEFAULT_CLOUD_CONFIG = {
-    SUPABASE_URL: '',
-    SUPABASE_ANON_KEY: '',
-    WORKSPACE_ID: 'sa-principal'
-  };
-
-    const CLOUD_STATE = {
-    client: null,
-    initialized: false,
-    syncTimer: null,
-    lastSyncAt: null,
-    syncing: false,
-    connected: false
-  };
-
-  let CLOUD_RUNTIME_CONFIG = (window.SA_CLOUD_CONFIG && typeof window.SA_CLOUD_CONFIG === 'object') ? { ...DEFAULT_CLOUD_CONFIG, ...window.SA_CLOUD_CONFIG } : { ...DEFAULT_CLOUD_CONFIG };
-
-  function mergeCloudConfig(){
-    return { ...DEFAULT_CLOUD_CONFIG, ...CLOUD_RUNTIME_CONFIG, ...(window.SA_CLOUD_CONFIG || {}) };
-  }
-
-  function saveCloudConfig(config){
-    CLOUD_RUNTIME_CONFIG = { ...DEFAULT_CLOUD_CONFIG, ...config };
-  }
-
-  function captureSystemSnapshot(){
-    return {
-      version: 'sa-cloud-v1',
-      savedAt: new Date().toISOString(),
-      config,
-      usuarios,
-      usuarioAtual,
-      pedidos,
-      packlist,
-      estoque,
-      expedicao,
-      modoExpedicao,
-      preferenciaShopee,
-      memoriaExpedicao,
-      produtos,
-      cores,
-      logs,
-      producaoDetalhada,
-      pedidosCompra
-    };
-  }
-
-  function applySystemSnapshot(payload){
-    if(!payload || typeof payload !== 'object') return;
-
-    config = payload.config || config;
-    usuarios = Array.isArray(payload.usuarios) ? payload.usuarios : usuarios;
-    usuarioAtual = payload.usuarioAtual || usuarioAtual;
-    pedidos = Array.isArray(payload.pedidos) ? payload.pedidos : pedidos;
-    packlist = Array.isArray(payload.packlist) ? payload.packlist : packlist;
-    estoque = payload.estoque && typeof payload.estoque === 'object' ? payload.estoque : estoque;
-    expedicao = Array.isArray(payload.expedicao) ? payload.expedicao : expedicao;
-    modoExpedicao = payload.modoExpedicao || modoExpedicao;
-    preferenciaShopee = payload.preferenciaShopee || preferenciaShopee;
-    memoriaExpedicao = payload.memoriaExpedicao && typeof payload.memoriaExpedicao === 'object' ? payload.memoriaExpedicao : memoriaExpedicao;
-    produtos = Array.isArray(payload.produtos) ? payload.produtos : produtos;
-    cores = Array.isArray(payload.cores) ? payload.cores : cores;
-    logs = Array.isArray(payload.logs) ? payload.logs : logs;
-    producaoDetalhada = Array.isArray(payload.producaoDetalhada) ? payload.producaoDetalhada : producaoDetalhada;
-    pedidosCompra = Array.isArray(payload.pedidosCompra)
-      ? payload.pedidosCompra.map(normalizarPedidoCompraItem).filter(Boolean)
-      : pedidosCompra;
-
-    if (typeof saveLocal === 'function') saveLocal();
-    try { if (typeof init === 'function') init(); } catch(e) {}
-    try { if (typeof renderUsuarios === 'function') renderUsuarios(); } catch(e) {}
-    try { if (typeof renderLogs === 'function') renderLogs(); } catch(e) {}
-    try { if (typeof atualizarBoasVindas === 'function') atualizarBoasVindas(); } catch(e) {}
-    try { if (typeof aplicarPermissoes === 'function') aplicarPermissoes(); } catch(e) {}
-    try {
-      const modo = document.getElementById('modoExpedicao');
-      if (modo) modo.value = modoExpedicao || 'auto';
-    } catch(e) {}
-  }
-
-  function cloudConfigReady(){
-    const cfg = mergeCloudConfig();
-    return Boolean(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && cfg.WORKSPACE_ID);
-  }
-
-  function getCloudStatusText(){
-    if (!cloudConfigReady()) return 'Configure URL, anon key e workspace para ativar a nuvem.';
-    if (!CLOUD_STATE.client) return 'Configuração salva. Faça login na nuvem para sincronizar.';
-    if (CLOUD_STATE.syncing) return 'Sincronizando com a nuvem...';
-    if (CLOUD_STATE.connected && CLOUD_STATE.lastSyncAt) return 'Nuvem conectada. Última sincronização: ' + CLOUD_STATE.lastSyncAt;
-    if (CLOUD_STATE.connected) return 'Nuvem conectada.';
-    return 'Cliente inicializado. Faça login na nuvem para sincronizar.';
-  }
-
-  function updateCloudStatus(extraMessage){
-    const statusEl = document.getElementById('cloudStatusText');
-    const badgeEl = document.getElementById('cloudStatusBadge');
-    const manualMessage = document.getElementById('cloudManualMessage');
-
-    if (statusEl) statusEl.textContent = extraMessage || getCloudStatusText();
-    if (manualMessage) manualMessage.textContent = extraMessage || '';
-
-    if (!badgeEl) return;
-    if (CLOUD_STATE.syncing) {
-      badgeEl.textContent = 'Sincronizando';
-      badgeEl.className = 'pill pill-warning';
-      return;
-    }
-    if (CLOUD_STATE.connected) {
-      badgeEl.textContent = 'Conectado';
-      badgeEl.className = 'pill pill-success';
-      return;
-    }
-    badgeEl.textContent = cloudConfigReady() ? 'Pronto para login' : 'Desconectado';
-    badgeEl.className = 'pill pill-neutral';
-  }
-
-  function ensureCloudCard(){
-    const host = document.getElementById('configTab-integracoes');
-    if (!host || document.getElementById('cloudSyncCard')) return;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'config-info-grid';
-    wrapper.innerHTML = `
-      <div class="config-box" id="cloudSyncCard">
-        <h3>GitHub Pages + Supabase</h3>
-        <p>Esta versão trabalha sem salvar dados do sistema no navegador. O sistema fica em memória temporária e a persistência oficial acontece somente na nuvem (Supabase).</p>
-        <div class="inline-grid">
-          <div>
-            <label>Supabase URL</label>
-            <input id="cloudSupabaseUrl" placeholder="https://SEU-PROJETO.supabase.co" />
-          </div>
-          <div>
-            <label>Supabase anon key</label>
-            <input id="cloudSupabaseAnonKey" placeholder="Cole aqui a anon key do projeto" />
-          </div>
-          <div>
-            <label>Workspace ID</label>
-            <input id="cloudWorkspaceId" placeholder="sa-principal" />
-          </div>
-        </div>
-        <div class="inline-grid" style="margin-top:10px">
-          <div>
-            <label>E-mail da nuvem</label>
-            <input id="cloudEmail" type="email" placeholder="Seu usuário do Supabase Auth" />
-          </div>
-          <div>
-            <label>Senha da nuvem</label>
-            <input id="cloudPassword" type="password" placeholder="Senha do Supabase Auth" />
-          </div>
-        </div>
-        <div class="inline-actions" style="margin-top:12px">
-          <button class="primary" type="button" id="btnSalvarCloudConfig">Aplicar configuração</button>
-          <button class="secondary" type="button" id="btnCloudLogin">Entrar na nuvem</button>
-          <button class="secondary" type="button" id="btnCloudPull">Baixar da nuvem</button>
-          <button class="secondary" type="button" id="btnCloudPush">Enviar para nuvem</button>
-          <button class="danger" type="button" id="btnCloudLogout">Sair da nuvem</button>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px">
-          <span id="cloudStatusBadge" class="pill pill-neutral">Desconectado</span>
-          <small id="cloudStatusText" style="color:var(--muted)">Configure URL, anon key e workspace para ativar a nuvem.</small>
-        </div>
-        <small id="cloudManualMessage" style="display:block;color:var(--muted);margin-top:8px"></small>
-      </div>
-      <div class="config-box">
-        <h3>Como esta integração funciona</h3>
-        <ul>
-          <li>O sistema não grava os módulos no navegador do equipamento.</li>
-          <li>Os dados ficam em memória temporária até você entrar na nuvem.</li>
-          <li>Depois do login, você baixa o estado salvo e toda alteração é enviada para o Supabase.</li>
-          <li>A autenticação da nuvem é separada do login interno do sistema.</li>
-        </ul>
-      </div>
-    `;
-    host.appendChild(wrapper);
-
-    const cfg = mergeCloudConfig();
-    document.getElementById('cloudSupabaseUrl').value = cfg.SUPABASE_URL || '';
-    document.getElementById('cloudSupabaseAnonKey').value = cfg.SUPABASE_ANON_KEY || '';
-    document.getElementById('cloudWorkspaceId').value = cfg.WORKSPACE_ID || 'sa-principal';
-
-    document.getElementById('btnSalvarCloudConfig').addEventListener('click', async function(){
-      const newCfg = {
-        SUPABASE_URL: document.getElementById('cloudSupabaseUrl').value.trim(),
-        SUPABASE_ANON_KEY: document.getElementById('cloudSupabaseAnonKey').value.trim(),
-        WORKSPACE_ID: document.getElementById('cloudWorkspaceId').value.trim() || 'sa-principal'
-      };
-      saveCloudConfig(newCfg);
-      await initCloudClient();
-      updateCloudStatus('Configuração aplicada. Faça login na nuvem para carregar os dados oficiais.');
-      notificar('Configuração da nuvem aplicada!');
-    });
-
-    document.getElementById('btnCloudLogin').addEventListener('click', loginCloud);
-    document.getElementById('btnCloudPull').addEventListener('click', loadCloudSnapshot);
-    document.getElementById('btnCloudPush').addEventListener('click', saveCloudSnapshot);
-    document.getElementById('btnCloudLogout').addEventListener('click', logoutCloud);
-  }
-
-  async function initCloudClient(){
-    const cfg = mergeCloudConfig();
-    if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) {
-      CLOUD_STATE.client = null;
-      CLOUD_STATE.connected = false;
-      updateCloudStatus();
-      return null;
-    }
-
-    if (!window.supabase || !window.supabase.createClient) {
-      updateCloudStatus('Biblioteca do Supabase não carregou.');
-      return null;
-    }
-
-    CLOUD_STATE.client = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
-      auth: {
-        autoRefreshToken: true,
-        persistSession: false,
-        detectSessionInUrl: true
-      }
-    });
-
-    try {
-      const { data: { session } } = await CLOUD_STATE.client.auth.getSession();
-      CLOUD_STATE.connected = Boolean(session);
-    } catch (error) {
-      CLOUD_STATE.connected = false;
-    }
-
-    updateCloudStatus();
-    return CLOUD_STATE.client;
-  }
-
-  async function loginCloud(){
-    const client = await initCloudClient();
-    if (!client) {
-      notificar('Preencha a URL e a anon key do Supabase primeiro.', 'error');
-      return;
-    }
-
-    const email = (document.getElementById('cloudEmail')?.value || '').trim();
-    const password = (document.getElementById('cloudPassword')?.value || '').trim();
-
-    if (!email || !password) {
-      notificar('Informe o e-mail e a senha da nuvem.', 'error');
-      return;
-    }
-
-    try {
-      const { error } = await client.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      CLOUD_STATE.connected = true;
-      updateCloudStatus('Login na nuvem realizado com sucesso.');
-      notificar('Nuvem conectada com sucesso!');
-      await loadCloudSnapshot(true);
-    } catch (error) {
-      CLOUD_STATE.connected = false;
-      updateCloudStatus('Falha no login da nuvem.');
-      notificar('Erro ao entrar na nuvem: ' + error.message, 'error');
-    }
-  }
-
-  async function logoutCloud(){
-    if (!CLOUD_STATE.client) return;
-    try {
-      await CLOUD_STATE.client.auth.signOut();
-      CLOUD_STATE.connected = false;
-      updateCloudStatus('Sessão da nuvem encerrada.');
-      notificar('Sessão da nuvem encerrada.');
-    } catch (error) {
-      notificar('Erro ao sair da nuvem: ' + error.message, 'error');
-    }
-  }
-
-  async function loadCloudSnapshot(silent){
-    const client = await initCloudClient();
-    if (!client || !CLOUD_STATE.connected) {
-      if (!silent) notificar('Entre na nuvem antes de baixar os dados.', 'error');
-      return;
-    }
-
-    const cfg = mergeCloudConfig();
-    CLOUD_STATE.syncing = true;
-    updateCloudStatus();
-
-    try {
-      const { data, error } = await client
-        .from('app_state')
-        .select('workspace_id,payload,updated_at')
-        .eq('workspace_id', cfg.WORKSPACE_ID)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (data && data.payload) {
-        applySystemSnapshot(data.payload);
-        CLOUD_STATE.lastSyncAt = new Date(data.updated_at).toLocaleString('pt-BR');
-        updateCloudStatus('Dados baixados da nuvem com sucesso.');
-        if (!silent) notificar('Dados baixados da nuvem!');
-      } else {
-        await saveCloudSnapshot(true);
-        if (!silent) notificar('Nenhum estado encontrado na nuvem. O estado local foi enviado.', 'error');
-      }
-    } catch (error) {
-      updateCloudStatus('Erro ao baixar da nuvem.');
-      if (!silent) notificar('Erro ao baixar da nuvem: ' + error.message, 'error');
-    } finally {
-      CLOUD_STATE.syncing = false;
-      updateCloudStatus();
-    }
-  }
-
-  async function saveCloudSnapshot(silent){
-    const client = await initCloudClient();
-    if (!client || !CLOUD_STATE.connected) {
-      if (!silent) notificar('Entre na nuvem antes de enviar os dados.', 'error');
-      return;
-    }
-
-    if (CLOUD_STATE.syncing) return;
-
-    const cfg = mergeCloudConfig();
-    CLOUD_STATE.syncing = true;
-    updateCloudStatus();
-
-    try {
-      const { data: userData } = await client.auth.getUser();
-      const payload = captureSystemSnapshot();
-      const { error } = await client
-        .from('app_state')
-        .upsert({
-          workspace_id: cfg.WORKSPACE_ID,
-          payload,
-          updated_by: userData?.user?.id || null
-        }, { onConflict: 'workspace_id' });
-
-      if (error) throw error;
-      CLOUD_STATE.lastSyncAt = new Date().toLocaleString('pt-BR');
-      updateCloudStatus('Dados enviados para a nuvem.');
-      if (!silent) notificar('Dados enviados para a nuvem!');
-    } catch (error) {
-      updateCloudStatus('Erro ao enviar para a nuvem.');
-      if (!silent) notificar('Erro ao enviar para a nuvem: ' + error.message, 'error');
-    } finally {
-      CLOUD_STATE.syncing = false;
-      updateCloudStatus();
-    }
-  }
-
-  function scheduleCloudSync(){
-    if (!CLOUD_STATE.connected) return;
-    clearTimeout(CLOUD_STATE.syncTimer);
-    CLOUD_STATE.syncTimer = setTimeout(function(){ saveCloudSnapshot(true); }, 900);
-  }
-
-  function patchSaveLocal(){
-    if (window.__saCloudSaveLocalPatched || typeof window.saveLocal !== 'function') return;
-    const originalSaveLocal = window.saveLocal;
-    window.saveLocal = function(){
-      const result = originalSaveLocal.apply(this, arguments);
-      scheduleCloudSync();
-      return result;
-    };
-    window.__saCloudSaveLocalPatched = true;
-  }
-
-  async function bootstrapCloud(){
-    ensureCloudCard();
-    patchSaveLocal();
-    await initCloudClient();
-    if (CLOUD_STATE.connected) {
-      await loadCloudSnapshot(true);
-    } else {
-      updateCloudStatus();
-    }
-  }
-
-  const previousOnload = window.onload;
-  window.onload = async function(){
-    if (typeof previousOnload === 'function') {
-      await previousOnload.apply(this, arguments);
-    }
-    if (!CLOUD_STATE.initialized) {
-      CLOUD_STATE.initialized = true;
-      await bootstrapCloud();
-    }
-  };
-
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(function(){
-      updateCloudStatus('Este modo não salva dados do sistema no navegador. Entre na nuvem e clique em 'Baixar da nuvem' para carregar o estado oficial.');
-    }, 300);
-  });
-
-})();
-</script>
-
-
-<script>
-(function(){
-  const CLOUD_TABLE = 'app_state_snapshot_storage';
-  let cloudClient = null;
-  let cloudReady = false;
-  let cloudLoading = false;
-  let cloudSaving = false;
-  let cloudTimer = null;
-  let cloudLastHash = '';
-
-  function cloudCfg(){
-    return (window.SA_CLOUD_CONFIG || {});
-  }
-
-  function cloudEnabled(){
-    const c = cloudCfg();
-    return !!(c.SUPABASE_URL && c.SUPABASE_ANON_KEY && c.WORKSPACE_ID);
-  }
-
-  function cloudWorkspace(){
-    return cloudCfg().WORKSPACE_ID || 'sa-principal';
-  }
-
-  function cloudNotify(msg, type){
-    try{ notificar(msg, type || 'success', 2600); }catch(e){ console.log(msg); }
-  }
-
-  function cloudGetClient(){
-    if(cloudClient) return cloudClient;
-    if(!cloudEnabled()) return null;
-    if(!(window.supabase && window.supabase.createClient)) return null;
-    cloudClient = window.supabase.createClient(
-      cloudCfg().SUPABASE_URL,
-      cloudCfg().SUPABASE_ANON_KEY
-    );
-    return cloudClient;
-  }
-
-  function buildSnapshot(){
-    return {
-      config,
-      usuarios,
-      pedidos,
-      packlist,
-      estoque,
-      expedicao,
-      modoExpedicao,
-      preferenciaShopee,
-      memoriaExpedicao,
-      produtos,
-      cores,
-      logs,
-      producaoDetalhada,
-      pedidosCompra
-    };
-  }
-
-  function applySnapshot(data){
-    if(!data || typeof data !== 'object') return;
-    config = data.config || config;
-    usuarios = Array.isArray(data.usuarios) ? data.usuarios.map(normalizarUsuario).filter(Boolean) : usuarios;
-    usuarioAtual = null;
-    pedidos = Array.isArray(data.pedidos) ? data.pedidos : [];
-    packlist = Array.isArray(data.packlist) ? data.packlist : [];
-    estoque = data.estoque || {};
-    expedicao = Array.isArray(data.expedicao) ? data.expedicao : [];
-    modoExpedicao = data.modoExpedicao || modoExpedicao;
-    preferenciaShopee = data.preferenciaShopee || preferenciaShopee;
-    memoriaExpedicao = data.memoriaExpedicao || {};
-    produtos = Array.isArray(data.produtos) ? data.produtos : defaults.produtosPadrao.slice();
-    cores = Array.isArray(data.cores) ? data.cores : defaults.cores.slice();
-    logs = Array.isArray(data.logs) ? data.logs : [];
-    producaoDetalhada = Array.isArray(data.producaoDetalhada) ? data.producaoDetalhada : [];
-    pedidosCompra = Array.isArray(data.pedidosCompra) ? data.pedidosCompra.map(normalizarPedidoCompraItem).filter(Boolean) : [];
-    saveLocal();
-    try{ init(); }catch(e){}
-    try{ renderUsuarios(); }catch(e){}
-    try{ renderLogs(); }catch(e){}
-    try{ renderExpedicao(); }catch(e){}
-    try{ atualizarBoasVindas(); }catch(e){}
-    try{ aplicarPermissoes(); }catch(e){}
-    const tela = document.getElementById('loginTela');
-    if(tela) tela.style.display = 'flex';
-  }
-
-  async function cloudPull(showMessage){
-    if(cloudLoading) return;
-    const client = cloudGetClient();
-    if(!client) return;
-    cloudLoading = true;
-    try{
-      const { data, error } = await client
-        .from(CLOUD_TABLE)
-        .select('payload')
-        .eq('workspace_id', cloudWorkspace())
-        .maybeSingle();
-      if(error) throw error;
-      if(data && data.payload){
-        applySnapshot(data.payload);
-        cloudLastHash = JSON.stringify(data.payload);
-        if(showMessage) cloudNotify('Dados carregados da nuvem.');
-      }else if(showMessage){
-        cloudNotify('Nenhum dado salvo na nuvem ainda.', 'error');
-      }
-    }catch(err){
-      console.error(err);
-      if(showMessage) cloudNotify('Erro ao carregar da nuvem: ' + (err.message || err), 'error');
-    }finally{
-      cloudLoading = false;
-    }
-  }
-
-  async function cloudPush(force){
-    if(cloudLoading || cloudSaving) return;
-    const client = cloudGetClient();
-    if(!client) return;
-    const payload = buildSnapshot();
-    const asText = JSON.stringify(payload);
-    if(!force && asText === cloudLastHash) return;
-    cloudSaving = true;
-    try{
-      const { error } = await client
-        .from(CLOUD_TABLE)
-        .upsert({
-          workspace_id: cloudWorkspace(),
-          payload: payload,
-          updated_at: new Date().toISOString()
-        });
-      if(error) throw error;
-      cloudLastHash = asText;
-    }catch(err){
-      console.error(err);
-      cloudNotify('Erro ao salvar na nuvem: ' + (err.message || err), 'error');
-    }finally{
-      cloudSaving = false;
-    }
-  }
-
-  const originalSaveLocal = window.saveLocal;
-  window.saveLocal = function(){
-    const result = originalSaveLocal.apply(this, arguments);
-    clearTimeout(cloudTimer);
-    cloudTimer = setTimeout(function(){ cloudPush(false); }, 800);
-    return result;
-  };
-
-  const originalLogout = window.logout;
-  window.logout = function(){
-    const result = originalLogout.apply(this, arguments);
-    try{
-      const tela = document.getElementById('loginTela');
-      if(tela) tela.style.display = 'flex';
-    }catch(e){}
-    return result;
-  };
-
-  window.addEventListener('load', function(){
-    if(!cloudEnabled()) {
-      console.warn('SA_CLOUD_CONFIG ausente/incompleto.');
-      return;
-    }
-    setTimeout(function(){ cloudPull(false); }, 1200);
-  });
-
-  window.cloudForcePush = function(){ return cloudPush(true); };
-  window.cloudForcePull = function(){ return cloudPull(true); };
-})();
-</script>
-
-</body></html>`;
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Pedido de Compra</title><style>body{font-family:Arial;padding:20px}h1{margin:0 0 6px}p{margin:0 0 16px;color:#555}table{width:100%;border-collapse:collapse;margin-top:14px}th,td{border:1px solid #cfcfcf;padding:8px;text-align:left;font-size:13px}th{background:#f3f4f6}tfoot td{font-weight:700;background:#fafafa}</style></head><body><h1>Pedido de Compra</h1><p>Data: ${new Date().toLocaleString('pt-BR')}</p><table><thead><tr><th>#</th><th>Peça</th><th>Cor</th><th>M</th><th>GG</th><th>Total a comprar</th><th>Observação</th></tr></thead><tbody>${linhas}</tbody><tfoot><tr><td colspan="3">Totais</td><td>${totalComprarM}</td><td>${totalComprarGG}</td><td>${totalComprar}</td><td></td></tr></tfoot></table></body></html>`;
 
   const win = window.open('', '_blank');
   win.document.write(html);
@@ -3875,177 +3190,7 @@ function imprimirPacklist(){
 
 </style>
       </head>
-      <body>${tabela}${rodape}
-<script>
-(function(){
-  const CLOUD_TABLE = 'app_state_snapshot_storage';
-  let cloudClient = null;
-  let cloudReady = false;
-  let cloudLoading = false;
-  let cloudSaving = false;
-  let cloudTimer = null;
-  let cloudLastHash = '';
-
-  function cloudCfg(){
-    return (window.SA_CLOUD_CONFIG || {});
-  }
-
-  function cloudEnabled(){
-    const c = cloudCfg();
-    return !!(c.SUPABASE_URL && c.SUPABASE_ANON_KEY && c.WORKSPACE_ID);
-  }
-
-  function cloudWorkspace(){
-    return cloudCfg().WORKSPACE_ID || 'sa-principal';
-  }
-
-  function cloudNotify(msg, type){
-    try{ notificar(msg, type || 'success', 2600); }catch(e){ console.log(msg); }
-  }
-
-  function cloudGetClient(){
-    if(cloudClient) return cloudClient;
-    if(!cloudEnabled()) return null;
-    if(!(window.supabase && window.supabase.createClient)) return null;
-    cloudClient = window.supabase.createClient(
-      cloudCfg().SUPABASE_URL,
-      cloudCfg().SUPABASE_ANON_KEY
-    );
-    return cloudClient;
-  }
-
-  function buildSnapshot(){
-    return {
-      config,
-      usuarios,
-      pedidos,
-      packlist,
-      estoque,
-      expedicao,
-      modoExpedicao,
-      preferenciaShopee,
-      memoriaExpedicao,
-      produtos,
-      cores,
-      logs,
-      producaoDetalhada,
-      pedidosCompra
-    };
-  }
-
-  function applySnapshot(data){
-    if(!data || typeof data !== 'object') return;
-    config = data.config || config;
-    usuarios = Array.isArray(data.usuarios) ? data.usuarios.map(normalizarUsuario).filter(Boolean) : usuarios;
-    usuarioAtual = null;
-    pedidos = Array.isArray(data.pedidos) ? data.pedidos : [];
-    packlist = Array.isArray(data.packlist) ? data.packlist : [];
-    estoque = data.estoque || {};
-    expedicao = Array.isArray(data.expedicao) ? data.expedicao : [];
-    modoExpedicao = data.modoExpedicao || modoExpedicao;
-    preferenciaShopee = data.preferenciaShopee || preferenciaShopee;
-    memoriaExpedicao = data.memoriaExpedicao || {};
-    produtos = Array.isArray(data.produtos) ? data.produtos : defaults.produtosPadrao.slice();
-    cores = Array.isArray(data.cores) ? data.cores : defaults.cores.slice();
-    logs = Array.isArray(data.logs) ? data.logs : [];
-    producaoDetalhada = Array.isArray(data.producaoDetalhada) ? data.producaoDetalhada : [];
-    pedidosCompra = Array.isArray(data.pedidosCompra) ? data.pedidosCompra.map(normalizarPedidoCompraItem).filter(Boolean) : [];
-    saveLocal();
-    try{ init(); }catch(e){}
-    try{ renderUsuarios(); }catch(e){}
-    try{ renderLogs(); }catch(e){}
-    try{ renderExpedicao(); }catch(e){}
-    try{ atualizarBoasVindas(); }catch(e){}
-    try{ aplicarPermissoes(); }catch(e){}
-    const tela = document.getElementById('loginTela');
-    if(tela) tela.style.display = 'flex';
-  }
-
-  async function cloudPull(showMessage){
-    if(cloudLoading) return;
-    const client = cloudGetClient();
-    if(!client) return;
-    cloudLoading = true;
-    try{
-      const { data, error } = await client
-        .from(CLOUD_TABLE)
-        .select('payload')
-        .eq('workspace_id', cloudWorkspace())
-        .maybeSingle();
-      if(error) throw error;
-      if(data && data.payload){
-        applySnapshot(data.payload);
-        cloudLastHash = JSON.stringify(data.payload);
-        if(showMessage) cloudNotify('Dados carregados da nuvem.');
-      }else if(showMessage){
-        cloudNotify('Nenhum dado salvo na nuvem ainda.', 'error');
-      }
-    }catch(err){
-      console.error(err);
-      if(showMessage) cloudNotify('Erro ao carregar da nuvem: ' + (err.message || err), 'error');
-    }finally{
-      cloudLoading = false;
-    }
-  }
-
-  async function cloudPush(force){
-    if(cloudLoading || cloudSaving) return;
-    const client = cloudGetClient();
-    if(!client) return;
-    const payload = buildSnapshot();
-    const asText = JSON.stringify(payload);
-    if(!force && asText === cloudLastHash) return;
-    cloudSaving = true;
-    try{
-      const { error } = await client
-        .from(CLOUD_TABLE)
-        .upsert({
-          workspace_id: cloudWorkspace(),
-          payload: payload,
-          updated_at: new Date().toISOString()
-        });
-      if(error) throw error;
-      cloudLastHash = asText;
-    }catch(err){
-      console.error(err);
-      cloudNotify('Erro ao salvar na nuvem: ' + (err.message || err), 'error');
-    }finally{
-      cloudSaving = false;
-    }
-  }
-
-  const originalSaveLocal = window.saveLocal;
-  window.saveLocal = function(){
-    const result = originalSaveLocal.apply(this, arguments);
-    clearTimeout(cloudTimer);
-    cloudTimer = setTimeout(function(){ cloudPush(false); }, 800);
-    return result;
-  };
-
-  const originalLogout = window.logout;
-  window.logout = function(){
-    const result = originalLogout.apply(this, arguments);
-    try{
-      const tela = document.getElementById('loginTela');
-      if(tela) tela.style.display = 'flex';
-    }catch(e){}
-    return result;
-  };
-
-  window.addEventListener('load', function(){
-    if(!cloudEnabled()) {
-      console.warn('SA_CLOUD_CONFIG ausente/incompleto.');
-      return;
-    }
-    setTimeout(function(){ cloudPull(false); }, 1200);
-  });
-
-  window.cloudForcePush = function(){ return cloudPush(true); };
-  window.cloudForcePull = function(){ return cloudPull(true); };
-})();
-</script>
-
-</body>
+      <body>${tabela}${rodape}</body>
       </html>
     `);
 
@@ -4190,7 +3335,6 @@ function retirarProduto(){
     });
     saveLocal();
     init();
-    syncMobileQuickNav("dashboard");
     adicionarLog("PRODUTO_REMOVIDO", `Produto: ${p}`);
     notificar(`Produto "${p}" removido!`);
   }
@@ -4902,18 +4046,13 @@ function exportarDados(){
   const data = {
     config,
     usuarios,
+    usuarioAtual,
     pedidos,
     packlist,
     estoque,
-    expedicao,
-    modoExpedicao,
-    preferenciaShopee,
-    memoriaExpedicao,
     produtos,
-    cores,
     logs,
-    producaoDetalhada,
-    pedidosCompra
+    producaoDetalhada
   };
 
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
@@ -4940,25 +4079,23 @@ function importarDados(){
     try {
       const data = JSON.parse(e.target.result);
       config = data.config || config;
-      usuarios = Array.isArray(data.usuarios) ? data.usuarios : usuarios;
-      usuarioAtual = null;
-      pedidos = Array.isArray(data.pedidos) ? data.pedidos : [];
-      packlist = Array.isArray(data.packlist) ? data.packlist : [];
+      usuarios = data.usuarios || usuarios;
+      usuarioAtual = data.usuarioAtual || usuarioAtual;
+      pedidos = data.pedidos || [];
+      packlist = data.packlist || [];
       estoque = data.estoque || {};
-      expedicao = Array.isArray(data.expedicao) ? data.expedicao : [];
-      modoExpedicao = data.modoExpedicao || modoExpedicao;
-      preferenciaShopee = data.preferenciaShopee || preferenciaShopee;
-      memoriaExpedicao = data.memoriaExpedicao || {};
-      produtos = Array.isArray(data.produtos) ? data.produtos : defaults.produtosPadrao.slice();
-      cores = Array.isArray(data.cores) ? data.cores : defaults.cores.slice();
-      logs = Array.isArray(data.logs) ? data.logs : [];
-      producaoDetalhada = Array.isArray(data.producaoDetalhada) ? data.producaoDetalhada : [];
-      pedidosCompra = Array.isArray(data.pedidosCompra) ? data.pedidosCompra.map(normalizarPedidoCompraItem).filter(Boolean) : [];
+      produtos = data.produtos || defaults.produtosPadrao.slice();
+      logs = data.logs || [];
+      producaoDetalhada = data.producaoDetalhada || [];
       saveLocal();
       init();
       atualizarBoasVindas();
-      document.getElementById("loginTela").style.display = "flex";
-      aplicarPermissoes();
+
+      if(usuarioAtual){
+        document.getElementById("loginTela").style.display = "none";
+        aplicarPermissoes();
+      }
+
       notificar("Dados importados com sucesso!");
     } catch(err){
       notificar("Erro ao importar JSON!", "error");
@@ -5058,9 +4195,13 @@ function resetDiario(){
 // ==========================
 // ONLOAD
 // ==========================
-window.onload = ()=>{
+window.onload = async ()=>{
+  await loadCloudState();
+
   if(localStorage.getItem("tema") === "dark"){
     document.body.classList.add("dark");
+  } else {
+    document.body.classList.remove("dark");
   }
 
   atualizarBoasVindas();
@@ -5075,7 +4216,6 @@ window.onload = ()=>{
   if(usuarioAtual){
     document.getElementById("loginTela").style.display = "none";
     init();
-    syncMobileQuickNav("dashboard");
     aplicarPermissoes();
     resetTimer();
   } else {
@@ -5094,6 +4234,7 @@ function atualizarModoExpedicao(){
   if(select){
     modoExpedicao = select.value || "auto";
     localStorage.setItem("modoExpedicao", modoExpedicao);
+    scheduleCloudSave();
   }
 
   const mensagens = {
@@ -5112,6 +4253,7 @@ function setPreferenciaShopee(tipo){
   if(!["shopee_agencia","shopee_direta"].includes(tipo)) return;
   preferenciaShopee = tipo;
   localStorage.setItem("preferenciaShopee", preferenciaShopee);
+  scheduleCloudSave();
   atualizarPainelExpedicao();
   notificar(`Destino BR alterado para ${nomePreferenciaShopee()}.`);
   focarCampoExpedicao();
@@ -5372,177 +4514,7 @@ function imprimirExpedicao(){
           </thead>
           <tbody>${linhas}</tbody>
         </table>
-      
-<script>
-(function(){
-  const CLOUD_TABLE = 'app_state_snapshot_storage';
-  let cloudClient = null;
-  let cloudReady = false;
-  let cloudLoading = false;
-  let cloudSaving = false;
-  let cloudTimer = null;
-  let cloudLastHash = '';
-
-  function cloudCfg(){
-    return (window.SA_CLOUD_CONFIG || {});
-  }
-
-  function cloudEnabled(){
-    const c = cloudCfg();
-    return !!(c.SUPABASE_URL && c.SUPABASE_ANON_KEY && c.WORKSPACE_ID);
-  }
-
-  function cloudWorkspace(){
-    return cloudCfg().WORKSPACE_ID || 'sa-principal';
-  }
-
-  function cloudNotify(msg, type){
-    try{ notificar(msg, type || 'success', 2600); }catch(e){ console.log(msg); }
-  }
-
-  function cloudGetClient(){
-    if(cloudClient) return cloudClient;
-    if(!cloudEnabled()) return null;
-    if(!(window.supabase && window.supabase.createClient)) return null;
-    cloudClient = window.supabase.createClient(
-      cloudCfg().SUPABASE_URL,
-      cloudCfg().SUPABASE_ANON_KEY
-    );
-    return cloudClient;
-  }
-
-  function buildSnapshot(){
-    return {
-      config,
-      usuarios,
-      pedidos,
-      packlist,
-      estoque,
-      expedicao,
-      modoExpedicao,
-      preferenciaShopee,
-      memoriaExpedicao,
-      produtos,
-      cores,
-      logs,
-      producaoDetalhada,
-      pedidosCompra
-    };
-  }
-
-  function applySnapshot(data){
-    if(!data || typeof data !== 'object') return;
-    config = data.config || config;
-    usuarios = Array.isArray(data.usuarios) ? data.usuarios.map(normalizarUsuario).filter(Boolean) : usuarios;
-    usuarioAtual = null;
-    pedidos = Array.isArray(data.pedidos) ? data.pedidos : [];
-    packlist = Array.isArray(data.packlist) ? data.packlist : [];
-    estoque = data.estoque || {};
-    expedicao = Array.isArray(data.expedicao) ? data.expedicao : [];
-    modoExpedicao = data.modoExpedicao || modoExpedicao;
-    preferenciaShopee = data.preferenciaShopee || preferenciaShopee;
-    memoriaExpedicao = data.memoriaExpedicao || {};
-    produtos = Array.isArray(data.produtos) ? data.produtos : defaults.produtosPadrao.slice();
-    cores = Array.isArray(data.cores) ? data.cores : defaults.cores.slice();
-    logs = Array.isArray(data.logs) ? data.logs : [];
-    producaoDetalhada = Array.isArray(data.producaoDetalhada) ? data.producaoDetalhada : [];
-    pedidosCompra = Array.isArray(data.pedidosCompra) ? data.pedidosCompra.map(normalizarPedidoCompraItem).filter(Boolean) : [];
-    saveLocal();
-    try{ init(); }catch(e){}
-    try{ renderUsuarios(); }catch(e){}
-    try{ renderLogs(); }catch(e){}
-    try{ renderExpedicao(); }catch(e){}
-    try{ atualizarBoasVindas(); }catch(e){}
-    try{ aplicarPermissoes(); }catch(e){}
-    const tela = document.getElementById('loginTela');
-    if(tela) tela.style.display = 'flex';
-  }
-
-  async function cloudPull(showMessage){
-    if(cloudLoading) return;
-    const client = cloudGetClient();
-    if(!client) return;
-    cloudLoading = true;
-    try{
-      const { data, error } = await client
-        .from(CLOUD_TABLE)
-        .select('payload')
-        .eq('workspace_id', cloudWorkspace())
-        .maybeSingle();
-      if(error) throw error;
-      if(data && data.payload){
-        applySnapshot(data.payload);
-        cloudLastHash = JSON.stringify(data.payload);
-        if(showMessage) cloudNotify('Dados carregados da nuvem.');
-      }else if(showMessage){
-        cloudNotify('Nenhum dado salvo na nuvem ainda.', 'error');
-      }
-    }catch(err){
-      console.error(err);
-      if(showMessage) cloudNotify('Erro ao carregar da nuvem: ' + (err.message || err), 'error');
-    }finally{
-      cloudLoading = false;
-    }
-  }
-
-  async function cloudPush(force){
-    if(cloudLoading || cloudSaving) return;
-    const client = cloudGetClient();
-    if(!client) return;
-    const payload = buildSnapshot();
-    const asText = JSON.stringify(payload);
-    if(!force && asText === cloudLastHash) return;
-    cloudSaving = true;
-    try{
-      const { error } = await client
-        .from(CLOUD_TABLE)
-        .upsert({
-          workspace_id: cloudWorkspace(),
-          payload: payload,
-          updated_at: new Date().toISOString()
-        });
-      if(error) throw error;
-      cloudLastHash = asText;
-    }catch(err){
-      console.error(err);
-      cloudNotify('Erro ao salvar na nuvem: ' + (err.message || err), 'error');
-    }finally{
-      cloudSaving = false;
-    }
-  }
-
-  const originalSaveLocal = window.saveLocal;
-  window.saveLocal = function(){
-    const result = originalSaveLocal.apply(this, arguments);
-    clearTimeout(cloudTimer);
-    cloudTimer = setTimeout(function(){ cloudPush(false); }, 800);
-    return result;
-  };
-
-  const originalLogout = window.logout;
-  window.logout = function(){
-    const result = originalLogout.apply(this, arguments);
-    try{
-      const tela = document.getElementById('loginTela');
-      if(tela) tela.style.display = 'flex';
-    }catch(e){}
-    return result;
-  };
-
-  window.addEventListener('load', function(){
-    if(!cloudEnabled()) {
-      console.warn('SA_CLOUD_CONFIG ausente/incompleto.');
-      return;
-    }
-    setTimeout(function(){ cloudPull(false); }, 1200);
-  });
-
-  window.cloudForcePush = function(){ return cloudPush(true); };
-  window.cloudForcePull = function(){ return cloudPull(true); };
-})();
-</script>
-
-</body>
+      </body>
     </html>
   `);
   janela.document.close();
@@ -5551,175 +4523,5 @@ function imprimirExpedicao(){
 }
 
 </script>
-
-<script>
-(function(){
-  const CLOUD_TABLE = 'app_state_snapshot_storage';
-  let cloudClient = null;
-  let cloudReady = false;
-  let cloudLoading = false;
-  let cloudSaving = false;
-  let cloudTimer = null;
-  let cloudLastHash = '';
-
-  function cloudCfg(){
-    return (window.SA_CLOUD_CONFIG || {});
-  }
-
-  function cloudEnabled(){
-    const c = cloudCfg();
-    return !!(c.SUPABASE_URL && c.SUPABASE_ANON_KEY && c.WORKSPACE_ID);
-  }
-
-  function cloudWorkspace(){
-    return cloudCfg().WORKSPACE_ID || 'sa-principal';
-  }
-
-  function cloudNotify(msg, type){
-    try{ notificar(msg, type || 'success', 2600); }catch(e){ console.log(msg); }
-  }
-
-  function cloudGetClient(){
-    if(cloudClient) return cloudClient;
-    if(!cloudEnabled()) return null;
-    if(!(window.supabase && window.supabase.createClient)) return null;
-    cloudClient = window.supabase.createClient(
-      cloudCfg().SUPABASE_URL,
-      cloudCfg().SUPABASE_ANON_KEY
-    );
-    return cloudClient;
-  }
-
-  function buildSnapshot(){
-    return {
-      config,
-      usuarios,
-      pedidos,
-      packlist,
-      estoque,
-      expedicao,
-      modoExpedicao,
-      preferenciaShopee,
-      memoriaExpedicao,
-      produtos,
-      cores,
-      logs,
-      producaoDetalhada,
-      pedidosCompra
-    };
-  }
-
-  function applySnapshot(data){
-    if(!data || typeof data !== 'object') return;
-    config = data.config || config;
-    usuarios = Array.isArray(data.usuarios) ? data.usuarios.map(normalizarUsuario).filter(Boolean) : usuarios;
-    usuarioAtual = null;
-    pedidos = Array.isArray(data.pedidos) ? data.pedidos : [];
-    packlist = Array.isArray(data.packlist) ? data.packlist : [];
-    estoque = data.estoque || {};
-    expedicao = Array.isArray(data.expedicao) ? data.expedicao : [];
-    modoExpedicao = data.modoExpedicao || modoExpedicao;
-    preferenciaShopee = data.preferenciaShopee || preferenciaShopee;
-    memoriaExpedicao = data.memoriaExpedicao || {};
-    produtos = Array.isArray(data.produtos) ? data.produtos : defaults.produtosPadrao.slice();
-    cores = Array.isArray(data.cores) ? data.cores : defaults.cores.slice();
-    logs = Array.isArray(data.logs) ? data.logs : [];
-    producaoDetalhada = Array.isArray(data.producaoDetalhada) ? data.producaoDetalhada : [];
-    pedidosCompra = Array.isArray(data.pedidosCompra) ? data.pedidosCompra.map(normalizarPedidoCompraItem).filter(Boolean) : [];
-    saveLocal();
-    try{ init(); }catch(e){}
-    try{ renderUsuarios(); }catch(e){}
-    try{ renderLogs(); }catch(e){}
-    try{ renderExpedicao(); }catch(e){}
-    try{ atualizarBoasVindas(); }catch(e){}
-    try{ aplicarPermissoes(); }catch(e){}
-    const tela = document.getElementById('loginTela');
-    if(tela) tela.style.display = 'flex';
-  }
-
-  async function cloudPull(showMessage){
-    if(cloudLoading) return;
-    const client = cloudGetClient();
-    if(!client) return;
-    cloudLoading = true;
-    try{
-      const { data, error } = await client
-        .from(CLOUD_TABLE)
-        .select('payload')
-        .eq('workspace_id', cloudWorkspace())
-        .maybeSingle();
-      if(error) throw error;
-      if(data && data.payload){
-        applySnapshot(data.payload);
-        cloudLastHash = JSON.stringify(data.payload);
-        if(showMessage) cloudNotify('Dados carregados da nuvem.');
-      }else if(showMessage){
-        cloudNotify('Nenhum dado salvo na nuvem ainda.', 'error');
-      }
-    }catch(err){
-      console.error(err);
-      if(showMessage) cloudNotify('Erro ao carregar da nuvem: ' + (err.message || err), 'error');
-    }finally{
-      cloudLoading = false;
-    }
-  }
-
-  async function cloudPush(force){
-    if(cloudLoading || cloudSaving) return;
-    const client = cloudGetClient();
-    if(!client) return;
-    const payload = buildSnapshot();
-    const asText = JSON.stringify(payload);
-    if(!force && asText === cloudLastHash) return;
-    cloudSaving = true;
-    try{
-      const { error } = await client
-        .from(CLOUD_TABLE)
-        .upsert({
-          workspace_id: cloudWorkspace(),
-          payload: payload,
-          updated_at: new Date().toISOString()
-        });
-      if(error) throw error;
-      cloudLastHash = asText;
-    }catch(err){
-      console.error(err);
-      cloudNotify('Erro ao salvar na nuvem: ' + (err.message || err), 'error');
-    }finally{
-      cloudSaving = false;
-    }
-  }
-
-  const originalSaveLocal = window.saveLocal;
-  window.saveLocal = function(){
-    const result = originalSaveLocal.apply(this, arguments);
-    clearTimeout(cloudTimer);
-    cloudTimer = setTimeout(function(){ cloudPush(false); }, 800);
-    return result;
-  };
-
-  const originalLogout = window.logout;
-  window.logout = function(){
-    const result = originalLogout.apply(this, arguments);
-    try{
-      const tela = document.getElementById('loginTela');
-      if(tela) tela.style.display = 'flex';
-    }catch(e){}
-    return result;
-  };
-
-  window.addEventListener('load', function(){
-    if(!cloudEnabled()) {
-      console.warn('SA_CLOUD_CONFIG ausente/incompleto.');
-      return;
-    }
-    setTimeout(function(){ cloudPull(false); }, 1200);
-  });
-
-  window.cloudForcePush = function(){ return cloudPush(true); };
-  window.cloudForcePull = function(){ return cloudPull(true); };
-})();
-</script>
-
 </body>
 </html>
