@@ -1,0 +1,4 @@
+window.SA_CONFIG = {
+  SUPABASE_URL: "https://xsaaiewxeeglxtrbegmd.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzYWFpZXd4ZWVnbHh0cmJlZ21kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg4MDQsImV4cCI6MjA5MDYyNDgwNH0.htk794VvlEvTrQPweFGp7LeiW5kYryGt7EZHd-V3rMA"
+};

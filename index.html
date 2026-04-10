@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S.A Sistema | Wolffz Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+  <div id="toast" class="toast hidden"></div>
+
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-card reveal">
+      <div class="auth-brand">
+        <div class="brand-mark">S.A</div>
+        <div>
+          <h1>S.A Confecções</h1>
+          <p>Sistema em nuvem com login real, banco de dados e sincronização entre máquinas.</p>
+        </div>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-auth-tab="login">Entrar</button>
+        <button class="auth-tab" data-auth-tab="signup">Criar conta</button>
+        <button class="auth-tab" data-auth-tab="reset">Recuperar senha</button>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="voce@empresa.com" required />
+        <label>Senha</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required />
+        <button type="submit" class="btn primary full">Entrar</button>
+      </form>
+
+      <form id="signupForm" class="auth-form hidden">
+        <label>Nome completo</label>
+        <input type="text" id="signupName" placeholder="Seu nome" required />
+        <label>Email</label>
+        <input type="email" id="signupEmail" placeholder="voce@empresa.com" required />
+        <label>Senha</label>
+        <input type="password" id="signupPassword" placeholder="Mínimo 6 caracteres" required />
+        <button type="submit" class="btn primary full">Criar conta</button>
+      </form>
+
+      <form id="resetForm" class="auth-form hidden">
+        <label>Email</label>
+        <input type="email" id="resetEmail" placeholder="voce@empresa.com" required />
+        <button type="submit" class="btn primary full">Enviar link de recuperação</button>
+      </form>
+
+      <div class="auth-foot">
+        <strong>Importante:</strong> no Supabase, deixe o Email Auth habilitado e adicione a URL do seu site em Authentication → URL Configuration.
+      </div>
+    </div>
+  </div>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-brand">
+          <div class="brand-mark sm">S.A</div>
+          <div>
+            <strong id="companyNameSidebar">S.A Confecções</strong>
+            <span id="workspaceChip">Workspace: sa-principal</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+          <button class="nav-btn" data-section="products">Produtos</button>
+          <button class="nav-btn" data-section="inventory">Estoque</button>
+          <button class="nav-btn" data-section="purchaseOrders">Pedido de compra</button>
+          <button class="nav-btn" data-section="production">Produção</button>
+          <button class="nav-btn" data-section="shipments">Expedição</button>
+          <button class="nav-btn" data-section="settings">Configurações</button>
+          <button class="nav-btn" data-section="audit">Auditoria</button>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="user-card">
+          <div class="avatar" id="userAvatar">SA</div>
+          <div>
+            <strong id="userName">Usuário</strong>
+            <span id="userMeta">Operador</span>
+          </div>
+        </div>
+        <button id="themeToggle" class="btn secondary full">Alternar tema</button>
+        <button id="logoutBtn" class="btn danger full">Sair</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar reveal">
+        <div>
+          <h2 id="pageTitle">Dashboard</h2>
+          <p id="pageSubtitle">Visão geral da operação em nuvem.</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="badge" id="sessionStatus">Conectado</span>
+          <button class="btn secondary" id="refreshAllBtn">Atualizar dados</button>
+        </div>
+      </header>
+
+      <section id="dashboardSection" class="section reveal">
+        <div class="hero-card">
+          <div>
+            <span class="eyebrow">ERP WEB</span>
+            <h3>Operação centralizada, com dados salvos no Supabase.</h3>
+            <p>Produtos, estoque, compras, produção, expedição e auditoria sincronizados entre todos os dispositivos.</p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn white" data-jump="products">Novo produto</button>
+            <button class="btn ghost" data-jump="inventory">Movimentar estoque</button>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <article class="metric-card"><span>Produtos ativos</span><strong id="metricProducts">0</strong></article>
+          <article class="metric-card"><span>Saldo em estoque</span><strong id="metricStock">0</strong></article>
+          <article class="metric-card"><span>Compras abertas</span><strong id="metricPO">0</strong></article>
+          <article class="metric-card"><span>Produções abertas</span><strong id="metricProd">0</strong></article>
+          <article class="metric-card"><span>Expedições hoje</span><strong id="metricShip">0</strong></article>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <div class="card-head">
+              <h3>Itens com estoque baixo</h3>
+              <span class="badge soft">Automático</span>
+            </div>
+            <div id="lowStockList" class="stack-list empty-state">Nenhum item crítico no momento.</div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3>Últimas movimentações</h3>
+              <span class="badge soft">Tempo real</span>
+            </div>
+            <div id="recentActivity" class="stack-list empty-state">Sem movimentações recentes.</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="productsSection" class="section hidden">
+        <div class="card">
+          <div class="card-head">
+            <h3>Cadastro de produtos</h3>
+            <span class="badge soft">CRUD</span>
+          </div>
+
+          <form id="productForm" class="form-grid">
+            <input type="hidden" id="productId" />
+            <div>
+              <label>Nome do produto</label>
+              <input id="productName" required placeholder="Ex.: Macacão Viscolycra" />
+            </div>
+            <div>
+              <label>SKU base</label>
+              <input id="productSku" placeholder="MAC-VISC-001" />
+            </div>
+            <div>
+              <label>Categoria</label>
+              <input id="productCategory" placeholder="Macacão, calça, blusa..." />
+            </div>
+            <div>
+              <label>Cores (separadas por vírgula)</label>
+              <input id="productColors" placeholder="Preto, Branco, Verde Bandeira" />
+            </div>
+            <div>
+              <label>Tamanhos (separados por vírgula)</label>
+              <input id="productSizes" placeholder="P, M, G, GG" />
+            </div>
+            <div>
+              <label>Status</label>
+              <select id="productActive">
+                <option value="true">Ativo</option>
+                <option value="false">Inativo</option>
+              </select>
+            </div>
+            <div class="full">
+              <label>Observações</label>
+              <textarea id="productNotes" placeholder="Observações internas do produto"></textarea>
+            </div>
+            <div class="full actions-row">
+              <button type="submit" class="btn primary">Salvar produto</button>
+              <button type="button" class="btn secondary" id="productResetBtn">Limpar</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Produtos cadastrados</h3>
+            <input id="productSearch" class="table-search" placeholder="Buscar produto..." />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>SKU</th>
+                  <th>Categoria</th>
+                  <th>Cores</th>
+                  <th>Tamanhos</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="productsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="inventorySection" class="section hidden">
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head">
+              <h3>Movimentar estoque</h3>
+              <span class="badge soft">Entrada / Saída / Ajuste</span>
+            </div>
+
+            <form id="inventoryForm" class="form-grid">
+              <div>
+                <label>Produto</label>
+                <select id="inventoryProduct" required></select>
+              </div>
+              <div>
+                <label>Cor</label>
+                <input id="inventoryColor" placeholder="Preto" required />
+              </div>
+              <div>
+                <label>Tamanho</label>
+                <input id="inventorySize" placeholder="M" required />
+              </div>
+              <div>
+                <label>Tipo</label>
+                <select id="inventoryType">
+                  <option value="entrada">Entrada</option>
+                  <option value="saida">Saída</option>
+                  <option value="ajuste">Ajuste</option>
+                </select>
+              </div>
+              <div>
+                <label>Quantidade</label>
+                <input id="inventoryQty" type="number" min="1" required />
+              </div>
+              <div>
+                <label>Custo unitário</label>
+                <input id="inventoryCost" type="number" min="0" step="0.01" placeholder="0.00" />
+              </div>
+              <div class="full">
+                <label>Observações</label>
+                <textarea id="inventoryNotes" placeholder="Motivo da movimentação"></textarea>
+              </div>
+              <div class="full actions-row">
+                <button type="submit" class="btn primary">Salvar movimentação</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Saldos atuais</h3>
+              <input id="inventorySearch" class="table-search" placeholder="Buscar saldo..." />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Cor</th>
+                    <th>Tamanho</th>
+                    <th>Saldo</th>
+                    <th>Custo médio</th>
+                    <th>Risco</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="purchaseOrdersSection" class="section hidden">
+        <div class="card">
+          <div class="card-head">
+            <h3>Pedido de compra</h3>
+            <span class="badge soft">Planejamento</span>
+          </div>
+
+          <form id="purchaseForm" class="form-grid">
+            <div>
+              <label>Fornecedor</label>
+              <input id="poSupplier" placeholder="Nome do fornecedor" required />
+            </div>
+            <div>
+              <label>Status</label>
+              <select id="poStatus">
+                <option value="aberto">Aberto</option>
+                <option value="enviado">Enviado</option>
+                <option value="recebido">Recebido</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div>
+              <label>Produto</label>
+              <select id="poProduct" required></select>
+            </div>
+            <div>
+              <label>Cor</label>
+              <input id="poColor" placeholder="Preto" required />
+            </div>
+            <div>
+              <label>Tamanho</label>
+              <input id="poSize" placeholder="M" required />
+            </div>
+            <div>
+              <label>Quantidade</label>
+              <input id="poQty" type="number" min="1" required />
+            </div>
+            <div>
+              <label>Custo unitário</label>
+              <input id="poUnitCost" type="number" min="0" step="0.01" placeholder="0.00" />
+            </div>
+            <div class="full">
+              <label>Observações</label>
+              <textarea id="poNotes" placeholder="Observações do pedido de compra"></textarea>
+            </div>
+            <div class="full actions-row">
+              <button type="submit" class="btn primary">Criar pedido de compra</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Pedidos de compra</h3>
+            <input id="poSearch" class="table-search" placeholder="Buscar pedido..." />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Fornecedor</th>
+                  <th>Produto</th>
+                  <th>Cor/Tam</th>
+                  <th>Qtd</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="purchaseTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="productionSection" class="section hidden">
+        <div class="card">
+          <div class="card-head">
+            <h3>Ordem de produção</h3>
+            <span class="badge soft">Produção</span>
+          </div>
+
+          <form id="productionForm" class="form-grid">
+            <div>
+              <label>Produto</label>
+              <select id="productionProduct" required></select>
+            </div>
+            <div>
+              <label>Lote</label>
+              <input id="productionBatch" placeholder="Ex.: LT-2026-001" required />
+            </div>
+            <div>
+              <label>Responsável</label>
+              <input id="productionResponsible" placeholder="Oficina / costureira" required />
+            </div>
+            <div>
+              <label>Status</label>
+              <select id="productionStatus">
+                <option value="aberto">Aberto</option>
+                <option value="em_andamento">Em andamento</option>
+                <option value="finalizado">Finalizado</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div>
+              <label>Cor</label>
+              <input id="productionColor" placeholder="Preto" required />
+            </div>
+            <div>
+              <label>Tamanho</label>
+              <input id="productionSize" placeholder="M" required />
+            </div>
+            <div>
+              <label>Quantidade planejada</label>
+              <input id="productionPlannedQty" type="number" min="1" required />
+            </div>
+            <div>
+              <label>Quantidade pronta</label>
+              <input id="productionDoneQty" type="number" min="0" value="0" required />
+            </div>
+            <div class="full">
+              <label>Observações</label>
+              <textarea id="productionNotes" placeholder="Detalhes da produção"></textarea>
+            </div>
+            <div class="full actions-row">
+              <button type="submit" class="btn primary">Salvar ordem</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Ordens de produção</h3>
+            <input id="productionSearch" class="table-search" placeholder="Buscar ordem..." />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Lote</th>
+                  <th>Produto</th>
+                  <th>Responsável</th>
+                  <th>Cor/Tam</th>
+                  <th>Planejado</th>
+                  <th>Pronto</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="productionTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="shipmentsSection" class="section hidden">
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head">
+              <h3>Bipagem / Expedição</h3>
+              <span class="badge soft">Leitura rápida</span>
+            </div>
+
+            <form id="shipmentForm" class="form-grid">
+              <div>
+                <label>Código da etiqueta</label>
+                <input id="shipmentCode" placeholder="AN..., BR..." required />
+              </div>
+              <div>
+                <label>Pedido</label>
+                <input id="shipmentOrderRef" placeholder="Pedido / referência" />
+              </div>
+              <div>
+                <label>Canal detectado</label>
+                <input id="shipmentChannel" readonly />
+              </div>
+              <div>
+                <label>Modo</label>
+                <select id="shipmentMode">
+                  <option value="auto">Auto</option>
+                  <option value="shopee_agencia">Shopee Agência</option>
+                  <option value="shopee_direta">Shopee Direta</option>
+                  <option value="mercado_envios">Mercado Envios</option>
+                  <option value="manual">Manual</option>
+                </select>
+              </div>
+              <div>
+                <label>Status</label>
+                <select id="shipmentStatus">
+                  <option value="separado">Separado</option>
+                  <option value="embalado">Embalado</option>
+                  <option value="despachado">Despachado</option>
+                </select>
+              </div>
+              <div>
+                <label>Observações</label>
+                <input id="shipmentNotes" placeholder="Observações da leitura" />
+              </div>
+              <div class="full actions-row">
+                <button type="submit" class="btn primary">Registrar leitura</button>
+              </div>
+            </form>
+
+            <div id="shipmentFeedback" class="callout neutral">
+              Digite ou bipa um código para classificar automaticamente a expedição.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Histórico de expedição</h3>
+              <input id="shipmentSearch" class="table-search" placeholder="Buscar leitura..." />
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Código</th>
+                    <th>Canal</th>
+                    <th>Modo</th>
+                    <th>Status</th>
+                    <th>Pedido</th>
+                  </tr>
+                </thead>
+                <tbody id="shipmentTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settingsSection" class="section hidden">
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head">
+              <h3>Configurações gerais</h3>
+              <span class="badge soft">Persistente</span>
+            </div>
+
+            <form id="settingsForm" class="form-grid">
+              <div>
+                <label>Nome da empresa</label>
+                <input id="settingsCompanyName" required />
+              </div>
+              <div>
+                <label>Workspace</label>
+                <input id="settingsWorkspaceId" required />
+              </div>
+              <div>
+                <label>Limite de estoque baixo</label>
+                <input id="settingsLowStock" type="number" min="1" required />
+              </div>
+              <div>
+                <label>Cor de destaque</label>
+                <input id="settingsAccent" type="color" />
+              </div>
+              <div class="full">
+                <label>Observações</label>
+                <textarea id="settingsNotes" placeholder="Observações internas"></textarea>
+              </div>
+              <div class="full actions-row">
+                <button type="submit" class="btn primary">Salvar configurações</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Perfil do usuário</h3>
+              <span class="badge soft">Auth + Profiles</span>
+            </div>
+            <form id="profileForm" class="form-grid">
+              <div>
+                <label>Nome</label>
+                <input id="profileName" required />
+              </div>
+              <div>
+                <label>Email</label>
+                <input id="profileEmail" readonly />
+              </div>
+              <div>
+                <label>Nível</label>
+                <input id="profileRole" readonly />
+              </div>
+              <div class="full actions-row">
+                <button type="submit" class="btn primary">Atualizar perfil</button>
+              </div>
+            </form>
+
+            <div class="info-box">
+              <strong>Como subir no GitHub Pages</strong>
+              <p>Suba os arquivos estáticos, preencha o <code>config.js</code> com as chaves do Supabase e rode o SQL do schema.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="auditSection" class="section hidden">
+        <div class="card">
+          <div class="card-head">
+            <h3>Auditoria</h3>
+            <input id="auditSearch" class="table-search" placeholder="Buscar log..." />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Ação</th>
+                  <th>Tabela</th>
+                  <th>Resumo</th>
+                  <th>Usuário</th>
+                </tr>
+              </thead>
+              <tbody id="auditTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
